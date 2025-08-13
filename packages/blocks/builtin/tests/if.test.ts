@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { IfBlock, OperatorResult } from "./if";
-import { JsVM } from "../vm";
+import { IfBlock, OperatorResult } from "../if";
+import { JsVM } from "../../vm";
 
 describe("Testing IfBlock", () => {
 	describe("Testing evaluateResult()", () => {
 		let sut: IfBlock = null!;
 		beforeEach(() => {
-			sut = new IfBlock({} as any);
+			sut = new IfBlock("", "", {} as any, {} as any);
 		});
 		it("should return true when all results are true", () => {
 			const results = [
@@ -63,9 +63,14 @@ describe("Testing IfBlock", () => {
 		};
 		const vm = new JsVM(context);
 		beforeEach(() => {
-			sut = new IfBlock({
-				vm,
-			});
+			sut = new IfBlock(
+				"",
+				"",
+				{
+					vm,
+				} as any,
+				{} as any
+			);
 		});
 		it("should return true when operator is eq and lhs and rhs are equal", () => {
 			expect(sut.evaluateOperator(1, 1, "eq")).toBe(true);

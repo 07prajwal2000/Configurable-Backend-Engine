@@ -1,14 +1,25 @@
-import { Script } from "node:vm";
 import { JsVM } from "./vm";
 
 export interface Context {
 	vm: JsVM;
+	route: string;
+	apiId: string;
+	vars: Record<string, any>;
 }
 
-export class BaseBlock {
+export interface BlockOutput {
+	output?: any;
+	next?: string;
+	error?: string;
+	successful: boolean;
+	continueIfFail: boolean;
+}
+
+export abstract class BaseBlock {
 	constructor(
 		protected readonly context: Context,
-		protected readonly input?: any
+		protected readonly input?: any,
+		public readonly next?: string
 	) {}
-	public async executeAsync(params?: any): Promise<any> {}
+	public abstract executeAsync(params?: any): Promise<BlockOutput>;
 }

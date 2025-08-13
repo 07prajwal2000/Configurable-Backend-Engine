@@ -1,4 +1,4 @@
-import { BaseBlock } from "../baseBlock";
+import { BaseBlock, BlockOutput, Context } from "../baseBlock";
 import { z } from "zod";
 
 export const operatorSchema = z.enum([
@@ -22,8 +22,6 @@ export const conditionSchema = z.object({
 
 export const ifBlockSchema = z.object({
 	conditions: z.array(conditionSchema),
-	onSuccess: z.string().optional(),
-	onFailure: z.string().optional(),
 });
 
 export enum OperatorResult {
@@ -33,9 +31,22 @@ export enum OperatorResult {
 }
 
 export class IfBlock extends BaseBlock {
-	override async executeAsync(): Promise<boolean> {
+	constructor(
+		private readonly onSuccess: string,
+		private readonly onError: string,
+		context: Context,
+		input: z.infer<typeof ifBlockSchema>
+	) {
+		super(context, input, onSuccess);
+	}
+
+	override async executeAsync(): Promise<BlockOutput> {
 		if (!ifBlockSchema.safeParse(this.input).success) {
-			throw new Error("Invalid input");
+			return {
+				error: "Invalid input",
+				continueIfFail: false,
+				successful: false,
+			};
 		}
 		const { conditions } = this.input as z.infer<typeof ifBlockSchema>;
 		const operatorResults: OperatorResult[] = [];
@@ -48,7 +59,14 @@ export class IfBlock extends BaseBlock {
 			if (chain == "and") continue;
 			operatorResults.push(OperatorResult.OR);
 		}
-		return this.evaluateResult(operatorResults);
+		const result = this.evaluateResult(operatorResults);
+		return {
+			output: result,
+			successful: result,
+			continueIfFail: true,
+			error: undefined,
+			next: result ? this.onSuccess : this.onError,
+		};
 	}
 	public evaluateResult(results: OperatorResult[]) {
 		let n = results.length;
@@ -106,6 +124,5 @@ export class IfBlock extends BaseBlock {
 					return false;
 			}
 		}
-		return false;
 	}
 }

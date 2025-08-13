@@ -1,21 +1,21 @@
-import { deepFreeze } from "@cbe/lib";
 import { Script } from "vm";
 
 export class JsVM {
 	private context: Record<string, any>;
 
 	constructor(context: Record<string, any>) {
-		this.context = deepFreeze(context);
+		this.context = context;
 	}
 
-	run(code: string): any {
+	run(code: string, extras?: any): any {
 		const script = new Script(code);
+		this.context["input"] = extras;
 		return script.runInNewContext(this.context);
 	}
-	async runAsync(code: string): Promise<any> {
-		const script = new Script(code);
-		const result = script.runInNewContext(this.context);
-		return await result;
+	async runAsync(code: string, extras?: any): Promise<any> {
+		return new Promise((resolve) => {
+			resolve(this.run(code, extras));
+		});
 	}
 	truthy(value: any) {
 		const type = typeof value;
