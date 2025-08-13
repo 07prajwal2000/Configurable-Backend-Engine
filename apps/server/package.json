@@ -1,0 +1,22 @@
+{
+	"name": "@cbe/backend-engine",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "tsx watch src/index.ts"
+	},
+	"keywords": [
+		"configurable-backend-engine"
+	],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"tsx": "^4.20.4"
+	},
+	"dependencies": {
+		"@cbe/blocks": "file:../../packages/blocks",
+		"hono": "^4.9.1",
+		"zod": "^4.0.17"
+	}
+}

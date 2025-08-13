@@ -1,0 +1,27 @@
+{
+	"name": "cbe",
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"server:dev": "npm run dev -w packages/server",
+		"dev": "turbo run dev"
+	},
+	"keywords": [
+		"configurable-backend-engine"
+	],
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
+	"engines": {
+		"node": ">=20.0.0",
+		"npm": ">=10.0.0"
+	},
+	"packageManager": "npm@10.9.2",
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"turbo": "^2.5.5"
+	}
+}
