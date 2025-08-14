@@ -12,15 +12,16 @@ export const setVarSchema = z
 	})
 	.describe("A useful block to set a variable in the context");
 
-export class SetVar extends BaseBlock {
+export class SetVarBlock extends BaseBlock {
 	constructor(
 		context: Context,
 		input: z.infer<typeof setVarSchema>,
-		next?: string
+		next?: string,
+		private readonly useParam?: boolean
 	) {
 		super(context, input, next);
 	}
-	public override async executeAsync(): Promise<BlockOutput> {
+	public override async executeAsync(params?: any): Promise<BlockOutput> {
 		if (!setVarSchema.safeParse(this.input).success) {
 			return {
 				continueIfFail: false,
@@ -29,15 +30,20 @@ export class SetVar extends BaseBlock {
 			};
 		}
 		const input = this.input as z.infer<typeof setVarSchema>;
-		const value =
-			typeof input.value == "string" && input.value.startsWith("js:")
-				? this.context.vm.run(this.input.value.slice(3))
-				: this.input.value;
+
+		const value = this.evaluateValue(this.useParam ? params : input.value);
 		this.context.vars[this.input.key] = value;
 		return {
 			continueIfFail: true,
 			successful: true,
 			next: this.next,
 		};
+	}
+
+	private evaluateValue(value: any) {
+		if (typeof value == "string" && value.startsWith("js:")) {
+			return this.context.vm.run(value.slice(3));
+		}
+		return value;
 	}
 }

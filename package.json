@@ -4,7 +4,8 @@
 	"type": "module",
 	"scripts": {
 		"server:dev": "npm run dev -w packages/server",
-		"dev": "turbo run dev"
+		"dev": "turbo run dev",
+		"test": "turbo run test"
 	},
 	"keywords": [
 		"configurable-backend-engine"

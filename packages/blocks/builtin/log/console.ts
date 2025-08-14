@@ -26,7 +26,11 @@ export class ConsoleLoggerBlock extends BaseBlock {
 		const path = this.context.route;
 		const level = !isObject ? "info" : params.level;
 		const msg = `${level.toUpperCase()}-${path}-${date} ${time}\n${
-			typeof params == "string" ? params : params.message
+			typeof params == "string"
+				? params
+				: params.message.startsWith("js:")
+				? this.context.vm.run(params.message.slice(3))
+				: params.message
 		}`;
 		if (level == "info") {
 			console.log(msg);

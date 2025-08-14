@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "https://www.schemastore.org/github-workflow.json": "file:///d%3A/Programming%20Files/OSS/CBE/.github/workflows/packages/blocks.yml"
+  }
+}

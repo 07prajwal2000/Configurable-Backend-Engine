@@ -3,7 +3,7 @@ import {
 	Engine,
 	IfBlock,
 	JsRunner,
-	SetVar,
+	SetVarBlock,
 } from "@cbe/blocks";
 import { Context } from "@cbe/blocks/baseBlock";
 import { JsVM } from "@cbe/blocks/vm";
@@ -46,7 +46,7 @@ const blocks = {
 	`,
 		"svar1"
 	),
-	svar1: new SetVar(
+	svar1: new SetVarBlock(
 		context,
 		{
 			key: "cache_key",
