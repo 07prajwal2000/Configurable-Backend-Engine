@@ -1,15 +1,9 @@
 import { BaseBlock, BlockOutput, Context } from "../baseBlock";
 import { z } from "zod";
 
-export const operatorSchema = z.enum([
-	"eq",
-	"neq",
-	"gt",
-	"gte",
-	"lt",
-	"lte",
-	"js",
-]);
+export const operatorSchema = z
+	.enum(["eq", "neq", "gt", "gte", "lt", "lte", "js"])
+	.describe("The operator to use for comparison");
 
 export const conditionSchema = z.object({
 	// if it is prefixed with `js:` then it will use vm which is created for the request's context

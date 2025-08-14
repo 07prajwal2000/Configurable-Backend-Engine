@@ -1,0 +1,8 @@
+site_name: "CBE"
+site_description: "A Configurable Backend Engine (CBE) is a No/Low Code Tool to build Backend Rest APIs with ease."
+site_author: "Prajwal Aradhya"
+docs_dir: "./docs"
+theme:
+  name: material
+extra:
+  generator: false

@@ -1,4 +1,10 @@
-import { ConsoleLoggerBlock, Engine, JsRunner } from "@cbe/blocks";
+import {
+	ConsoleLoggerBlock,
+	Engine,
+	IfBlock,
+	JsRunner,
+	SetVar,
+} from "@cbe/blocks";
 import { Context } from "@cbe/blocks/baseBlock";
 import { JsVM } from "@cbe/blocks/vm";
 
@@ -21,9 +27,36 @@ const context: Context = {
 };
 
 const blocks = {
-	js1: new JsRunner(context, `query.id;`, "js2"),
-	js2: new JsRunner(context, `input + " " + query.id;`, "cli"),
+	js1: new JsRunner(context, `query.id;`, "if1"),
+	if1: new IfBlock("js2", "cl2", context, {
+		conditions: [
+			{
+				chain: "and",
+				lhs: 123,
+				rhs: 123,
+				operator: "eq",
+			},
+		],
+	}),
+	js2: new JsRunner(
+		context,
+		`
+		const uid = "UID:1234";
+		input.toString() + " " + query.id;
+	`,
+		"svar1"
+	),
+	svar1: new SetVar(
+		context,
+		{
+			key: "cache_key",
+			value: "js:'KEY:' + query.orgId + ':' + query.id",
+		},
+		"js3"
+	),
+	js3: new JsRunner(context, `cache_key;`, "cli"),
 	cli: new ConsoleLoggerBlock(context),
+	cli2: new ConsoleLoggerBlock(context),
 };
 
 const engine = new Engine(blocks);
