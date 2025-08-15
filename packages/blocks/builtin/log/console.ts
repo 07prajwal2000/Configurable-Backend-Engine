@@ -3,35 +3,25 @@ import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
 import { logBlockSchema } from ".";
 
 export class ConsoleLoggerBlock extends BaseBlock {
-	constructor(context: Context, next?: string) {
-		super(context, undefined, next);
+	constructor(
+		context: Context,
+		input: z.infer<typeof logBlockSchema>,
+		next?: string
+	) {
+		super(context, input, next);
 	}
 
-	override async executeAsync(
-		params: z.infer<typeof logBlockSchema>
-	): Promise<BlockOutput> {
-		const isObject = typeof params == "object";
-		console.log(params);
-
-		if (isObject && !logBlockSchema.safeParse(params).success) {
+	override async executeAsync(params: any): Promise<BlockOutput> {
+		if (!logBlockSchema.safeParse(this.input).success) {
 			return {
-				error: "Log block requires 'message' and 'level' parameters",
+				error: "Log block requires 'message' and 'level' in input",
 				continueIfFail: false,
 				successful: false,
 			};
 		}
-		const datetime = new Date().toISOString().split("T");
-		const date = datetime[0];
-		const time = datetime[1].substring(0, datetime[1].lastIndexOf("."));
-		const path = this.context.route;
-		const level = !isObject ? "info" : params.level;
-		const msg = `${level.toUpperCase()}-${path}-${date} ${time}\n${
-			typeof params == "string"
-				? params
-				: params.message.startsWith("js:")
-				? this.context.vm.run(params.message.slice(3))
-				: params.message
-		}`;
+		const data = this.input as z.infer<typeof logBlockSchema>;
+		const level = data.level;
+		const msg = this.formatMessage(params, level);
 		if (level == "info") {
 			console.log(msg);
 		} else if (level == "error") {
@@ -44,5 +34,23 @@ export class ConsoleLoggerBlock extends BaseBlock {
 			successful: true,
 			next: this.next,
 		};
+	}
+
+	private formatMessage(params: any, level: string) {
+		const isObject = typeof params == "object";
+		const datetime = new Date().toISOString().split("T");
+		const date = datetime[0];
+		const time = datetime[1].substring(0, datetime[1].lastIndexOf("."));
+		const path = this.context.route;
+		const msg = `${level.toUpperCase()}-${path}-${date} ${time}\n${
+			isObject
+				? JSON.stringify(params, null, 2)
+				: typeof params == "string"
+				? params
+				: params.message.startsWith("js:")
+				? this.context.vm.run(params.message.slice(3))
+				: params.message
+		}`;
+		return msg;
 	}
 }

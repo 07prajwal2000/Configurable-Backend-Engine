@@ -1,6 +1,6 @@
 import { BaseBlock, BlockOutput } from "../baseBlock";
 
-export class JsRunner extends BaseBlock {
+export class JsRunnerBlock extends BaseBlock {
 	override async executeAsync(params?: any): Promise<BlockOutput> {
 		try {
 			const result = this.context.vm.runAsync(this.input, params);
