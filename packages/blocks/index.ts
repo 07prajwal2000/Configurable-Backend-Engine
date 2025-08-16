@@ -6,3 +6,4 @@ export * from "./builtin/transformer";
 export * from "./builtin/loops/for";
 export * from "./builtin/loops/foreach";
 export * from "./engine";
+export * from "./builtin/interceptor";

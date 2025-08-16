@@ -6,3 +6,5 @@ theme:
   name: material
 extra:
   generator: false
+markdown_extensions:
+  - def_list

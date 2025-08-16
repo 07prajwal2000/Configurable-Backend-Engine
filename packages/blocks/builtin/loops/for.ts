@@ -4,8 +4,8 @@ import { Engine } from "../../engine";
 
 export const forLoopBlockSchema = z.object({
 	block: z.string().optional(),
-	start: z.number(),
-	end: z.number(),
+	start: z.number().or(z.string()),
+	end: z.number().or(z.string()),
 	step: z.number().optional().default(1),
 });
 
@@ -26,8 +26,25 @@ export class ForLoopBlock extends BaseBlock {
 		callback?: (i: number) => void,
 		useEngine: boolean = true
 	): Promise<BlockOutput> {
-		const input = this.input as z.infer<typeof forLoopBlockSchema>;
-		for (let i = input.start; i < input.end; i += input.step) {
+		const { data: input, success } = forLoopBlockSchema.safeParse(this.input);
+		if (!success) {
+			return {
+				continueIfFail: false,
+				successful: false,
+				next: this.next,
+			};
+		}
+		const step =
+			typeof input.step == "string"
+				? this.context.vm.run(input.step)
+				: input.step;
+		const start =
+			typeof input.start == "string"
+				? this.context.vm.run(input.start)
+				: input.start;
+		const end =
+			typeof input.end == "string" ? this.context.vm.run(input.end) : input.end;
+		for (let i = start; i < end; i += step) {
 			if (input.block && useEngine)
 				await this.childEngine.start(input.block, i);
 			callback && callback(i);
