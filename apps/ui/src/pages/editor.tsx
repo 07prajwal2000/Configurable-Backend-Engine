@@ -1,11 +1,8 @@
-import { useState } from "react";
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import BlockEditor from "../components/editor/blockEditor";
 import EditorSidebar from "../components/editor/editorSidebar";
 
 const Editor = () => {
-  const [rightSidebar, setRightSidebar] = useState(true);
-
   return (
     <Grid
       container

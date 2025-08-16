@@ -14,6 +14,7 @@ import { useCallback, useState } from "react";
 import Dummy from "../blocks/dummy";
 import Entrypoint from "../blocks/entrypoint";
 import { useBlockStore } from "../../store/blockStore";
+import IfBlock from "../blocks/builtin/ifBlock";
 
 const initialNodes: Node[] = [
   {
@@ -26,7 +27,7 @@ const initialNodes: Node[] = [
     id: "dummy",
     data: {},
     position: { x: 100, y: -50 },
-    type: "dummy",
+    type: "if",
   },
   {
     id: "1",
@@ -54,17 +55,13 @@ const initialEdges = [
 const nodeTypes: NodeTypes = {
   entrypoint: Entrypoint,
   dummy: Dummy,
+  if: IfBlock,
 };
 
 const BlockEditor = () => {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
-  const {
-    selectedBlock,
-    infoSelectedBlock,
-    setInfoSelectedBlock,
-    setSelectedBlock,
-  } = useBlockStore();
+  const { selectedBlock, setSelectedBlock } = useBlockStore();
 
   const onNodesChange = useCallback(
     (changes: any) =>
@@ -87,10 +84,13 @@ const BlockEditor = () => {
   }, []);
 
   function onSelectionChange(e: OnSelectionChangeParams) {
-    if (e.nodes.length == 0) {
-      if (infoSelectedBlock) setInfoSelectedBlock("");
-      else if (selectedBlock) setSelectedBlock("");
+    if (e.nodes.length == 0 && selectedBlock != "") {
+      setSelectedBlock("");
     }
+  }
+
+  function onNodeDblClick(node: Node) {
+    setSelectedBlock(node.id);
   }
 
   return (
@@ -100,6 +100,7 @@ const BlockEditor = () => {
         nodesConnectable
         nodesDraggable
         nodes={nodes}
+        onNodeDoubleClick={(_, node) => onNodeDblClick(node)}
         nodeTypes={nodeTypes}
         onSelectionChange={onSelectionChange}
         edges={edges}
