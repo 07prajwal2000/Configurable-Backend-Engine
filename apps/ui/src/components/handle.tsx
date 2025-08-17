@@ -7,6 +7,7 @@ interface CustomHandleProps extends HandleProps {
   left?: number;
   right?: number;
   top?: number;
+  maxConnections?: number;
 }
 
 const CustomHandle = (props: CustomHandleProps) => {
@@ -26,7 +27,6 @@ const CustomHandle = (props: CustomHandleProps) => {
         right: props.right,
         top: props.top,
       }}
-      isConnectable={connections.length < 1}
       {...props}
     />
   );

@@ -1,10 +1,11 @@
-import { Paper } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import {
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
   Background,
   MiniMap,
+  Panel,
   ReactFlow,
   type Node,
   type NodeTypes,
@@ -15,6 +16,7 @@ import Dummy from "../blocks/dummy";
 import Entrypoint from "../blocks/entrypoint";
 import { useBlockStore } from "../../store/blockStore";
 import IfBlock from "../blocks/builtin/ifBlock";
+import AaddBlockMenu from "./addBlockMenu";
 
 const initialNodes: Node[] = [
   {
@@ -117,6 +119,11 @@ const BlockEditor = () => {
           }}
         />
         <Background />
+        <Panel style={{ bottom: "100px" }} position="bottom-left">
+          <Stack direction={"column-reverse"} gap={2}>
+            <AaddBlockMenu />
+          </Stack>
+        </Panel>
       </ReactFlow>
     </Paper>
   );

@@ -1,4 +1,4 @@
-import { Position, type NodeProps } from "@xyflow/react";
+import { Position, useReactFlow, type NodeProps } from "@xyflow/react";
 import CustomHandle from "../../handle";
 import BaseBlock from "../baseBlock";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
@@ -10,6 +10,7 @@ const IfBlock = (props: NodeProps) => {
   const toggleConditions = () => {
     setConditionsOpened(!conditionsOpened);
   };
+
   return (
     <BaseBlock alignCenter title="If Condition" {...props}>
       <CustomHandle type="target" position={Position.Top} />
@@ -32,7 +33,12 @@ const IfBlock = (props: NodeProps) => {
               On Success
             </Typography>
           </Box>
-          <CustomHandle bottom={-3} type="source" position={Position.Bottom} />
+          <CustomHandle
+            id={`${props.id}-success`}
+            bottom={-3}
+            type="source"
+            position={Position.Bottom}
+          />
         </Grid>
         <Grid alignItems={"center"} size={6} position={"relative"}>
           <Box>
@@ -40,7 +46,12 @@ const IfBlock = (props: NodeProps) => {
               On Failure
             </Typography>
           </Box>
-          <CustomHandle bottom={-3} type="source" position={Position.Bottom} />
+          <CustomHandle
+            id={`${props.id}-failure}`}
+            bottom={-3}
+            type="source"
+            position={Position.Bottom}
+          />
         </Grid>
       </Stack>
       <ConditionsBuilder opened={conditionsOpened} onClose={toggleConditions} />

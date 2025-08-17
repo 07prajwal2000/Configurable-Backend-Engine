@@ -36,7 +36,7 @@ describe("testing for loop block", () => {
         vm: new JsVM(vars),
       },
       {
-        start: "idx",
+        start: "js:idx",
         end: n,
         step: 1,
       },

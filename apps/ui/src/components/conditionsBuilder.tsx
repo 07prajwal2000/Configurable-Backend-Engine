@@ -1,10 +1,12 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Divider,
   Drawer,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -15,6 +17,9 @@ import { conditionSchema } from "@cbe/blocks";
 import type z from "zod";
 import InputWithJs from "./inputWithJs";
 import { operatorSchema } from "@cbe/lib";
+import { useState } from "react";
+import { MdDelete } from "react-icons/md";
+import { JsEditorButton } from "./editor/jsDialogEditor";
 
 export type SavedConditionsType = z.infer<typeof conditionSchema>;
 
@@ -25,8 +30,44 @@ interface ConditionsBuilderProps {
 }
 
 const ConditionsBuilder = (props: ConditionsBuilderProps) => {
+  const [conditions, setConditions] = useState<SavedConditionsType[]>([]);
   function onSaveClicked() {
     // props.onSave
+  }
+
+  function addNewCondition() {
+    setConditions([
+      {
+        chain: "and",
+        lhs: "",
+        operator: operatorSchema.enum.eq,
+        rhs: "",
+      },
+    ]);
+  }
+
+  function addCondition(chain: "and" | "or") {
+    setConditions((prev) => [
+      ...prev,
+      {
+        chain,
+        lhs: "",
+        operator: operatorSchema.enum.eq,
+        rhs: "",
+      },
+    ]);
+  }
+
+  function onDelete(index: number) {
+    setConditions((prev) => prev.filter((_, i) => i != index));
+  }
+
+  function onConditionChange(condition: SavedConditionsType, index: number) {
+    setConditions((prev) => {
+      const newConditions = [...prev];
+      newConditions[index] = condition;
+      return newConditions;
+    });
   }
 
   return (
@@ -37,41 +78,100 @@ const ConditionsBuilder = (props: ConditionsBuilderProps) => {
             <Typography variant="h5">Edit Conditions</Typography>
             <Divider />
           </Stack>
-          <Box>
-            <Grid container direction={"row"} gap={2}>
-              <Grid size={2}>
-                <InputWithJs
-                  fullWidth
-                  variant="outlined"
-                  label="LHS"
-                  size="small"
-                />
-              </Grid>
-              <Grid size={2}>
-                <FormControl fullWidth>
-                  <InputLabel id="op">Operator</InputLabel>
-                  <Select
-                    labelId="op"
-                    defaultValue={operatorSchema.enum.eq}
-                    label="Operator"
-                    size="small"
-                  >
-                    {Object.values(operatorSchema.enum).map((x) => (
-                      <MenuItem value={x}>{x.toUpperCase()}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid size={2}>
-                <InputWithJs
-                  fullWidth
-                  variant="outlined"
-                  label="RHS"
-                  size="small"
-                />
-              </Grid>
-            </Grid>
+          <Box maxHeight={"60vh"} py={1} sx={{ overflowY: "auto" }}>
+            <Stack direction={"column"} gap={2}>
+              {conditions.map((condition, index) => (
+                <Grid key={index} container direction={"row"} gap={1}>
+                  {condition.chain == "or" && (
+                    <Grid size={12}>
+                      <Divider>
+                        <Typography>OR</Typography>
+                      </Divider>
+                    </Grid>
+                  )}
+                  {condition.operator != "js" && (
+                    <Grid size={3}>
+                      <InputWithJs
+                        fullWidth
+                        value={condition.lhs.toString()}
+                        onChange={(value) =>
+                          onConditionChange({ ...condition, lhs: value }, index)
+                        }
+                        variant="outlined"
+                        label="LHS"
+                        size="small"
+                      />
+                    </Grid>
+                  )}
+                  <Grid size={2}>
+                    <FormControl fullWidth>
+                      <InputLabel id="op">Operator</InputLabel>
+                      <Select
+                        labelId="op"
+                        value={condition.operator}
+                        label="Operator"
+                        size="small"
+                        onChange={(e) =>
+                          onConditionChange(
+                            { ...condition, operator: e.target.value },
+                            index
+                          )
+                        }
+                      >
+                        {Object.values(operatorSchema.enum).map((x) => (
+                          <MenuItem value={x}>{x.toUpperCase()}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {condition.operator != "js" && (
+                    <Grid size={3}>
+                      <InputWithJs
+                        fullWidth
+                        value={condition.rhs.toString()}
+                        variant="outlined"
+                        label="RHS"
+                        size="small"
+                        onChange={(value) =>
+                          onConditionChange({ ...condition, rhs: value }, index)
+                        }
+                      />
+                    </Grid>
+                  )}
+                  {condition.operator == "js" && (
+                    <Grid size={4}>
+                      <JsEditorButton
+                        defaultValue={condition.js}
+                        onSave={(value) =>
+                          onConditionChange({ ...condition, js: value }, index)
+                        }
+                        title="Edit JavaScript Condition"
+                      />
+                    </Grid>
+                  )}
+                  <Grid size={1}>
+                    <IconButton onClick={() => onDelete(index)} color="error">
+                      <MdDelete />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              ))}
+            </Stack>
           </Box>
+          {conditions.length == 0 ? (
+            <Button onClick={addNewCondition} variant="outlined" fullWidth>
+              Add Condition
+            </Button>
+          ) : (
+            <ButtonGroup fullWidth>
+              <Button onClick={() => addCondition("and")}>
+                Add AND (&) Condition
+              </Button>
+              <Button onClick={() => addCondition("or")}>
+                Add OR (||) Condition
+              </Button>
+            </ButtonGroup>
+          )}
           <Button onClick={onSaveClicked} variant="contained" color="success">
             Save Conditions
           </Button>

@@ -44,18 +44,3 @@ const Editor = () => {
 };
 
 export default Editor;
-// {!rightSidebar && (
-//   <Fab
-//     onClick={() => setRightSidebar(!rightSidebar)}
-//     variant="extended"
-//     color="primary"
-//     size="small"
-//     sx={{
-//       position: "absolute",
-//       right: 16,
-//       top: 16,
-//     }}
-//   >
-//     <MdOutlineChevronLeft />
-//   </Fab>
-// )}

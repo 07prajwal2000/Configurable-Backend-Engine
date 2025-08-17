@@ -3,12 +3,11 @@ import React from "react";
 import { useBlockStore } from "../../store/blockStore";
 
 const EditorSidebar = () => {
-  const { selectedBlock, infoSelectedBlock } = useBlockStore();
+  const { selectedBlock } = useBlockStore();
   return (
     <Box>
       <Typography fontSize={15}>Settings will come here for blocks</Typography>
       <Typography>Selected Block: {selectedBlock || "None"}</Typography>
-      <Typography>Selected Block: {infoSelectedBlock || "None"}</Typography>
     </Box>
   );
 };

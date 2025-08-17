@@ -16,7 +16,7 @@ export function evaluateOperator(
   const isRhsScript = typeof rhs == "string" && rhs.startsWith("js:");
 
   if (operator == "js" && !!js) {
-    const result = vm.run(js);
+    const result = vm.run(js.startsWith("js:") ? js.slice(3) : js);
     return vm.truthy(result);
   } else if (isLhsScript || isRhsScript) {
     lhs = isLhsScript ? vm.run(lhs.slice(3)) : lhs;
