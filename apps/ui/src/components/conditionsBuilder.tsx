@@ -24,15 +24,19 @@ import { JsEditorButton } from "./editor/jsDialogEditor";
 export type SavedConditionsType = z.infer<typeof conditionSchema>;
 
 interface ConditionsBuilderProps {
+  defaultValue?: SavedConditionsType[];
   opened: boolean;
   onClose?: () => void;
-  onSave?: (value: SavedConditionsType) => void;
+  onSave?: (value: SavedConditionsType[]) => void;
 }
 
 const ConditionsBuilder = (props: ConditionsBuilderProps) => {
-  const [conditions, setConditions] = useState<SavedConditionsType[]>([]);
+  const [conditions, setConditions] = useState<SavedConditionsType[]>(
+    props.defaultValue || []
+  );
   function onSaveClicked() {
-    // props.onSave
+    props.onSave && props.onSave(conditions);
+    props.onClose && props.onClose();
   }
 
   function addNewCondition() {
@@ -63,6 +67,7 @@ const ConditionsBuilder = (props: ConditionsBuilderProps) => {
   }
 
   function onConditionChange(condition: SavedConditionsType, index: number) {
+    console.log(condition);
     setConditions((prev) => {
       const newConditions = [...prev];
       newConditions[index] = condition;
@@ -173,7 +178,7 @@ const ConditionsBuilder = (props: ConditionsBuilderProps) => {
             </ButtonGroup>
           )}
           <Button onClick={onSaveClicked} variant="contained" color="success">
-            Save Conditions
+            Save
           </Button>
         </Stack>
       </Box>

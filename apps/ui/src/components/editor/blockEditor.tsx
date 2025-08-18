@@ -17,6 +17,11 @@ import Entrypoint from "../blocks/entrypoint";
 import { useBlockStore } from "../../store/blockStore";
 import IfBlock from "../blocks/builtin/ifBlock";
 import AaddBlockMenu from "./addBlockMenu";
+import ForLoopBlock from "../blocks/builtin/forLoopBlock";
+import { showToast } from "../toasts";
+import type { forLoopBlockSchema, transformerBlockSchema } from "@cbe/blocks";
+import type z from "zod";
+import TransformerBlock from "../blocks/builtin/transformer";
 
 const initialNodes: Node[] = [
   {
@@ -26,22 +31,32 @@ const initialNodes: Node[] = [
     type: "entrypoint",
   },
   {
-    id: "dummy",
-    data: {},
+    id: "if-condition",
+    data: {
+      conditions: [],
+    },
     position: { x: 100, y: -50 },
     type: "if",
   },
   {
-    id: "1",
+    id: "transformer",
     position: { x: 50, y: 20 },
-    data: { label: "Node 1" },
-    type: "dummy",
+    data: {
+      fieldMap: {},
+      useJs: false,
+      js: "",
+    } as z.infer<typeof transformerBlockSchema>,
+    type: "transformer",
   },
   {
-    id: "2",
+    id: "forloop-id",
     position: { x: 50, y: 80 },
-    data: { label: "Node 2" },
-    type: "dummy",
+    data: {
+      start: 0,
+      end: 10,
+      step: 1,
+    } as z.infer<typeof forLoopBlockSchema>,
+    type: "forloop",
   },
 ];
 
@@ -58,6 +73,8 @@ const nodeTypes: NodeTypes = {
   entrypoint: Entrypoint,
   dummy: Dummy,
   if: IfBlock,
+  forloop: ForLoopBlock,
+  transformer: TransformerBlock,
 };
 
 const BlockEditor = () => {
@@ -76,6 +93,16 @@ const BlockEditor = () => {
     []
   );
   const onConnect = useCallback((params: any) => {
+    if (params.source === params.target) {
+      showToast(
+        {
+          type: "error",
+          message: "Cannot connect to self",
+        },
+        true
+      );
+      return;
+    }
     params["animated"] = true;
     setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot));
   }, []);
@@ -119,7 +146,7 @@ const BlockEditor = () => {
           }}
         />
         <Background />
-        <Panel style={{ bottom: "100px" }} position="bottom-left">
+        <Panel style={{ bottom: "60px" }} position="bottom-left">
           <Stack direction={"column-reverse"} gap={2}>
             <AaddBlockMenu />
           </Stack>

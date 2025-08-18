@@ -1,5 +1,5 @@
 import { useTheme } from "@mui/material";
-import { Handle, useNodeConnections, type HandleProps } from "@xyflow/react";
+import { Handle, type HandleProps, type NodeConnection } from "@xyflow/react";
 
 interface CustomHandleProps extends HandleProps {
   bgColor?: string;
@@ -7,13 +7,9 @@ interface CustomHandleProps extends HandleProps {
   left?: number;
   right?: number;
   top?: number;
-  maxConnections?: number;
 }
 
 const CustomHandle = (props: CustomHandleProps) => {
-  const connections = useNodeConnections({
-    handleType: props.type,
-  });
   const theme = useTheme();
   const sourceColor = theme.palette.primary.main;
   const targetColor = theme.palette.success.main;
@@ -31,5 +27,21 @@ const CustomHandle = (props: CustomHandleProps) => {
     />
   );
 };
+
+export function connectionExist(
+  handleId: string,
+  type: "source" | "target",
+  connections: NodeConnection[]
+) {
+  for (let i = 0; i < connections.length; i++) {
+    const cur = connections[i];
+    if (type == "source" && cur.sourceHandle == handleId) {
+      return true;
+    } else if (type == "target" && cur.targetHandle == handleId) {
+      return true;
+    }
+  }
+  return false;
+}
 
 export default CustomHandle;

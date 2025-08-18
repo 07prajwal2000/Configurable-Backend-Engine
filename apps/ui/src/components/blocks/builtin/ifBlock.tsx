@@ -1,19 +1,41 @@
-import { Position, useReactFlow, type NodeProps } from "@xyflow/react";
-import CustomHandle from "../../handle";
+import { Position, useNodeConnections, type NodeProps } from "@xyflow/react";
+import CustomHandle, { connectionExist } from "../../handle";
 import BaseBlock from "../baseBlock";
 import { Box, Button, Grid, Stack, Typography } from "@mui/material";
-import ConditionsBuilder from "../../conditionsBuilder";
+import ConditionsBuilder, {
+  type SavedConditionsType,
+} from "../../conditionsBuilder";
 import { useState } from "react";
 
-const IfBlock = (props: NodeProps) => {
+interface IfBlockProps extends NodeProps {
+  data: {
+    conditions: SavedConditionsType[];
+  };
+}
+
+const IfBlock = (props: IfBlockProps) => {
   const [conditionsOpened, setConditionsOpened] = useState(false);
   const toggleConditions = () => {
     setConditionsOpened(!conditionsOpened);
   };
+  const successHandleId = `${props.id}-success`;
+  const failureHandleId = `${props.id}-failure`;
+  const targetHandleId = `${props.id}-target`;
+
+  const connections = useNodeConnections({ id: props.id });
+
+  function onConditionSave(value: SavedConditionsType[]) {
+    console.log(value);
+  }
 
   return (
     <BaseBlock alignCenter title="If Condition" {...props}>
-      <CustomHandle type="target" position={Position.Top} />
+      <CustomHandle
+        isConnectable={!connectionExist(targetHandleId, "target", connections)}
+        id={targetHandleId}
+        type="target"
+        position={Position.Top}
+      />
       <Button
         variant="outlined"
         color="info"
@@ -34,7 +56,10 @@ const IfBlock = (props: NodeProps) => {
             </Typography>
           </Box>
           <CustomHandle
-            id={`${props.id}-success`}
+            isConnectable={
+              !connectionExist(successHandleId, "source", connections)
+            }
+            id={successHandleId}
             bottom={-3}
             type="source"
             position={Position.Bottom}
@@ -47,14 +72,21 @@ const IfBlock = (props: NodeProps) => {
             </Typography>
           </Box>
           <CustomHandle
-            id={`${props.id}-failure}`}
+            id={failureHandleId}
+            isConnectable={
+              !connectionExist(failureHandleId, "source", connections)
+            }
             bottom={-3}
             type="source"
             position={Position.Bottom}
           />
         </Grid>
       </Stack>
-      <ConditionsBuilder opened={conditionsOpened} onClose={toggleConditions} />
+      <ConditionsBuilder
+        onSave={onConditionSave}
+        opened={conditionsOpened}
+        onClose={toggleConditions}
+      />
     </BaseBlock>
   );
 };

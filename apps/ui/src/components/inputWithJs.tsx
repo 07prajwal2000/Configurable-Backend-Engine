@@ -39,6 +39,7 @@ const InputWithJs = (props: Props) => {
     <FormControl fullWidth={props.fullWidth}>
       <InputLabel htmlFor={id}>{props.label}</InputLabel>
       <OutlinedInput
+        sx={props.sx}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         label={props.label}

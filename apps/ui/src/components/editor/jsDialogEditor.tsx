@@ -5,6 +5,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  type SxProps,
+  type Theme,
 } from "@mui/material";
 import CodeEditor from "./codeEditor";
 import { useState } from "react";
@@ -46,20 +48,29 @@ const JsDialogEditor = (props: JsDialogEditorProps) => {
   );
 };
 
-export function JsEditorButton(props: Omit<JsDialogEditorProps, "open">) {
+interface JsEditorButtonProps extends Omit<JsDialogEditorProps, "open"> {
+  buttonSx?: SxProps<Theme>;
+}
+
+export function JsEditorButton(props: JsEditorButtonProps) {
   const [open, setOpen] = useState(false);
   function toggleOpen() {
     setOpen(!open);
   }
 
   function onSave(value: string) {
-    console.log(value);
     setOpen(false);
-    // props.onSave && props.onSave(value);
+    props.onSave && props.onSave(value);
   }
   return (
     <Box>
-      <Button onClick={toggleOpen} color="info" variant="outlined" fullWidth>
+      <Button
+        onClick={toggleOpen}
+        color="info"
+        variant="outlined"
+        fullWidth
+        sx={props.buttonSx}
+      >
         {props.title}
       </Button>
       <JsDialogEditor

@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
 import { useBlockStore } from "../../store/blockStore";
 
 const EditorSidebar = () => {

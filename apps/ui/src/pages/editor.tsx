@@ -28,9 +28,6 @@ const Editor = () => {
             height: "100%",
           }}
         >
-          <Box sx={{ height: "5vh", p: 0 }}>
-            <Typography fontSize={25}>Right</Typography>
-          </Box>
           <Box
             sx={{ width: "100%", maxHeight: "92vh", overflowY: "auto" }}
             p={2}

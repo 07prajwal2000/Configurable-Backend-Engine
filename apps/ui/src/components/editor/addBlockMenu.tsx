@@ -53,7 +53,7 @@ const AaddBlockMenu = () => {
           width: "300px",
           overflowY: "none",
           mx: 2,
-          top: "-45px",
+          top: "-10px",
         }}
       >
         <Stack direction={"column"} p={"8px"} gap={1} width={"250px"}>
