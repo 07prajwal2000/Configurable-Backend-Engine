@@ -18,7 +18,7 @@ import type z from "zod";
 import InputWithJs from "./inputWithJs";
 import { operatorSchema } from "@cbe/lib";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
+import { MdAddCircleOutline, MdDelete } from "react-icons/md";
 import { JsEditorButton } from "./editor/jsDialogEditor";
 
 export type SavedConditionsType = z.infer<typeof conditionSchema>;
@@ -36,6 +36,10 @@ const ConditionsBuilder = (props: ConditionsBuilderProps) => {
   );
   function onSaveClicked() {
     props.onSave && props.onSave(conditions);
+    props.onClose && props.onClose();
+  }
+  function close() {
+    setConditions(props.defaultValue || []);
     props.onClose && props.onClose();
   }
 
@@ -67,7 +71,6 @@ const ConditionsBuilder = (props: ConditionsBuilderProps) => {
   }
 
   function onConditionChange(condition: SavedConditionsType, index: number) {
-    console.log(condition);
     setConditions((prev) => {
       const newConditions = [...prev];
       newConditions[index] = condition;
@@ -76,11 +79,27 @@ const ConditionsBuilder = (props: ConditionsBuilderProps) => {
   }
 
   return (
-    <Drawer anchor="bottom" open={props.opened} onClose={props.onClose}>
+    <Drawer anchor="bottom" open={props.opened} onClose={close}>
       <Box sx={{ p: 2 }}>
         <Stack direction={"column"} gap={4}>
           <Stack gap={1}>
-            <Typography variant="h5">Edit Conditions</Typography>
+            <Stack
+              direction={"row"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography variant="h5">Edit Conditions</Typography>
+              {conditions.length == 0 && (
+                <Button
+                  startIcon={<MdAddCircleOutline />}
+                  onClick={addNewCondition}
+                  variant="outlined"
+                  color="info"
+                >
+                  Add Condition
+                </Button>
+              )}
+            </Stack>
             <Divider />
           </Stack>
           <Box maxHeight={"60vh"} py={1} sx={{ overflowY: "auto" }}>
@@ -164,9 +183,16 @@ const ConditionsBuilder = (props: ConditionsBuilderProps) => {
             </Stack>
           </Box>
           {conditions.length == 0 ? (
-            <Button onClick={addNewCondition} variant="outlined" fullWidth>
-              Add Condition
-            </Button>
+            <Stack gap={1}>
+              <Typography
+                fontSize={20}
+                textAlign={"center"}
+                color="textDisabled"
+                textTransform={"uppercase"}
+              >
+                Add a new condition to edit
+              </Typography>
+            </Stack>
           ) : (
             <ButtonGroup fullWidth>
               <Button onClick={() => addCondition("and")}>

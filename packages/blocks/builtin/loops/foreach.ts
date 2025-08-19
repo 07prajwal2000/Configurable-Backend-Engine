@@ -3,7 +3,7 @@ import { BlockOutput, Context } from "../../baseBlock";
 import { Engine } from "../../engine";
 import { ForLoopBlock, forLoopBlockSchema } from "./for";
 
-const valuesSchema = z.array(z.any()).or(z.string());
+const valuesSchema = z.array(z.any());
 
 export const forEachLoopBlockSchema = z.object({
   block: z.string().optional(),
@@ -61,11 +61,7 @@ export class ForEachLoopBlock extends ForLoopBlock {
     if (this.foreachInput.useParam && paramValues.success) {
       input.end = params.length;
     }
-    const array = this.foreachInput.useParam
-      ? paramValues.data!
-      : typeof this.values == "string"
-      ? this.context.vm.run(this.values.slice(3))
-      : this.values;
+    const array = this.foreachInput.useParam ? paramValues.data! : this.values;
     await super.executeAsync(async (i) => {
       await this.childEngine.start(input.block!, array[i]);
     }, false);

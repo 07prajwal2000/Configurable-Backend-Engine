@@ -4,7 +4,6 @@ import {
   Button,
   Divider,
   Drawer,
-  Fab,
   Grid,
   IconButton,
   Stack,
@@ -12,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { MdDelete, MdLink } from "react-icons/md";
+import { MdAddCircleOutline, MdDelete, MdLink } from "react-icons/md";
 import { showToast } from "../toasts";
 
 type FieldMapEditorProps = {
@@ -24,9 +23,12 @@ type FieldMapEditorProps = {
 };
 
 const FieldMapEditor = (props: FieldMapEditorProps) => {
-  const [fieldMap, setFieldMap] = useState<{ source: string; dest: string }[]>([
-    { source: "a", dest: "b" },
-  ]);
+  const [fieldMap, setFieldMap] = useState<{ source: string; dest: string }[]>(
+    Object.keys(props.defaultMap || {}).map((key) => ({
+      source: key,
+      dest: props.defaultMap![key],
+    }))
+  );
 
   function onSourceChanged(value: string, idx: number) {
     const newMap = [...fieldMap];
@@ -87,9 +89,18 @@ const FieldMapEditor = (props: FieldMapEditorProps) => {
     newMap.splice(idx, 1);
     setFieldMap(newMap);
   }
+  function close() {
+    setFieldMap(
+      Object.keys(props.defaultMap || {}).map((key) => ({
+        source: key,
+        dest: props.defaultMap![key],
+      })) || []
+    );
+    props.onClose && props.onClose();
+  }
 
   return (
-    <Drawer anchor="bottom" open={props.open} onClose={props.onClose}>
+    <Drawer anchor="bottom" open={props.open} onClose={close}>
       <Box sx={{ p: 2 }}>
         <Stack
           mb={1}
@@ -103,6 +114,7 @@ const FieldMapEditor = (props: FieldMapEditorProps) => {
             variant="outlined"
             color="info"
             onClick={onAddClicked}
+            startIcon={<MdAddCircleOutline />}
           >
             Add New Field Map
           </Button>
@@ -111,10 +123,16 @@ const FieldMapEditor = (props: FieldMapEditorProps) => {
         <Stack
           direction={"column"}
           gap={1}
-          sx={{ minHeight: 100, maxHeight: 300, overflowY: "auto", my: 2 }}
+          sx={{
+            minHeight: 100,
+            maxHeight: 300,
+            overflowY: "auto",
+            my: 1,
+            py: 1,
+          }}
         >
           {fieldMap.map((kvp, i) => (
-            <Grid container gap={1}>
+            <Grid container key={i} gap={1}>
               <Grid size={3}>
                 <Autocomplete
                   freeSolo

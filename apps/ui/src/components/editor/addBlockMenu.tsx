@@ -7,13 +7,13 @@ import BlockCategories from "../blocks/blockCategories";
 import BlocksList from "../blocks/blocksList";
 import { FaArrowRotateLeft } from "react-icons/fa6";
 
-const AaddBlockMenu = () => {
+type AddBlockMenuProps = {
+  onAddNewBlock: (type: string, position: { x: number; y: number }) => void;
+};
+
+const AddBlockMenu = (props: AddBlockMenuProps) => {
   const { addBlockMenuOpen, setAddBlockMenuOpen } = useEditorUIStore();
   const [target, setTarget] = useState<HTMLButtonElement>(null!);
-  function toggleMenu(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    setAddBlockMenuOpen(!addBlockMenuOpen);
-    setTarget(e.currentTarget);
-  }
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const { screenToFlowPosition } = useReactFlow();
@@ -23,6 +23,10 @@ const AaddBlockMenu = () => {
     setSelectedCategory("");
   }, [addBlockMenuOpen]);
 
+  function toggleMenu(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    setAddBlockMenuOpen(!addBlockMenuOpen);
+    setTarget(e.currentTarget);
+  }
   function getViewportCenter() {
     return screenToFlowPosition({
       x: (window.innerWidth - window.innerWidth * 0.3) / 2,
@@ -33,6 +37,12 @@ const AaddBlockMenu = () => {
   function resetSearch() {
     setSearch("");
     setSelectedCategory("");
+  }
+
+  async function onBlockSelect(block: string) {
+    const position = getViewportCenter();
+    props.onAddNewBlock(block, position);
+    setAddBlockMenuOpen(false);
   }
 
   return (
@@ -84,6 +94,7 @@ const AaddBlockMenu = () => {
                     where: search != "" ? "name" : "category",
                     value: search || selectedCategory,
                   }}
+                  onSelect={onBlockSelect}
                 />
               </>
             )}
@@ -94,4 +105,4 @@ const AaddBlockMenu = () => {
   );
 };
 
-export default AaddBlockMenu;
+export default AddBlockMenu;

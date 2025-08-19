@@ -1,43 +1,57 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  Stack,
-  Switch,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import CustomHandle from "../../handle";
 import BaseBlock from "../baseBlock";
 import { Position, type NodeProps } from "@xyflow/react";
 import type z from "zod";
 import type { transformerBlockSchema } from "@cbe/blocks";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { JsEditorButton } from "../../editor/jsDialogEditor";
 import FieldMapEditor from "../../editor/fieldMapEditor";
+import { useBlockDataUpdater } from "../../editor/blockEditor";
 
 interface TransformerBlockProps extends NodeProps {
   data: z.infer<typeof transformerBlockSchema>;
 }
 
 const TransformerBlock = (props: TransformerBlockProps) => {
+  const initialRenderedRef = useRef(false);
   const [useJs, setUseJs] = useState(props.data.useJs);
   const [fieldMap, setFieldMap] = useState(props.data.fieldMap);
   const [showFieldMapEditor, setShowFieldMapEditor] = useState(false);
   const [jsCode, setJsCode] = useState(props.data.js || "");
+  const { updateBlockData } = useBlockDataUpdater();
+  useEffect(() => {
+    if (!initialRenderedRef.current) {
+      initialRenderedRef.current = true;
+      return;
+    }
+    updateBlockData(props.id, {
+      useJs: useJs,
+      fieldMap: fieldMap,
+      js: jsCode,
+    });
+  }, [useJs, fieldMap, jsCode]);
 
   function toggleFieldMapEditor() {
     setShowFieldMapEditor(!showFieldMapEditor);
   }
 
+  function onSave(value: Record<string, string>) {
+    setFieldMap(value);
+  }
+
   return (
     <BaseBlock title="Transformer" {...props}>
-      <CustomHandle type="source" position={Position.Bottom} />
-      <CustomHandle type="target" position={Position.Top} />
+      <CustomHandle
+        id={`${props.id}-source`}
+        type="source"
+        position={Position.Bottom}
+      />
+      <CustomHandle
+        id={`${props.id}-target`}
+        type="target"
+        position={Position.Top}
+      />
       <Stack
         direction={"column"}
         justifyContent={"space-around"}
@@ -61,12 +75,10 @@ const TransformerBlock = (props: TransformerBlockProps) => {
             variant="outlined"
             color="info"
             fullWidth
-            sx={{ p: "2px", my: "3px" }}
+            sx={{ p: "2px", my: "3px", fontSize: 5 }}
             size="small"
           >
-            <Typography textAlign={"center"} fontSize={5}>
-              Edit Field Map
-            </Typography>
+            Edit Field Map
           </Button>
         )}
         {useJs && (
@@ -81,8 +93,8 @@ const TransformerBlock = (props: TransformerBlockProps) => {
       <FieldMapEditor
         open={showFieldMapEditor}
         onClose={toggleFieldMapEditor}
-        defaultMap={props.data.fieldMap}
-        onSave={(value) => setFieldMap(value)}
+        defaultMap={fieldMap}
+        onSave={onSave}
         defaultFields={[]}
       />
     </BaseBlock>

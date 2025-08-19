@@ -6,6 +6,7 @@ import ConditionsBuilder, {
   type SavedConditionsType,
 } from "../../conditionsBuilder";
 import { useState } from "react";
+import { useBlockDataUpdater } from "../../editor/blockEditor";
 
 interface IfBlockProps extends NodeProps {
   data: {
@@ -15,18 +16,19 @@ interface IfBlockProps extends NodeProps {
 
 const IfBlock = (props: IfBlockProps) => {
   const [conditionsOpened, setConditionsOpened] = useState(false);
-  const toggleConditions = () => {
-    setConditionsOpened(!conditionsOpened);
-  };
+  const connections = useNodeConnections({ id: props.id });
   const successHandleId = `${props.id}-success`;
   const failureHandleId = `${props.id}-failure`;
   const targetHandleId = `${props.id}-target`;
-
-  const connections = useNodeConnections({ id: props.id });
-
+  const { updateBlockData } = useBlockDataUpdater();
   function onConditionSave(value: SavedConditionsType[]) {
-    console.log(value);
+    updateBlockData(props.id, {
+      conditions: value,
+    });
   }
+  const toggleConditions = () => {
+    setConditionsOpened(!conditionsOpened);
+  };
 
   return (
     <BaseBlock alignCenter title="If Condition" {...props}>
@@ -86,6 +88,7 @@ const IfBlock = (props: IfBlockProps) => {
         onSave={onConditionSave}
         opened={conditionsOpened}
         onClose={toggleConditions}
+        defaultValue={props.data.conditions}
       />
     </BaseBlock>
   );
