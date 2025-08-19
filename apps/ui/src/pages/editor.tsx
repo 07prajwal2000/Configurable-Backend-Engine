@@ -5,7 +5,6 @@ import { BlockEditorContext } from "../context/blockEditorContext";
 import type { Edge, Node } from "@xyflow/react";
 import { initialBlocks } from "../store/blockStore";
 import { useChangeTrackerStore } from "../store/changeTrackerStore";
-import Topbar from "../components/editor/topbar";
 
 const Editor = () => {
   const changeTrackerStore = useChangeTrackerStore();
@@ -48,8 +47,8 @@ const Editor = () => {
         sourceHandle: x.sourceHandle,
         targetHandle: x.targetHandle,
       }));
-    console.log(changedBlocks);
-    console.log(changedEdges);
+    console.log("Changed Blocks", changedBlocks);
+    console.log("Changed Edges", changedEdges);
     changeTrackerStore.reset();
   }
 
@@ -76,14 +75,6 @@ const Editor = () => {
         sx={{ height: "100vh", width: "100vw", overflow: "hidden" }}
       >
         <Grid size={9}>
-          <Paper
-            sx={{
-              margin: 1,
-              p: 1,
-            }}
-          >
-            <Topbar />
-          </Paper>
           <BlockEditor blocks={initialBlocks} edges={[]} />
         </Grid>
         <Grid size={3}>

@@ -13,7 +13,7 @@ const Topbar = () => {
   async function saveChanges() {
     setLoading(true);
     try {
-      await context.changes.saveChanges(nodes, edges);
+      context.changes.saveChanges(nodes, edges);
     } catch (error) {
     } finally {
       setLoading(false);

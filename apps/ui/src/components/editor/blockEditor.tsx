@@ -25,6 +25,7 @@ import SetVarBlock from "../blocks/builtin/setVarBlock";
 import JsExecutorBlock from "../blocks/builtin/jsExecutorBlock";
 import ResponseBlock from "../blocks/responseBlock";
 import { generateBlockID } from "../../services/blocks";
+import Topbar from "./topbar";
 
 const nodeTypes: NodeTypes = {
   entrypoint: Entrypoint,
@@ -274,6 +275,16 @@ const BlockEditor = (props: BlockEditorProps) => {
           fitView
         >
           <Background />
+          <Panel style={{ width: "100%", top: -5 }} position="top-center">
+            <Paper
+              sx={{
+                margin: 1,
+                p: 1,
+              }}
+            >
+              <Topbar />
+            </Paper>
+          </Panel>
           <Panel style={{ bottom: "60px" }} position="bottom-left">
             <Stack direction={"column-reverse"} gap={2}>
               <AddBlockMenu onAddNewBlock={addNewBlock} />
