@@ -17,11 +17,12 @@ import AddBlockMenu from "./addBlockMenu";
 import { showToast } from "../toasts";
 import { useBlockEditorContext } from "../../context/blockEditorContext";
 import { generateBlockID } from "../../services/blocks";
-import { blockTypeMap, BlockTypes } from "../../constants/blockType";
+import { blockTypeMap } from "../../constants/blockType";
 import { blocksList } from "../../constants/blocksList";
 import EditorSidebar from "./editorSidebar";
 import Topbar from "./topbar";
 import { generateEdgeID } from "../../services/edges";
+import type { BlockTypes } from "@cbe/blocks";
 
 type BlockEditorProps = {
   blocks: Node[];

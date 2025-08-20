@@ -37,7 +37,7 @@ const ForeachLoopBlock = (props: ForeachLoopBlockProps) => {
     "target",
     connections
   );
-  const srcHandleId = `${props.id}-src`;
+  const srcHandleId = `${props.id}-source`;
   const srcConnExist = connectionExist(srcHandleId, "source", connections);
   const executorHandleId = `${props.id}-executor`;
   const executorConnExist = connectionExist(

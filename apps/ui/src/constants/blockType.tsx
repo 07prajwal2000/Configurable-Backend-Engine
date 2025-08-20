@@ -9,19 +9,7 @@ import IfBlock from "../components/blocks/builtin/ifBlock";
 import ForLoopBlock from "../components/blocks/builtin/forLoopBlock";
 import TransformerBlock from "../components/blocks/builtin/transformerBlock";
 import SetVarBlock from "../components/blocks/builtin/setVarBlock";
-
-export enum BlockTypes {
-  entrypoint = "entrypoint",
-  if = "if",
-  forloop = "forloop",
-  foreachloop = "foreachloop",
-  transformer = "transformer",
-  setvar = "setvar",
-  getvar = "getvar",
-  consolelog = "consolelog",
-  jsrunner = "jsrunner",
-  response = "response",
-}
+import { BlockTypes } from "@cbe/blocks";
 
 export const blockTypeMap: NodeTypes = {
   [BlockTypes.entrypoint]: Entrypoint,

@@ -1,5 +1,5 @@
 import type { Node } from "@xyflow/react";
-import { BlockTypes } from "./blockType";
+import { BlockTypes } from "@cbe/blocks";
 import type { logBlockSchema } from "@cbe/blocks/builtin/log";
 import type z from "zod";
 
