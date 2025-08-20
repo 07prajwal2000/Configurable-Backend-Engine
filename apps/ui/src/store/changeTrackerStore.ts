@@ -5,6 +5,7 @@ type ChangeTrackerTypes = {
   edges: Set<string>;
   trackBlock(block: string): void;
   trackEdge(edge: string): void;
+  trackEdges(edge: string[]): void;
   reset(): void;
 };
 
@@ -15,6 +16,8 @@ const changeTracker = create<ChangeTrackerTypes>((set) => ({
     set((state) => ({ blocks: new Set([...state.blocks, block]) })),
   trackEdge: (edge: string) =>
     set((state) => ({ edges: new Set([...state.edges, edge]) })),
+  trackEdges: (edges: string[]) =>
+    set((state) => ({ edges: new Set([...state.edges, ...edges]) })),
   reset: () => set({ blocks: new Set(), edges: new Set() }),
 }));
 

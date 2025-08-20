@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdAddCircleOutline, MdClose, MdDelete, MdSave } from "react-icons/md";
 
 type ListEditorProps = {
@@ -20,9 +20,12 @@ type ListEditorProps = {
 };
 
 const ListEditor = (props: ListEditorProps) => {
-  const initialItems =
-    typeof props.values == "string" ? [] : props.values || [];
+  const initialItems = (props.values as string[]) || [];
   const [items, setItems] = useState(initialItems);
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, [props.values]);
 
   function onSaveClicked() {
     props.onSave && props.onSave(items);

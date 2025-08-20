@@ -7,6 +7,8 @@ interface CustomHandleProps extends HandleProps {
   left?: number;
   right?: number;
   top?: number;
+  id: string;
+  isConnectable: boolean;
 }
 
 const CustomHandle = (props: CustomHandleProps) => {

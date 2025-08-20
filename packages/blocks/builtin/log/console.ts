@@ -3,54 +3,56 @@ import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
 import { logBlockSchema } from ".";
 
 export class ConsoleLoggerBlock extends BaseBlock {
-	constructor(
-		context: Context,
-		input: z.infer<typeof logBlockSchema>,
-		next?: string
-	) {
-		super(context, input, next);
-	}
+  constructor(
+    context: Context,
+    input: z.infer<typeof logBlockSchema>,
+    next?: string
+  ) {
+    super(context, input, next);
+  }
 
-	override async executeAsync(params: any): Promise<BlockOutput> {
-		if (!logBlockSchema.safeParse(this.input).success) {
-			return {
-				error: "Log block requires 'message' and 'level' in input",
-				continueIfFail: false,
-				successful: false,
-			};
-		}
-		const data = this.input as z.infer<typeof logBlockSchema>;
-		const level = data.level;
-		const msg = this.formatMessage(params, level);
-		if (level == "info") {
-			console.log(msg);
-		} else if (level == "error") {
-			console.error(msg);
-		} else {
-			console.warn(msg);
-		}
-		return {
-			continueIfFail: true,
-			successful: true,
-			next: this.next,
-		};
-	}
+  override async executeAsync(params: any): Promise<BlockOutput> {
+    const { success, data } = logBlockSchema.safeParse(this.input);
+    if (!success) {
+      return {
+        error: "Log block requires 'message' and 'level' in input",
+        continueIfFail: false,
+        successful: false,
+      };
+    }
+    const level = data.level;
+    const msgOrParams = data.message?.trim() != "" ? data.message : params;
+    const msg = this.formatMessage(msgOrParams, level);
+    if (level == "info") {
+      console.log(msg);
+    } else if (level == "error") {
+      console.error(msg);
+    } else {
+      console.warn(msg);
+    }
+    return {
+      continueIfFail: true,
+      successful: true,
+      next: this.next,
+      output: params,
+    };
+  }
 
-	private formatMessage(params: any, level: string) {
-		const isObject = typeof params == "object";
-		const datetime = new Date().toISOString().split("T");
-		const date = datetime[0];
-		const time = datetime[1].substring(0, datetime[1].lastIndexOf("."));
-		const path = this.context.route;
-		const msg = `${level.toUpperCase()}-${path}-${date} ${time}\n${
-			isObject
-				? JSON.stringify(params, null, 2)
-				: typeof params == "string"
-				? params
-				: params.message.startsWith("js:")
-				? this.context.vm.run(params.message.slice(3))
-				: params.message
-		}`;
-		return msg;
-	}
+  private formatMessage(params: any, level: string) {
+    const isObject = typeof params == "object";
+    const datetime = new Date().toISOString().split("T");
+    const date = datetime[0];
+    const time = datetime[1].substring(0, datetime[1].lastIndexOf("."));
+    const path = this.context.route;
+    const msg = `${level.toUpperCase()}-${path}-${date} ${time}\n${
+      isObject
+        ? JSON.stringify(params, null, 2)
+        : typeof params == "string"
+        ? params
+        : params.message.startsWith("js:")
+        ? this.context.vm.run(params.message.slice(3))
+        : params.message
+    }`;
+    return msg;
+  }
 }

@@ -1,13 +1,48 @@
-import { useBlockDataUpdater } from "../../editor/blockEditor";
+import BaseBlockSidebar from "../../editor/baseBlockSidebar";
+import { useBlocksContext } from "../../editor/blockEditor";
 import { JsEditorButton } from "../../editor/jsDialogEditor";
-import CustomHandle from "../../handle";
+import CustomHandle, { connectionExist } from "../../handle";
 import BaseBlock from "../baseBlock";
-import { Position, type NodeProps } from "@xyflow/react";
+import {
+  Position,
+  useNodeConnections,
+  type Node,
+  type NodeProps,
+} from "@xyflow/react";
 
 interface JsExecutorProps extends NodeProps {}
 
+export function JsExecutorSidebar({ block }: { block: Node }) {
+  const { updateBlockData } = useBlocksContext();
+  function onSave(value: string) {
+    updateBlockData(block.id, {
+      value: value,
+    });
+  }
+  return (
+    <BaseBlockSidebar block={block} showConnections>
+      <JsEditorButton
+        title="Edit JavaScript"
+        onSave={onSave}
+        defaultValue={block.data?.value as string}
+      />
+    </BaseBlockSidebar>
+  );
+}
+
 const JsExecutorBlock = (props: JsExecutorProps) => {
-  const { updateBlockData } = useBlockDataUpdater();
+  const { updateBlockData } = useBlocksContext();
+  const connections = useNodeConnections({
+    id: props.id,
+  });
+  const targetHandleId = `${props.id}-target`;
+  const targetConnExist = connectionExist(
+    targetHandleId,
+    "target",
+    connections
+  );
+  const srcHandleId = `${props.id}-source`;
+  const srcConnExist = connectionExist(srcHandleId, "source", connections);
 
   function onSave(value: string) {
     updateBlockData(props.id, {
@@ -18,12 +53,14 @@ const JsExecutorBlock = (props: JsExecutorProps) => {
   return (
     <BaseBlock title="JS Runner" {...props}>
       <CustomHandle
-        id={`${props.id}-target`}
+        isConnectable={!targetConnExist}
+        id={targetHandleId}
         type="target"
         position={Position.Top}
       />
       <CustomHandle
-        id={`${props.id}-source`}
+        isConnectable={!srcConnExist}
+        id={srcHandleId}
         type="source"
         position={Position.Bottom}
       />

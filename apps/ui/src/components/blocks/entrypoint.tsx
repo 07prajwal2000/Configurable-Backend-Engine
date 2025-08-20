@@ -1,6 +1,12 @@
-import { Position, useNodeConnections, type NodeProps } from "@xyflow/react";
+import {
+  Position,
+  useNodeConnections,
+  type Node,
+  type NodeProps,
+} from "@xyflow/react";
 import CustomHandle, { connectionExist } from "../handle";
 import BaseBlock from "./baseBlock";
+import BaseBlockSidebar from "../editor/baseBlockSidebar";
 
 const Entrypoint = (props: NodeProps) => {
   const connections = useNodeConnections({ id: props.id });
@@ -17,5 +23,9 @@ const Entrypoint = (props: NodeProps) => {
     </BaseBlock>
   );
 };
+
+export function EntrypointBlockSidebar({ block }: { block: Node }) {
+  return <BaseBlockSidebar block={block} showConnections />;
+}
 
 export default Entrypoint;

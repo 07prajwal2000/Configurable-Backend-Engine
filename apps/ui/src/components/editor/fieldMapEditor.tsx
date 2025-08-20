@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdAddCircleOutline, MdDelete, MdLink } from "react-icons/md";
 import { showToast } from "../toasts";
 
@@ -29,6 +29,14 @@ const FieldMapEditor = (props: FieldMapEditorProps) => {
       dest: props.defaultMap![key],
     }))
   );
+  useEffect(() => {
+    setFieldMap(
+      Object.keys(props.defaultMap || {}).map((key) => ({
+        source: key,
+        dest: props.defaultMap![key],
+      }))
+    );
+  }, [props.defaultMap]);
 
   function onSourceChanged(value: string, idx: number) {
     const newMap = [...fieldMap];

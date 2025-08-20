@@ -1,12 +1,74 @@
-import { Position, useNodeConnections, type NodeProps } from "@xyflow/react";
+import {
+  Position,
+  useNodeConnections,
+  type Node,
+  type NodeProps,
+} from "@xyflow/react";
 import BaseBlock from "../baseBlock";
 import CustomHandle, { connectionExist } from "../../handle";
 import { Grid, Stack, Typography, useTheme } from "@mui/material";
 import { z } from "zod";
 import type { forLoopBlockSchema } from "@cbe/blocks";
+import BaseBlockSidebar from "../../editor/baseBlockSidebar";
+import { useBlocksContext } from "../../editor/blockEditor";
+import InputWithJs from "../../inputWithJs";
 
 interface ForLoopProps extends NodeProps {
   data: z.infer<typeof forLoopBlockSchema>;
+}
+
+export function ForLoopBlockSidebar({ block }: { block: Node }) {
+  const { updateBlockData } = useBlocksContext();
+  const data = block.data as z.infer<typeof forLoopBlockSchema>;
+  const isValueError =
+    !isNaN(data.start as number) &&
+    !isNaN(data.end as number) &&
+    data.start > data.end;
+
+  function onStartChange(value: string) {
+    updateBlockData(block.id, {
+      ...data,
+      start: value,
+    });
+  }
+  function onEndChange(value: string) {
+    updateBlockData(block.id, {
+      ...data,
+      end: value,
+    });
+  }
+  function onStepChange(value: string) {
+    updateBlockData(block.id, {
+      ...data,
+      step: value,
+    });
+  }
+
+  return (
+    <BaseBlockSidebar showConnections block={block}>
+      <InputWithJs
+        type="number"
+        error={isValueError}
+        value={data.start.toString()}
+        onChange={onStartChange}
+        label="Start"
+      />
+      <InputWithJs
+        type="number"
+        error={isValueError}
+        value={data.end.toString()}
+        onChange={onEndChange}
+        label="End"
+      />
+      <InputWithJs
+        type="number"
+        error={isValueError}
+        value={data.step.toString()}
+        onChange={onStepChange}
+        label="Step"
+      />
+    </BaseBlockSidebar>
+  );
 }
 
 const ForLoopBlock = (props: ForLoopProps) => {
@@ -19,7 +81,7 @@ const ForLoopBlock = (props: ForLoopProps) => {
     "target",
     connections
   );
-  const srcHandleId = `${props.id}-src`;
+  const srcHandleId = `${props.id}-source`;
   const srcConnExist = connectionExist(srcHandleId, "source", connections);
   const executorHandleId = `${props.id}-executor`;
   const executorConnExist = connectionExist(
@@ -31,6 +93,7 @@ const ForLoopBlock = (props: ForLoopProps) => {
   const primaryColor = useTheme().palette.info;
 
   function JsOrValue({ value }: { value: string | number }) {
+    const isJs = typeof value == "string" && value.startsWith("js:");
     return (
       <Typography
         fontSize={6}
@@ -42,20 +105,27 @@ const ForLoopBlock = (props: ForLoopProps) => {
           borderColor: primaryColor.main,
         }}
       >
-        {typeof value === "string" ? "js" : value}
+        {isJs ? "js" : value}
       </Typography>
     );
   }
 
+  function valueOrNil(value: any) {
+    if (value !== "") {
+      return value;
+    }
+    return "-";
+  }
+
   return (
     <BaseBlock {...props} title="For Loop">
-      <Stack direction={"column"} gap={0.2}>
+      <Stack mt={0.5} direction={"column"} gap={0.2}>
         <Grid container direction={"row"} gap={1} alignItems={"center"}>
           <Grid size={3}>
             <Typography fontSize={6}>Start</Typography>
           </Grid>
           <Grid size={4}>
-            <JsOrValue value={props.data.start} />
+            <JsOrValue value={valueOrNil(props.data.start)} />
           </Grid>
         </Grid>
         <Grid container direction={"row"} gap={1} alignItems={"center"}>
@@ -63,7 +133,7 @@ const ForLoopBlock = (props: ForLoopProps) => {
             <Typography fontSize={6}>End</Typography>
           </Grid>
           <Grid size={4}>
-            <JsOrValue value={props.data.end} />
+            <JsOrValue value={valueOrNil(props.data.end)} />
           </Grid>
         </Grid>
         <Grid container direction={"row"} gap={1} alignItems={"center"}>
@@ -71,7 +141,7 @@ const ForLoopBlock = (props: ForLoopProps) => {
             <Typography fontSize={6}>Step</Typography>
           </Grid>
           <Grid size={4}>
-            <JsOrValue value={props.data.step} />
+            <JsOrValue value={valueOrNil(props.data.step)} />
           </Grid>
         </Grid>
       </Stack>

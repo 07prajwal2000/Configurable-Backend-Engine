@@ -7,6 +7,7 @@ export type BlockEditorContextType = {
   updateBlock: (id: string, value: Node) => Promise<void>;
   addNewEdge: (value: Edge) => Promise<void>;
   deleteEdge: (id: string) => Promise<void>;
+  deleteEdges: (ids: string[]) => Promise<void>;
   changes: {
     blocks: Set<string>;
     trackBlockChange: (id: string) => void;

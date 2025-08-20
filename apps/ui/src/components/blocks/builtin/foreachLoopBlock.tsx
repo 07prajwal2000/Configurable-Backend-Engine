@@ -1,19 +1,32 @@
 import type z from "zod";
 import BaseBlock from "../baseBlock";
-import { Position, useNodeConnections, type NodeProps } from "@xyflow/react";
+import {
+  Position,
+  useNodeConnections,
+  type Node,
+  type NodeProps,
+} from "@xyflow/react";
 import type { forEachLoopBlockSchema } from "@cbe/blocks";
 import CustomHandle, { connectionExist } from "../../handle";
-import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { useState } from "react";
 import ListEditor from "../../editor/listEditor";
-import { useBlockDataUpdater } from "../../editor/blockEditor";
+import { useBlocksContext } from "../../editor/blockEditor";
+import BaseBlockSidebar from "../../editor/baseBlockSidebar";
 
 interface ForeachLoopBlockProps extends NodeProps {
   data: z.infer<typeof forEachLoopBlockSchema>;
 }
 
 const ForeachLoopBlock = (props: ForeachLoopBlockProps) => {
-  const initialRender = useRef(false);
   const warnColor = useTheme().palette.warning;
   const connections = useNodeConnections({
     id: props.id,
@@ -33,20 +46,12 @@ const ForeachLoopBlock = (props: ForeachLoopBlockProps) => {
     connections
   );
   const [popupOpened, setPopupOpened] = useState(false);
-  const [useParam, setUseParam] = useState(props.data.useParam || false);
-  const { updateBlockData } = useBlockDataUpdater();
+  const { updateBlockData } = useBlocksContext();
 
-  useEffect(() => {
-    if (!initialRender.current) {
-      initialRender.current = true;
-      return;
-    }
-    onSave();
-  }, [useParam]);
   function toggleEditValues() {
     setPopupOpened(!popupOpened);
   }
-  function onSave(value?: any[]) {
+  function onSave(value?: any[], useParam?: boolean) {
     updateBlockData(props.id, {
       useParam,
       values: value || props.data.values,
@@ -80,8 +85,8 @@ const ForeachLoopBlock = (props: ForeachLoopBlockProps) => {
         <Stack direction={"row"} alignItems={"center"}>
           <Typography fontSize={6}>Use Param?</Typography>
           <input
-            checked={useParam}
-            onChange={(e) => setUseParam(e.target.checked)}
+            checked={props.data.useParam}
+            onChange={(e) => onSave(undefined, e.target.checked)}
             type="checkbox"
             style={{
               height: "10px",
@@ -90,18 +95,17 @@ const ForeachLoopBlock = (props: ForeachLoopBlockProps) => {
           />
         </Stack>
 
-        {!useParam && (
-          <Button
-            onClick={toggleEditValues}
-            variant="outlined"
-            color="info"
-            fullWidth
-            sx={{ p: "2px", my: "3px", fontSize: 5 }}
-            size="small"
-          >
-            Edit Values
-          </Button>
-        )}
+        <Button
+          onClick={toggleEditValues}
+          variant="outlined"
+          color="info"
+          fullWidth
+          sx={{ p: "2px", my: "3px", fontSize: 5 }}
+          disabled={props.data.useParam}
+          size="small"
+        >
+          Edit Values
+        </Button>
       </Stack>
       <ListEditor
         open={popupOpened}
@@ -113,5 +117,58 @@ const ForeachLoopBlock = (props: ForeachLoopBlockProps) => {
     </BaseBlock>
   );
 };
+
+export function ForeachLoopBlockSidebar({ block }: { block: Node }) {
+  const [popupOpened, setPopupOpened] = useState(false);
+  const { updateBlockData } = useBlocksContext();
+
+  function toggleEditValues() {
+    setPopupOpened(!popupOpened);
+  }
+  function onSave(value?: any[], useParam?: boolean) {
+    updateBlockData(block.id, {
+      useParam,
+      values: value || block.data.values,
+    });
+  }
+
+  return (
+    <BaseBlockSidebar block={block} showConnections>
+      <Box>
+        <FormControlLabel
+          sx={{
+            mx: 0,
+            px: 0,
+          }}
+          labelPlacement="start"
+          control={
+            <Checkbox
+              checked={block.data.useParam as boolean}
+              onChange={(e) => onSave(undefined, e.target.checked)}
+            />
+          }
+          label="Use Param?"
+        />
+      </Box>
+      <Button
+        onClick={toggleEditValues}
+        variant="outlined"
+        color="info"
+        disabled={block.data.useParam as boolean}
+        fullWidth
+        size="small"
+      >
+        Edit Values
+      </Button>
+      <ListEditor
+        open={popupOpened}
+        onClose={() => setPopupOpened(false)}
+        title="Edit List Values"
+        values={(block.data.values as string[]) || []}
+        onSave={onSave}
+      />
+    </BaseBlockSidebar>
+  );
+}
 
 export default ForeachLoopBlock;

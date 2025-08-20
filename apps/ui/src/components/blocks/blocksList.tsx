@@ -1,9 +1,10 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useMemo } from "react";
-import { blocksList } from "../editor/blockEditor";
+import type { BlockTypes } from "../../constants/blockType";
+import { blocksList } from "../../constants/blocksList";
 
 type BlocksListType = {
-  onSelect?: (blockName: string) => void;
+  onSelect?: (blockName: BlockTypes) => void;
   filter?: {
     where: "category" | "name" | "none";
     value: string;

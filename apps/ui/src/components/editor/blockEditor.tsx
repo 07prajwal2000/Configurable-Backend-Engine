@@ -1,161 +1,27 @@
-import { Paper, Stack } from "@mui/material";
+import { Box, Grid, Paper, Stack } from "@mui/material";
 import {
   addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
   Background,
   Panel,
   ReactFlow,
+  ReactFlowProvider,
+  useEdgesState,
+  useNodesState,
   type Edge,
   type Node,
-  type NodeTypes,
   type OnSelectionChangeParams,
 } from "@xyflow/react";
-import { createContext, useCallback, useContext, useState } from "react";
-import Entrypoint from "../blocks/entrypoint";
+import { createContext, useCallback, useContext } from "react";
 import { useBlockStore } from "../../store/blockStore";
-import IfBlock from "../blocks/builtin/ifBlock";
 import AddBlockMenu from "./addBlockMenu";
-import ForLoopBlock from "../blocks/builtin/forLoopBlock";
 import { showToast } from "../toasts";
-import TransformerBlock from "../blocks/builtin/transformerBlock";
 import { useBlockEditorContext } from "../../context/blockEditorContext";
-import ForeachLoopBlock from "../blocks/builtin/foreachLoopBlock";
-import SetVarBlock from "../blocks/builtin/setVarBlock";
-import JsExecutorBlock from "../blocks/builtin/jsExecutorBlock";
-import ResponseBlock from "../blocks/responseBlock";
 import { generateBlockID } from "../../services/blocks";
+import { blockTypeMap, BlockTypes } from "../../constants/blockType";
+import { blocksList } from "../../constants/blocksList";
+import EditorSidebar from "./editorSidebar";
 import Topbar from "./topbar";
-
-const nodeTypes: NodeTypes = {
-  entrypoint: Entrypoint,
-  if: IfBlock,
-  forloop: ForLoopBlock,
-  foreachloop: ForeachLoopBlock,
-  transformer: TransformerBlock,
-  setvar: SetVarBlock,
-  jsrunner: JsExecutorBlock,
-  response: ResponseBlock,
-};
-
-export const blocksList: Record<
-  string,
-  {
-    name: string;
-    title: string;
-    category: string;
-    create(x: number, y: number): Node;
-  }
-> = {
-  forloop: {
-    name: "forloop",
-    title: "For Loop",
-    category: "logic",
-    create(x: number, y: number): Node {
-      return {
-        type: "forloop",
-        data: {
-          end: 10,
-          start: 0,
-          step: 1,
-        },
-        id: "",
-        position: { x, y },
-      };
-    },
-  },
-  foreachloop: {
-    name: "foreachloop",
-    title: "For Each Loop",
-    category: "logic",
-    create(x: number, y: number): Node {
-      return {
-        data: {
-          useParam: false,
-          values: [],
-        },
-        type: "foreachloop",
-        id: "",
-        position: { x, y },
-      };
-    },
-  },
-  if: {
-    name: "if",
-    title: "If Condition",
-    category: "logic",
-    create(x: number, y: number): Node {
-      return {
-        type: "if",
-        data: {
-          conditions: [],
-        },
-        id: "",
-        position: { x, y },
-      };
-    },
-  },
-  setvar: {
-    name: "setvar",
-    title: "Set Var",
-    category: "logic",
-    create(x: number, y: number): Node {
-      return {
-        data: {
-          type: "setvar",
-          key: "",
-          value: "",
-        },
-        id: "",
-        position: { x, y },
-      };
-    },
-  },
-  transformer: {
-    name: "transformer",
-    title: "Transformer",
-    category: "misc",
-    create(x: number, y: number): Node {
-      return {
-        type: "transformer",
-        data: {
-          fieldMap: {},
-          useJs: false,
-        },
-        id: "",
-        position: { x, y },
-      };
-    },
-  },
-  jsrunner: {
-    name: "jsrunner",
-    title: "JS Runner",
-    category: "misc",
-    create(x: number, y: number): Node {
-      return {
-        type: "jsrunner",
-        data: {
-          value: "",
-        },
-        id: "",
-        position: { x, y },
-      };
-    },
-  },
-  response: {
-    name: "response",
-    title: "Response",
-    category: "misc",
-    create(x: number, y: number): Node {
-      return {
-        type: "response",
-        data: {},
-        id: "",
-        position: { x, y },
-      };
-    },
-  },
-};
+import { generateEdgeID } from "../../services/edges";
 
 type BlockEditorProps = {
   blocks: Node[];
@@ -163,30 +29,23 @@ type BlockEditorProps = {
 };
 const BlockDataUpdater = createContext<{
   updateBlockData: (id: string, data: any) => void;
+  deleteBlock: (id: string) => void;
 }>({} as any);
 
-export function useBlockDataUpdater() {
+export function useBlocksContext() {
   return useContext(BlockDataUpdater);
 }
 
 const BlockEditor = (props: BlockEditorProps) => {
   const blockEditorContext = useBlockEditorContext();
-  const [nodes, setNodes] = useState(props.blocks);
-  const [edges, setEdges] = useState(props.edges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(props.blocks);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges);
   const { selectedBlock, setSelectedBlock } = useBlockStore();
 
-  const onNodesChange = useCallback((changes: any) => {
-    setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
-  }, []);
-  const onEdgesChange = useCallback(
-    (changes: any) =>
-      setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    []
-  );
   function onNodeDragStop(node: Node) {
     blockEditorContext.updateBlock(node.id, node);
   }
-  const onConnect = useCallback((params: any) => {
+  const onConnect = useCallback(async (params: any) => {
     if (params.source === params.target) {
       showToast(
         {
@@ -197,6 +56,7 @@ const BlockEditor = (props: BlockEditorProps) => {
       );
       return;
     }
+    params.id = await generateEdgeID();
     params["animated"] = true;
     blockEditorContext.addNewEdge(params);
     setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot));
@@ -218,7 +78,10 @@ const BlockEditor = (props: BlockEditorProps) => {
     setSelectedBlock(node.id);
   }
 
-  async function addNewBlock(type: string, position: { x: number; y: number }) {
+  async function addNewBlock(
+    type: BlockTypes,
+    position: { x: number; y: number }
+  ) {
     const newBlock = blocksList[type];
     if (!newBlock) {
       showToast({
@@ -233,6 +96,24 @@ const BlockEditor = (props: BlockEditorProps) => {
     await blockEditorContext.addNewBlock(newNode);
   }
 
+  async function deleteBlock(id: string) {
+    setNodes((p) => p.filter((node) => node.id !== id));
+    setSelectedBlock("");
+    setEdges((prevEdges) => {
+      const diffEdges: string[] = [];
+      const newEdges: Edge[] = [];
+      for (let edge of prevEdges) {
+        if (edge.source == id || edge.target == id) {
+          diffEdges.push(edge.id);
+          continue;
+        }
+        newEdges.push(edge);
+      }
+      blockEditorContext.deleteEdge;
+      return newEdges;
+    });
+    await blockEditorContext.deleteBlock(id);
+  }
   async function updateBlockData(id: string, data: any) {
     setNodes((p) =>
       p.map((node) => {
@@ -257,40 +138,66 @@ const BlockEditor = (props: BlockEditorProps) => {
       <BlockDataUpdater.Provider
         value={{
           updateBlockData,
+          deleteBlock,
         }}
       >
-        <ReactFlow
-          onEdgeDoubleClick={(_, e) => onEdgeDoubleClick(e.id)}
-          nodesConnectable
-          onNodeDragStop={(_, n) => onNodeDragStop(n)}
-          nodesDraggable
-          nodes={nodes}
-          onNodeDoubleClick={(_, node) => onNodeDblClick(node)}
-          nodeTypes={nodeTypes}
-          onSelectionChange={onSelectionChange}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView
-        >
-          <Background />
-          <Panel style={{ width: "100%", top: -5 }} position="top-center">
-            <Paper
-              sx={{
-                margin: 1,
-                p: 1,
-              }}
-            >
-              <Topbar />
-            </Paper>
-          </Panel>
-          <Panel style={{ bottom: "60px" }} position="bottom-left">
-            <Stack direction={"column-reverse"} gap={2}>
-              <AddBlockMenu onAddNewBlock={addNewBlock} />
-            </Stack>
-          </Panel>
-        </ReactFlow>
+        <ReactFlowProvider>
+          <Grid
+            container
+            sx={{ height: "100vh", width: "100vw", overflow: "hidden" }}
+          >
+            <Grid size={9}>
+              <Paper
+                sx={{
+                  margin: 1,
+                  p: 1,
+                }}
+              >
+                <Topbar />
+              </Paper>
+
+              <ReactFlow
+                onEdgeDoubleClick={(_, e) => onEdgeDoubleClick(e.id)}
+                nodesConnectable
+                onNodeDragStop={(_, n) => onNodeDragStop(n)}
+                nodesDraggable
+                nodes={nodes}
+                onNodeDoubleClick={(_, node) => onNodeDblClick(node)}
+                nodeTypes={blockTypeMap}
+                onSelectionChange={onSelectionChange}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                fitView
+              >
+                <Background />
+                <Panel style={{ bottom: "60px" }} position="bottom-left">
+                  <Stack direction={"column-reverse"} gap={2}>
+                    <AddBlockMenu onAddNewBlock={addNewBlock} />
+                  </Stack>
+                </Panel>
+              </ReactFlow>
+            </Grid>
+            <Grid size={3}>
+              <Paper
+                sx={{
+                  overflowX: "hidden",
+                  overflowY: "auto",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <Box
+                  sx={{ width: "100%", maxHeight: "92vh", overflowY: "auto" }}
+                  p={2}
+                >
+                  <EditorSidebar />
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
+        </ReactFlowProvider>
       </BlockDataUpdater.Provider>
     </Paper>
   );

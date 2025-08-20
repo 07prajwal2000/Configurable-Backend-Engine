@@ -9,7 +9,7 @@ import {
   type Theme,
 } from "@mui/material";
 import CodeEditor from "./codeEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type JsDialogEditorProps = {
   open: boolean;
@@ -20,7 +20,11 @@ type JsDialogEditorProps = {
 };
 
 const JsDialogEditor = (props: JsDialogEditorProps) => {
-  const [jsCode, setjsCode] = useState(props.defaultValue || "");
+  const [jsCode, setjsCode] = useState(props.defaultValue ?? "");
+
+  useEffect(() => {
+    setjsCode(props.defaultValue ?? "");
+  }, [props.defaultValue]);
 
   function onSaveClicked() {
     props.onSave && props.onSave(jsCode);

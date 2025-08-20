@@ -6,7 +6,7 @@ import {
   useTheme,
   type BaseTextFieldProps,
 } from "@mui/material";
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 import { IoLogoJavascript } from "react-icons/io5";
 import JsDialogEditor from "./editor/jsDialogEditor";
 
@@ -34,15 +34,17 @@ const InputWithJs = (props: Props) => {
     props.onChange && props.onChange(value);
     setValue(value);
   }
-  const isJsCode = useMemo(() => value.startsWith("js:"), [value]);
+  const isJsCode = value.startsWith("js:");
   return (
     <FormControl fullWidth={props.fullWidth}>
       <InputLabel htmlFor={id}>{props.label}</InputLabel>
       <OutlinedInput
         sx={props.sx}
         value={value}
+        error={props.error}
         onChange={(e) => onChange(e.target.value)}
         label={props.label}
+        type={isJsCode ? "text" : props.type}
         id={id}
         size="small"
         endAdornment={

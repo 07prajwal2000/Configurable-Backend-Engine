@@ -17,7 +17,7 @@ import { conditionSchema } from "@cbe/blocks";
 import type z from "zod";
 import InputWithJs from "./inputWithJs";
 import { operatorSchema } from "@cbe/lib";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdAddCircleOutline, MdDelete } from "react-icons/md";
 import { JsEditorButton } from "./editor/jsDialogEditor";
 
@@ -34,6 +34,10 @@ const ConditionsBuilder = (props: ConditionsBuilderProps) => {
   const [conditions, setConditions] = useState<SavedConditionsType[]>(
     props.defaultValue || []
   );
+  useEffect(() => {
+    setConditions(props.defaultValue || []);
+  }, [props.defaultValue]);
+
   function onSaveClicked() {
     props.onSave && props.onSave(conditions);
     props.onClose && props.onClose();

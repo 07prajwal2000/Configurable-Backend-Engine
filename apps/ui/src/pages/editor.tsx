@@ -1,8 +1,6 @@
-import { Box, Grid, Paper } from "@mui/material";
 import BlockEditor from "../components/editor/blockEditor";
-import EditorSidebar from "../components/editor/editorSidebar";
 import { BlockEditorContext } from "../context/blockEditorContext";
-import type { Edge, Node } from "@xyflow/react";
+import { type Edge, type Node } from "@xyflow/react";
 import { initialBlocks } from "../store/blockStore";
 import { useChangeTrackerStore } from "../store/changeTrackerStore";
 
@@ -15,7 +13,7 @@ const Editor = () => {
   async function deleteBlock(value: string) {
     changeTrackerStore.trackBlock(value);
   }
-  async function updateBlock(id: string, value: Node) {
+  async function updateBlock(id: string, _: Node) {
     changeTrackerStore.trackBlock(id);
   }
 
@@ -24,6 +22,9 @@ const Editor = () => {
   }
   async function deleteEdge(id: string) {
     changeTrackerStore.trackEdge(id);
+  }
+  async function deleteEdges(ids: string[]) {
+    changeTrackerStore.trackEdges(ids);
   }
 
   async function saveChanges(blocks: Node[], edges: Edge[]) {
@@ -60,6 +61,7 @@ const Editor = () => {
         updateBlock,
         addNewEdge,
         deleteEdge,
+        deleteEdges,
         changes: {
           blocks: changeTrackerStore.blocks,
           edges: changeTrackerStore.edges,
@@ -70,31 +72,7 @@ const Editor = () => {
         },
       }}
     >
-      <Grid
-        container
-        sx={{ height: "100vh", width: "100vw", overflow: "hidden" }}
-      >
-        <Grid size={9}>
-          <BlockEditor blocks={initialBlocks} edges={[]} />
-        </Grid>
-        <Grid size={3}>
-          <Paper
-            sx={{
-              overflowX: "hidden",
-              overflowY: "auto",
-              width: "100%",
-              height: "100%",
-            }}
-          >
-            <Box
-              sx={{ width: "100%", maxHeight: "92vh", overflowY: "auto" }}
-              p={2}
-            >
-              <EditorSidebar />
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
+      <BlockEditor blocks={initialBlocks} edges={[]} />
     </BlockEditorContext>
   );
 };

@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 import BlockCategories from "../blocks/blockCategories";
 import BlocksList from "../blocks/blocksList";
 import { FaArrowRotateLeft } from "react-icons/fa6";
+import type { BlockTypes } from "../../constants/blockType";
 
 type AddBlockMenuProps = {
-  onAddNewBlock: (type: string, position: { x: number; y: number }) => void;
+  onAddNewBlock: (type: BlockTypes, position: { x: number; y: number }) => void;
 };
 
 const AddBlockMenu = (props: AddBlockMenuProps) => {
@@ -39,7 +40,7 @@ const AddBlockMenu = (props: AddBlockMenuProps) => {
     setSelectedCategory("");
   }
 
-  async function onBlockSelect(block: string) {
+  async function onBlockSelect(block: BlockTypes) {
     const position = getViewportCenter();
     props.onAddNewBlock(block, position);
     setAddBlockMenuOpen(false);
@@ -47,8 +48,8 @@ const AddBlockMenu = (props: AddBlockMenuProps) => {
 
   return (
     <Box>
-      <Fab onClick={toggleMenu} size="small" color="primary">
-        {addBlockMenuOpen ? <MdClose size={25} /> : <MdAdd size={25} />}
+      <Fab onClick={toggleMenu} size="medium" color="primary">
+        {addBlockMenuOpen ? <MdClose size={35} /> : <MdAdd size={35} />}
       </Fab>
       <Menu
         anchorOrigin={{
