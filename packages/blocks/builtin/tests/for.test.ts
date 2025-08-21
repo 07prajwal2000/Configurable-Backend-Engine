@@ -6,7 +6,7 @@ import { Context } from "../../baseBlock";
 import { JsVM } from "@cbe/lib/vm";
 
 describe("testing for loop block", () => {
-  it("should call the callback n times", () => {
+  it("should call the callback n times", async () => {
     const n = 10;
     const sut = new ForLoopBlock(
       {} as any,
@@ -21,7 +21,7 @@ describe("testing for loop block", () => {
     const callback = vi.fn((i) => {
       idx = i;
     });
-    sut.executeAsync(callback);
+    await sut.executeAsync(callback);
     expect(callback).toHaveBeenCalledTimes(n);
     expect(idx).toBe(n - 1);
   });
@@ -32,7 +32,7 @@ describe("testing for loop block", () => {
       {
         apiId: "",
         route: "",
-        vars,
+        vars: vars as any,
         vm: new JsVM(vars),
       },
       {
@@ -57,7 +57,7 @@ describe("testing for loop block", () => {
     const context: Context = {
       apiId: "123",
       route: "/api/user",
-      vars,
+      vars: vars as any,
       vm: new JsVM(vars),
     };
     const engine = new Engine({
