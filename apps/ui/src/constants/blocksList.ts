@@ -1,5 +1,9 @@
 import type { Node } from "@xyflow/react";
-import { BlockTypes } from "@cbe/blocks";
+import {
+  arrayOperationsBlockSchema,
+  BlockCategories,
+  BlockTypes,
+} from "@cbe/blocks";
 import type { logBlockSchema } from "@cbe/blocks/builtin/log";
 import type z from "zod";
 
@@ -15,7 +19,7 @@ export const blocksList: Record<
   forloop: {
     name: BlockTypes.forloop,
     title: "For Loop",
-    category: "logic",
+    category: BlockCategories.LOGIC,
     create(x: number, y: number): Node {
       return {
         type: BlockTypes.forloop,
@@ -32,7 +36,7 @@ export const blocksList: Record<
   foreachloop: {
     name: BlockTypes.foreachloop,
     title: "For Each Loop",
-    category: "logic",
+    category: BlockCategories.LOGIC,
     create(x: number, y: number): Node {
       return {
         data: {
@@ -48,7 +52,7 @@ export const blocksList: Record<
   if: {
     name: BlockTypes.if,
     title: "If Condition",
-    category: "logic",
+    category: BlockCategories.LOGIC,
     create(x: number, y: number): Node {
       return {
         type: BlockTypes.if,
@@ -63,7 +67,7 @@ export const blocksList: Record<
   getvar: {
     name: BlockTypes.getvar,
     title: "Get Variable",
-    category: "logic",
+    category: BlockCategories.LOGIC,
     create(x: number, y: number): Node {
       return {
         type: BlockTypes.getvar,
@@ -78,7 +82,7 @@ export const blocksList: Record<
   setvar: {
     name: BlockTypes.setvar,
     title: "Set Variable",
-    category: "logic",
+    category: BlockCategories.LOGIC,
     create(x: number, y: number): Node {
       return {
         type: BlockTypes.setvar,
@@ -94,7 +98,7 @@ export const blocksList: Record<
   transformer: {
     name: BlockTypes.transformer,
     title: "Transformer",
-    category: "misc",
+    category: BlockCategories.MISC,
     create(x: number, y: number): Node {
       return {
         type: BlockTypes.transformer,
@@ -110,7 +114,7 @@ export const blocksList: Record<
   jsrunner: {
     name: BlockTypes.jsrunner,
     title: "JS Runner",
-    category: "misc",
+    category: BlockCategories.MISC,
     create(x: number, y: number): Node {
       return {
         type: BlockTypes.jsrunner,
@@ -125,7 +129,7 @@ export const blocksList: Record<
   response: {
     name: BlockTypes.response,
     title: "Response",
-    category: "misc",
+    category: BlockCategories.MISC,
     create(x: number, y: number): Node {
       return {
         type: BlockTypes.response,
@@ -140,7 +144,7 @@ export const blocksList: Record<
   consolelog: {
     name: BlockTypes.consolelog,
     title: "Console Log",
-    category: "logging",
+    category: BlockCategories.LOGGING,
     create(x: number, y: number): Node {
       return {
         type: BlockTypes.consolelog,
@@ -148,6 +152,24 @@ export const blocksList: Record<
           level: "info",
           message: "",
         } as z.infer<typeof logBlockSchema>,
+        id: "",
+        position: { x, y },
+      };
+    },
+  },
+  [BlockTypes.arrayops]: {
+    name: BlockTypes.arrayops,
+    title: "Array Operations",
+    category: BlockCategories.MISC,
+    create(x: number, y: number): Node {
+      return {
+        type: BlockTypes.arrayops,
+        data: {
+          datasource: "",
+          operation: "push",
+          useParamAsInput: false,
+          value: "",
+        } as z.infer<typeof arrayOperationsBlockSchema>,
         id: "",
         position: { x, y },
       };

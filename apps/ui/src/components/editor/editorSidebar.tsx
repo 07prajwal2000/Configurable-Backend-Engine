@@ -12,6 +12,7 @@ import { SetVarBlockSidebar } from "../blocks/builtin/setVarBlock";
 import { TransformerBlockSidebar } from "../blocks/builtin/transformerBlock";
 import { JsExecutorSidebar } from "../blocks/builtin/jsExecutorBlock";
 import { ConsoleLogBlockSidebar } from "../blocks/builtin/logging/consoleBlock";
+import { ArrayOperationsBlockSidebar } from "../blocks/builtin/arrayOperationsBlock";
 
 const EditorSidebar = () => {
   const { selectedBlock } = useBlockStore();
@@ -39,6 +40,9 @@ const EditorSidebar = () => {
       )}
       {block.type === BlockTypes.getvar && <GetVarBlockSidebar block={block} />}
       {block.type === BlockTypes.setvar && <SetVarBlockSidebar block={block} />}
+      {block.type === BlockTypes.arrayops && (
+        <ArrayOperationsBlockSidebar block={block} />
+      )}
       {block.type === BlockTypes.consolelog && (
         <ConsoleLogBlockSidebar block={block} />
       )}

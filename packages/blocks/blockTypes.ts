@@ -9,4 +9,5 @@ export enum BlockTypes {
   consolelog = "consolelog",
   jsrunner = "jsrunner",
   response = "response",
+  arrayops = "arrayops",
 }

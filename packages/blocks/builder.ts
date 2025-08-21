@@ -18,6 +18,10 @@ import { ForLoopBlock, forLoopBlockSchema } from "./builtin/loops/for";
 import { GetVarBlock, getVarBlockSchema } from "./builtin/getVar";
 import { ResponseBlock, responseBlockSchema } from "./builtin/response";
 import { EntrypointBlock } from "./builtin/entrypoint";
+import {
+  ArrayOperationsBlock,
+  arrayOperationsBlockSchema,
+} from "./builtin/arrayOperations";
 
 export const blockDTOSchema = z.object({
   id: z.uuidv7(),
@@ -104,7 +108,7 @@ export class BlockBuilder {
   private build(id: string, newBlockMap: { [id: string]: BaseBlock }) {
     if (id in newBlockMap || !(id in this.blocksMap)) return;
     const block = this.blocksMap[id];
-    newBlockMap[id] = this.createBlock(block);
+    newBlockMap[id] = this.createBlock(block)!;
     if (!(id in this.edgesMap)) return;
     for (const edge of this.edgesMap[id]) {
       this.build(edge.to, newBlockMap);
@@ -132,10 +136,20 @@ export class BlockBuilder {
         return this.createJsRunnerBlock(block);
       case BlockTypes.response:
         return this.createResponseBlock(block);
+      case BlockTypes.arrayops:
+        return this.createArrayOperationsBlock(block);
     }
   }
   public getEntrypoint() {
     return this.entrypoint;
+  }
+  private createArrayOperationsBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? arrayOperationsBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new ArrayOperationsBlock(this.context, parsedResult.data, edge);
   }
   private createIfBlock(block: BlockDTOType) {
     const successBlock = this.findEdge(block, "success");

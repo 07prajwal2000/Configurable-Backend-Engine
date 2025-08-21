@@ -11,3 +11,4 @@ export * from "./categories";
 export * from "./builtin/getVar";
 export * from "./builder";
 export * from "./builtin/interceptor";
+export * from "./builtin/arrayOperations";

@@ -6,7 +6,7 @@ import {
   useTheme,
   type BaseTextFieldProps,
 } from "@mui/material";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { IoLogoJavascript } from "react-icons/io5";
 import JsDialogEditor from "./editor/jsDialogEditor";
 
@@ -20,6 +20,10 @@ const InputWithJs = (props: Props) => {
   const [showJsModal, setShowJsModal] = useState(false);
   const [value, setValue] = useState(props.value || "");
   const jsBtnColor = useTheme().palette.success;
+
+  useEffect(() => {
+    setValue(props.value || "");
+  }, [props.value]);
 
   function onJsBtnClicked() {
     setShowJsModal(true);

@@ -10,6 +10,7 @@ import ForLoopBlock from "../components/blocks/builtin/forLoopBlock";
 import TransformerBlock from "../components/blocks/builtin/transformerBlock";
 import SetVarBlock from "../components/blocks/builtin/setVarBlock";
 import { BlockTypes } from "@cbe/blocks";
+import ArrayOperationsBlock from "../components/blocks/builtin/arrayOperationsBlock";
 
 export const blockTypeMap: NodeTypes = {
   [BlockTypes.entrypoint]: Entrypoint,
@@ -22,4 +23,5 @@ export const blockTypeMap: NodeTypes = {
   [BlockTypes.consolelog]: ConsoleLogBlock,
   [BlockTypes.jsrunner]: JsExecutorBlock,
   [BlockTypes.response]: ResponseBlock,
+  [BlockTypes.arrayops]: ArrayOperationsBlock,
 };
