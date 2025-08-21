@@ -13,7 +13,7 @@ Each block has a Source (blue knob) and Target (green knob) Connection(s), and s
 | Source | Blue | Connects to next node and optionally passes the input |
 | Target | Green | Accepts connection and input |
 
-![alt text](./img/block.png) 
+![Block](img/block.png) 
 
 ## Built-in Blocks
 
