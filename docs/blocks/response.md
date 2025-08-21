@@ -7,7 +7,7 @@ tags:
 ---
 
 # Response/Output Block
-![alt text](/assets/blocks/response-block.png)
+![alt text](./img/response-block.png)
 
 This block is used to return the response to the router. Whatever data which is sent into the param block will be the body of that request. 
 
