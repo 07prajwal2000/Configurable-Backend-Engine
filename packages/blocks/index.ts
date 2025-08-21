@@ -8,4 +8,6 @@ export * from "./builtin/loops/foreach";
 export * from "./engine";
 export * from "./blockTypes";
 export * from "./categories";
+export * from "./builtin/getVar";
+export * from "./builder";
 export * from "./builtin/interceptor";

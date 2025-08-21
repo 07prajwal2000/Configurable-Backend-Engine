@@ -1,4 +1,4 @@
-export const httpCodes = [
+export const httpcodes = [
   {
     code: "200",
     name: "OK",

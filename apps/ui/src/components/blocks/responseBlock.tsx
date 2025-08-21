@@ -16,8 +16,8 @@ import {
   useTheme,
 } from "@mui/material";
 import BaseBlockSidebar from "../editor/baseBlockSidebar";
-import { httpCodes } from "../../constants/httpcode";
 import { useBlocksContext } from "../editor/blockEditor";
+import { httpcodes } from "@cbe/lib";
 
 interface ResponseProps extends NodeProps {}
 
@@ -87,7 +87,7 @@ export function ResponseBlockSidebar({ block }: { block: Node }) {
           sx={{ fontSize: 14 }}
           onChange={(e) => onChange(e.target.value)}
         >
-          {httpCodes.map((x) => (
+          {httpcodes.map((x) => (
             <MenuItem key={x.code} sx={{ fontSize: 12, p: 1 }} value={x.code}>
               {x.name} ({x.code})
             </MenuItem>

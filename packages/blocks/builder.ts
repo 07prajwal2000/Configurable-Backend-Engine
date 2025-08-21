@@ -9,6 +9,9 @@ import { TransformerBlock } from "./builtin/transformer";
 import { ForEachLoopBlock } from "./builtin/loops/foreach";
 import { Engine } from "./engine";
 import { ForLoopBlock } from "./builtin/loops/for";
+import { GetVarBlock } from "./builtin/getVar";
+import { ResponseBlock } from "./builtin/response";
+import { EntrypointBlock } from "./builtin/entrypoint";
 
 export const blockDTOSchema = z.object({
   id: z.uuidv7(),
@@ -45,8 +48,6 @@ type EdgesType = Record<
   ]
 >;
 
-// TARGET = INPUT = INCOMING
-// SOURCE = OUTPUT = OUTGOING - ONLY FOCUS 🙂
 export class BlockBuilder {
   private edgesMap: EdgesType = {};
   private entrypointId = "";
@@ -78,7 +79,7 @@ export class BlockBuilder {
     return this.edgesMap;
   }
 
-  public loadBlocks(blocks: BlocksListDTOSchemaType) {
+  public buildBlocksGraph(blocks: BlocksListDTOSchemaType) {
     const blocksMap: { [id: string]: BaseBlock } = {};
     for (const block of blocks) {
       switch (block.type) {
@@ -121,9 +122,6 @@ export class BlockBuilder {
     const failureBlock = this.findEdge(block, "failure");
     return new IfBlock(successBlock, failureBlock, this.context, block.data);
   }
-  createResponseBlock(block: BlockDTOType): BaseBlock {
-    throw new Error("Method not implemented.");
-  }
   createJsRunnerBlock(block: BlockDTOType): BaseBlock {
     const edge = this.findEdge(block, "target");
     return new JsRunnerBlock(this.context, block.data, edge);
@@ -132,7 +130,6 @@ export class BlockBuilder {
     const edge = this.findEdge(block, "target");
     return new ConsoleLoggerBlock(this.context, block.data, edge);
   }
-  //
   createSetVarBlock(block: BlockDTOType): BaseBlock {
     const edge = this.findEdge(block, "target");
     return new SetVarBlock(this.context, block.data, edge);
@@ -156,13 +153,18 @@ export class BlockBuilder {
     const engine = this.createEngine(executor);
     return new ForLoopBlock(this.context, block.data, engine, edge);
   }
-  // TODO:
+  createResponseBlock(block: BlockDTOType): BaseBlock {
+    return new ResponseBlock(this.context, block.data);
+  }
   createGetVarBlock(block: BlockDTOType): BaseBlock {
-    throw new Error("Method not implemented.");
+    const edge = this.findEdge(block, "target");
+    return new GetVarBlock(this.context, block.data, edge);
   }
   createEntrypointBlock(block: BlockDTOType): BaseBlock {
-    throw new Error("Method not implemented.");
+    const edge = this.findEdge(block, "target");
+    return new EntrypointBlock(this.context, block.data);
   }
+  // TODO: Optimize it
   findEdge(block: BlockDTOType, handleType: string) {
     const edge = this.edgesMap[block.id]?.find(
       (edge) => edge.handle == handleType
