@@ -4,13 +4,19 @@ import { BlockTypes } from "./blockTypes";
 import { IfBlock } from "./builtin/if";
 import { JsRunnerBlock } from "./builtin/jsRunner";
 import { ConsoleLoggerBlock } from "./builtin/log/console";
-import { SetVarBlock } from "./builtin/setVar";
-import { TransformerBlock } from "./builtin/transformer";
-import { ForEachLoopBlock } from "./builtin/loops/foreach";
+import { SetVarBlock, setVarSchema } from "./builtin/setVar";
+import {
+  TransformerBlock,
+  transformerBlockSchema,
+} from "./builtin/transformer";
+import {
+  ForEachLoopBlock,
+  forEachLoopBlockSchema,
+} from "./builtin/loops/foreach";
 import { Engine } from "./engine";
-import { ForLoopBlock } from "./builtin/loops/for";
-import { GetVarBlock } from "./builtin/getVar";
-import { ResponseBlock } from "./builtin/response";
+import { ForLoopBlock, forLoopBlockSchema } from "./builtin/loops/for";
+import { GetVarBlock, getVarBlockSchema } from "./builtin/getVar";
+import { ResponseBlock, responseBlockSchema } from "./builtin/response";
 import { EntrypointBlock } from "./builtin/entrypoint";
 
 export const blockDTOSchema = z.object({
@@ -28,10 +34,10 @@ export const blocksListDTOSchema = z.array(blockDTOSchema);
 export const edgeDTOSchema = z.array(
   z.object({
     id: z.uuidv7(),
-    source: z.string(),
-    target: z.string(),
-    sourceHandle: z.string(),
-    targetHandle: z.string(),
+    from: z.string(),
+    to: z.string(),
+    fromHandle: z.string(),
+    toHandle: z.string(),
   })
 );
 export type BlockDTOType = z.infer<typeof blockDTOSchema>;
@@ -42,133 +48,185 @@ type EdgesType = Record<
   string,
   [
     {
-      target: string;
+      to: string;
       handle: string;
     }
   ]
 >;
 
+export interface EngineFactory {
+  create(builder: BlockBuilder, executor: string): Engine;
+}
+
 export class BlockBuilder {
   private edgesMap: EdgesType = {};
-  private entrypointId = "";
-  constructor(private readonly context: Context) {}
+  private blocksMap: { [id: string]: BlockDTOType } = {};
+  private entrypoint = "";
+  constructor(
+    private readonly context: Context,
+    private readonly engineFactory: EngineFactory,
+    private readonly shouldValidateBlockData?: boolean
+  ) {}
 
   // building graph's edges
   public loadEdges(edges: EdgeDTOSchemaType) {
     const edgesMap: EdgesType = {};
     for (const edge of edges) {
-      const handle = edge.targetHandle.slice(
-        edge.targetHandle.lastIndexOf("-")
-      );
-      if (handle == BlockTypes.entrypoint) {
-        this.entrypointId = edge.target;
-      }
+      const handle = edge.toHandle;
       const outgoing = {
-        target: edge.target,
+        to: edge.to,
         handle,
       };
-      if (edge.target in edgesMap) {
-        edgesMap[edge.target].push(outgoing);
+      if (edge.from in edgesMap) {
+        edgesMap[edge.from].push(outgoing);
       } else {
-        edgesMap[edge.target] = [outgoing];
+        edgesMap[edge.from] = [outgoing];
       }
     }
     this.edgesMap = edgesMap;
   }
+  public loadBlocks(blocks: BlocksListDTOSchemaType) {
+    for (const block of blocks) {
+      this.blocksMap[block.id] = block;
+      if (block.type == BlockTypes.entrypoint) {
+        this.entrypoint = block.id;
+      }
+    }
+  }
   public getEdges() {
     return this.edgesMap;
   }
-
-  public buildBlocksGraph(blocks: BlocksListDTOSchemaType) {
-    const blocksMap: { [id: string]: BaseBlock } = {};
-    for (const block of blocks) {
-      switch (block.type) {
-        case BlockTypes.if:
-          blocksMap[block.id] = this.createIfBlock(block);
-          break;
-        case BlockTypes.entrypoint:
-          blocksMap[block.id] = this.createEntrypointBlock(block);
-          break;
-        case BlockTypes.forloop:
-          blocksMap[block.id] = this.createForLoopBlock(block);
-          break;
-        case BlockTypes.foreachloop:
-          blocksMap[block.id] = this.createForEachLoopBlock(block);
-          break;
-        case BlockTypes.transformer:
-          blocksMap[block.id] = this.createTransformerBlock(block);
-          break;
-        case BlockTypes.setvar:
-          blocksMap[block.id] = this.createSetVarBlock(block);
-          break;
-        case BlockTypes.getvar:
-          blocksMap[block.id] = this.createGetVarBlock(block);
-          break;
-        case BlockTypes.consolelog:
-          blocksMap[block.id] = this.createConsoleLogBlock(block);
-          break;
-        case BlockTypes.jsrunner:
-          blocksMap[block.id] = this.createJsRunnerBlock(block);
-          break;
-        case BlockTypes.response:
-          blocksMap[block.id] = this.createResponseBlock(block);
-          break;
-      }
-    }
-    return blocksMap;
+  public buildGraph(entrypoint: string) {
+    const newBlocksMap: { [id: string]: BaseBlock } = {};
+    this.build(entrypoint, newBlocksMap);
+    return newBlocksMap;
   }
-  createIfBlock(block: BlockDTOType) {
+  private build(id: string, newBlockMap: { [id: string]: BaseBlock }) {
+    if (id in newBlockMap || !(id in this.blocksMap)) return;
+    const block = this.blocksMap[id];
+    newBlockMap[id] = this.createBlock(block);
+    if (!(id in this.edgesMap)) return;
+    for (const edge of this.edgesMap[id]) {
+      this.build(edge.to, newBlockMap);
+    }
+  }
+  private createBlock(block: BlockDTOType) {
+    switch (block.type) {
+      case BlockTypes.entrypoint:
+        return this.createEntrypointBlock(block);
+      case BlockTypes.if:
+        return this.createIfBlock(block);
+      case BlockTypes.forloop:
+        return this.createForLoopBlock(block);
+      case BlockTypes.foreachloop:
+        return this.createForEachLoopBlock(block);
+      case BlockTypes.transformer:
+        return this.createTransformerBlock(block);
+      case BlockTypes.setvar:
+        return this.createSetVarBlock(block);
+      case BlockTypes.getvar:
+        return this.createGetVarBlock(block);
+      case BlockTypes.consolelog:
+        return this.createConsoleLogBlock(block);
+      case BlockTypes.jsrunner:
+        return this.createJsRunnerBlock(block);
+      case BlockTypes.response:
+        return this.createResponseBlock(block);
+    }
+  }
+  public getEntrypoint() {
+    return this.entrypoint;
+  }
+  private createIfBlock(block: BlockDTOType) {
     const successBlock = this.findEdge(block, "success");
     const failureBlock = this.findEdge(block, "failure");
     return new IfBlock(successBlock, failureBlock, this.context, block.data);
   }
-  createJsRunnerBlock(block: BlockDTOType): BaseBlock {
-    const edge = this.findEdge(block, "target");
-    return new JsRunnerBlock(this.context, block.data, edge);
+  private createJsRunnerBlock(block: BlockDTOType): BaseBlock {
+    const edge = this.findEdge(block, "source");
+    return new JsRunnerBlock(this.context, block.data.value, edge);
   }
-  createConsoleLogBlock(block: BlockDTOType): BaseBlock {
-    const edge = this.findEdge(block, "target");
+  private createConsoleLogBlock(block: BlockDTOType): BaseBlock {
+    const edge = this.findEdge(block, "source");
     return new ConsoleLoggerBlock(this.context, block.data, edge);
   }
-  createSetVarBlock(block: BlockDTOType): BaseBlock {
-    const edge = this.findEdge(block, "target");
-    return new SetVarBlock(this.context, block.data, edge);
+  private createSetVarBlock(block: BlockDTOType): BaseBlock {
+    const edge = this.findEdge(block, "source");
+    const parsedResult = this.shouldValidateBlockData
+      ? setVarSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid set var block data");
+    return new SetVarBlock(this.context, parsedResult.data, edge);
   }
-  createTransformerBlock(block: BlockDTOType): BaseBlock {
-    const edge = this.findEdge(block, "target");
-    return new TransformerBlock(this.context, block.data, edge);
+  private createTransformerBlock(block: BlockDTOType): BaseBlock {
+    const edge = this.findEdge(block, "source");
+    const parsedResult = this.shouldValidateBlockData
+      ? transformerBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+
+    return new TransformerBlock(this.context, parsedResult.data, edge);
   }
-  createForEachLoopBlock(block: BlockDTOType): BaseBlock {
-    const edge = this.findEdge(block, "target");
+  private createForEachLoopBlock(block: BlockDTOType): BaseBlock {
+    const edge = this.findEdge(block, "source");
     const executor = this.findEdge(block, "executor");
-    const engine = this.createEngine(executor);
-    return new ForEachLoopBlock(this.context, block.data, engine, edge);
+    const engine = this.engineFactory.create(this, executor);
+    const parsedResult = this.shouldValidateBlockData
+      ? forEachLoopBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success)
+      throw new Error("Invalid for each loop block data");
+
+    return new ForEachLoopBlock(
+      this.context,
+      {
+        ...parsedResult.data,
+        block: executor,
+      },
+      engine,
+      edge
+    );
   }
-  createEngine(edge: string) {
-    return new Engine({});
-  }
-  createForLoopBlock(block: BlockDTOType): BaseBlock {
-    const edge = this.findEdge(block, "target");
+  private createForLoopBlock(block: BlockDTOType): BaseBlock {
+    const edge = this.findEdge(block, "source");
     const executor = this.findEdge(block, "executor");
-    const engine = this.createEngine(executor);
-    return new ForLoopBlock(this.context, block.data, engine, edge);
+    const engine = this.engineFactory.create(this, executor);
+    const parsedResult = this.shouldValidateBlockData
+      ? forLoopBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid for loop block data");
+    return new ForLoopBlock(
+      this.context,
+      {
+        ...parsedResult.data,
+        block: executor,
+      },
+      engine,
+      edge
+    );
   }
-  createResponseBlock(block: BlockDTOType): BaseBlock {
-    return new ResponseBlock(this.context, block.data);
+  private createResponseBlock(block: BlockDTOType): BaseBlock {
+    const parsedResult = this.shouldValidateBlockData
+      ? responseBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    return new ResponseBlock(this.context, parsedResult.data);
   }
-  createGetVarBlock(block: BlockDTOType): BaseBlock {
-    const edge = this.findEdge(block, "target");
-    return new GetVarBlock(this.context, block.data, edge);
+  private createGetVarBlock(block: BlockDTOType): BaseBlock {
+    const edge = this.findEdge(block, "source");
+    const parsedResult = this.shouldValidateBlockData
+      ? getVarBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid get var block data");
+    return new GetVarBlock(this.context, parsedResult.data, edge);
   }
-  createEntrypointBlock(block: BlockDTOType): BaseBlock {
-    const edge = this.findEdge(block, "target");
-    return new EntrypointBlock(this.context, block.data);
+  private createEntrypointBlock(block: BlockDTOType): BaseBlock {
+    const edge = this.findEdge(block, "source");
+    return new EntrypointBlock(this.context, block.data, edge);
   }
-  // TODO: Optimize it
-  findEdge(block: BlockDTOType, handleType: string) {
+  private findEdge(block: BlockDTOType, handleType: string) {
     const edge = this.edgesMap[block.id]?.find(
       (edge) => edge.handle == handleType
     );
-    return edge?.target || "";
+    return edge?.to || "";
   }
 }

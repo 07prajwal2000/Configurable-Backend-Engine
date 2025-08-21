@@ -12,3 +12,5 @@ This is the default and exists only one in any request. It is the starting point
 |------|-------|
 | Source | The body of the request will be passed to the next block |
 
+!!! note
+    All the request's metadata such as query params, route params, headers, and cookies will be available as a global variable. See request's **[context](../concepts/context.md)** for more details.

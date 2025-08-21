@@ -12,14 +12,7 @@ export class ConsoleLoggerBlock extends BaseBlock {
   }
 
   override async executeAsync(params: any): Promise<BlockOutput> {
-    const { success, data } = logBlockSchema.safeParse(this.input);
-    if (!success) {
-      return {
-        error: "Log block requires 'message' and 'level' in input",
-        continueIfFail: false,
-        successful: false,
-      };
-    }
+    const data = this.input as z.infer<typeof logBlockSchema>;
     const level = data.level;
     const msgOrParams = data.message?.trim() != "" ? data.message : params;
     const msg = this.formatMessage(msgOrParams, level);
@@ -48,10 +41,10 @@ export class ConsoleLoggerBlock extends BaseBlock {
       isObject
         ? JSON.stringify(params, null, 2)
         : typeof params == "string"
-        ? params
-        : params.message.startsWith("js:")
-        ? this.context.vm.run(params.message.slice(3))
-        : params.message
+        ? params.startsWith("js:")
+          ? this.context.vm.run(params.slice(3))
+          : params
+        : params
     }`;
     return msg;
   }

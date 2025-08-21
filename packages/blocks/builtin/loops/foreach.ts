@@ -34,7 +34,8 @@ export class ForEachLoopBlock extends ForLoopBlock {
         step: 1,
         block: input.block,
       },
-      subEngine
+      subEngine,
+      next
     );
     this.foreachInput = foreachInput;
     this.values = input.values;

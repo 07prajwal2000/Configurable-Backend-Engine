@@ -43,13 +43,15 @@ const Editor = () => {
       .filter((x) => changeTrackerStore.edges.has(x.id))
       .map((x) => ({
         id: x.id,
-        source: x.source,
-        target: x.target,
-        sourceHandle: x.sourceHandle,
-        targetHandle: x.targetHandle,
+        from: x.source,
+        to: x.target,
+        toHandle: x.sourceHandle!.slice(x.sourceHandle!.lastIndexOf("-") + 1),
+        fromHandle: x.targetHandle!.slice(x.targetHandle!.lastIndexOf("-") + 1),
       }));
-    console.log("Changed Blocks", changedBlocks);
-    console.log("Changed Edges", changedEdges);
+    console.log("Changed", {
+      blocks: changedBlocks,
+      edges: changedEdges,
+    });
     changeTrackerStore.reset();
   }
 

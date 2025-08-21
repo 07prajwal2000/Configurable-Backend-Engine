@@ -10,7 +10,7 @@ import BaseBlockSidebar from "../editor/baseBlockSidebar";
 
 const Entrypoint = (props: NodeProps) => {
   const connections = useNodeConnections({ id: props.id });
-  const handleId = `${props.id}-entrypoint`;
+  const handleId = `${props.id}-source`;
   const connExist = connectionExist(handleId, "source", connections);
   return (
     <BaseBlock alignCenter title="Entrypoint" {...props}>

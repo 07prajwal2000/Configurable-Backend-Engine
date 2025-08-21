@@ -7,7 +7,7 @@ export const responseBlockSchema = z.object({
 });
 
 export interface ResponseBlockHTTPResult extends BlockOutput {
-  data?: {
+  output?: {
     httpCode: string;
     headers: Record<string, string>;
     body: unknown;
@@ -34,7 +34,7 @@ export class ResponseBlock extends BaseBlock {
     return {
       continueIfFail: true,
       successful: true,
-      data: {
+      output: {
         httpCode: data.httpCode,
         headers: headers,
         body: params,

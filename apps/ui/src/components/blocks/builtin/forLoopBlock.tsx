@@ -155,14 +155,14 @@ const ForLoopBlock = (props: ForLoopProps) => {
         bgColor={warnColor.light}
         position={Position.Right}
         type="source"
-        id={srcHandleId}
-        isConnectable={!srcConnExist}
+        id={executorHandleId}
+        isConnectable={!executorConnExist}
       />
       <CustomHandle
         position={Position.Bottom}
         type="source"
-        id={executorHandleId}
-        isConnectable={!executorConnExist}
+        id={srcHandleId}
+        isConnectable={!srcConnExist}
       />
     </BaseBlock>
   );

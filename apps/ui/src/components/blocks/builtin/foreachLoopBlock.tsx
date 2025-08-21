@@ -70,12 +70,12 @@ const ForeachLoopBlock = (props: ForeachLoopBlockProps) => {
         <CustomHandle
           position={Position.Bottom}
           type="source"
-          id={executorHandleId}
-          isConnectable={!executorConnExist}
+          id={srcHandleId}
+          isConnectable={!srcConnExist}
         />
         <CustomHandle
-          isConnectable={!srcConnExist}
-          id={srcHandleId}
+          isConnectable={!executorConnExist}
+          id={executorHandleId}
           position={Position.Right}
           bgColor={warnColor.light}
           type="source"

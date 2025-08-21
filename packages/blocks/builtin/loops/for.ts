@@ -53,9 +53,10 @@ export class ForLoopBlock extends BaseBlock {
           )
         : input.end;
     for (let i = start; i < end; i += step) {
-      if (input.block && useEngine)
+      if (input.block && useEngine) {
         await this.childEngine.start(input.block, i);
-      callback && callback(i);
+      }
+      callback && (await callback(i));
     }
     return {
       continueIfFail: true,

@@ -19,11 +19,8 @@ This block is used to return the response to the router. Whatever data which is 
 In addition to the body, it is also possible to set any headers to the request. To set any headers to the request, it is required to set the `responseHttpHeaders` variable in the context. Below is an example to set a header, but this is being run inside a [JS Runner](./built-in/jsrunner.md) block.
 
 ```javascript
-vars.responseHttpHeaders = {
-  "Content-Type": "application/json",
-};
+responseHttpHeaders["Content-Type"] = "application/json";
 ```
 
 !!! note
-    It is required to initialize the `responseHttpHeaders` in vars
-
+    It is not required to initialize the `responseHttpHeaders` in vars, doing so will override the existing headers.

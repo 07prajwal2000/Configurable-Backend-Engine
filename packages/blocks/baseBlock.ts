@@ -4,7 +4,16 @@ export interface Context {
   vm: JsVM;
   route: string;
   apiId: string;
-  vars: Record<string, any>;
+  vars: ContextVarsType & Record<string, any>;
+}
+
+export interface ContextVarsType {
+  httpRequestQuery: Record<string, string>;
+  httpRequestMethod: Record<string, string>;
+  httpRequestCookies: Record<string, string>;
+  httpRequestHeaders: Record<string, string>;
+  httpRequestRoute: Record<string, string>;
+  responseHttpHeaders: Record<string, string>;
 }
 
 export interface BlockOutput {
