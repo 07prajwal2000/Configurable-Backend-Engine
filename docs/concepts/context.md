@@ -14,6 +14,7 @@ The request context has access to the following:
 
 ## Accessing the Context
 All variables in the example such as `httpRequestQuery` is a global variable and can be accessed from [Js Runner](../blocks/built-in/jsrunner.md) block.
+
 - Accessing the query parameter in Js Runner Block
 ```javascript
   const { search, color } = httpRequestQuery;

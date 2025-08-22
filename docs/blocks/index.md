@@ -29,11 +29,16 @@ There are several built-in blocks available. (Adding more every day)
 -   **Loops**:
     -   **[For](built-in/for.md)**: Loop block which loops from start to end with step (incrementer).
     -   **[ForEach](built-in/foreach.md)**: Inherited by for loop, which accepts array as input or from params and loops through it.
+-   **HTTP**
+    -   **[Get Header](built-in/http/httpGetHeader.md)**: Get header from the request.
+    -   **[Set Header](built-in/http/httpSetHeader.md)**: Set header to the response.
+    -   **[Get Cookie](built-in/http/httpGetCookie.md)**: Get cookie from the request.
+    -   **[Set Cookie](built-in/http/httpSetCookie.md)**: Set cookie to the response.
+    -   **[Get Param](built-in/http/httpGetParam.md)**: Get route/query param from the request.
+    -   **[Get Body](built-in/http/httpGetRequestBody.md)**: Get body from the request.
 -   **[JsRunner](built-in/jsrunner.md)**: Runs Javascript code in an isolated sandbox vm (uses '_node:vm_' package) with the current request's context.
 -   **[Transformer](built-in/transformer.md)**: Transforms the js object to a new object with specified field map.
 -   **[SetVar](built-in/setvar.md)**: Block which sets variable to the current request's context. It is accessible throughout the request.
 -   **[Response](./response.md)**: Block which returns the response to the http router.
 -   **Logging**
     -   **[Console](built-in/console.md)**: Logs output to CLI console. (not much useful for a server-based, but useful for development purposes).
--   **Debugging**
-    -   **[Interceptor](built-in/interceptor.md)**: Used for development purposes to intercept the execution chain.
