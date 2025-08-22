@@ -1,19 +1,19 @@
 {
   "blocks": [
     {
-      "id": "0198cdb3-2bdb-776d-9cdb-adfa91682e83",
+      "id": "0198d2a7-fc79-7f5d-bffc-06e700834303",
       "position": {
-        "x": 151,
-        "y": -245
+        "x": -35,
+        "y": -216.32187628746033
       },
       "data": {},
       "type": "entrypoint"
     },
     {
-      "id": "0198cdb3-2bdc-7e5d-b2ae-f7ffcf11ccaf",
+      "id": "0198d2a7-fc79-7f5d-bffc-06e8467022d2",
       "position": {
-        "x": -5.5,
-        "y": 10.5
+        "x": 1,
+        "y": 44.5
       },
       "data": {
         "httpCode": "200"
@@ -21,173 +21,87 @@
       "type": "response"
     },
     {
-      "id": "0198cdb3-7c47-740c-8612-013d6f496d55",
+      "id": "0198d2a8-1635-732f-ab55-0acf4ca1b340",
       "position": {
-        "x": 148.55,
-        "y": -167.17500114440918
+        "x": -0.6999999999999886,
+        "y": -173.17500114440918
       },
       "data": {
-        "values": ["apple", "grapes", "orange", "mango", "banana"]
-      },
-      "type": "foreachloop"
-    },
-    {
-      "id": "0198cdb4-00df-7e69-a042-35a17cffb5fe",
-      "position": {
-        "x": 138.55,
-        "y": -87.67500114440918
-      },
-      "data": {
-        "conditions": [
-          {
-            "chain": "and",
-            "lhs": "js:fruit",
-            "operator": "neq",
-            "rhs": "js:null"
-          }
-        ]
-      },
-      "type": "if"
-    },
-    {
-      "id": "0198cdb4-7931-78db-8c9c-3110d374f61f",
-      "position": {
-        "x": 23.55000000000001,
-        "y": -42.67500114440918
-      },
-      "data": {
-        "level": "info",
-        "message": "fruit is not null"
-      },
-      "type": "consolelog"
-    },
-    {
-      "id": "0198cdb4-db86-7985-855b-3313d7c64a04",
-      "position": {
-        "x": 332.55,
-        "y": -155.67500114440918
-      },
-      "data": {
-        "key": "fruit",
-        "value": "js:input"
+        "key": "fruits",
+        "value": "js:[]"
       },
       "type": "setvar"
     },
     {
-      "id": "0198cdb5-7ae3-78ab-9ce8-0c8d9db01d59",
+      "id": "0198d2a8-5e64-768f-9009-7eff356fb52e",
       "position": {
-        "x": 329.55,
-        "y": -69.17500114440918
+        "x": 0.8000000000000114,
+        "y": -100.17500114440918
       },
       "data": {
-        "level": "info",
-        "message": "js:`fruit is ${fruit}`"
+        "values": ["Apple", "Orange", "Grapes", "Banana"]
       },
-      "type": "consolelog"
+      "type": "foreachloop"
     },
     {
-      "id": "0198cdb7-9e3a-7d8c-b603-9cdfb8ee8a3e",
+      "id": "0198d2a8-c5f7-7a3b-afeb-07a78f8f6281",
       "position": {
-        "x": 193.05,
-        "y": -14.67500114440918
+        "x": 163.8,
+        "y": -67.17500114440918
       },
       "data": {
-        "conditions": [
-          {
-            "chain": "and",
-            "lhs": "a",
-            "operator": "eq",
-            "rhs": "a"
-          }
-        ]
+        "datasource": "fruits",
+        "operation": "push",
+        "useParamAsInput": true,
+        "value": ""
       },
-      "type": "if"
+      "type": "arrayops"
     },
     {
-      "id": "0198cdb8-0ed8-7020-af48-90d3e0d9d188",
+      "id": "0198d2a9-4927-724f-898a-f9f259d81d1d",
       "position": {
-        "x": 146.05,
-        "y": 106.32499885559082
+        "x": -4.199999999999989,
+        "y": -15.17500114440918
       },
       "data": {
-        "httpCode": "200"
+        "key": "fruits"
       },
-      "type": "response"
-    },
-    {
-      "id": "0198cdb8-4df9-7337-b195-f6a2cf3e1d50",
-      "position": {
-        "x": 155.05,
-        "y": 45.82499885559082
-      },
-      "data": {
-        "level": "info",
-        "message": "fruit is null"
-      },
-      "type": "consolelog"
+      "type": "getvar"
     }
   ],
   "edges": [
     {
-      "id": "0198cdb3-8e4d-7c81-8a13-708b2ccecd2b",
-      "from": "0198cdb3-2bdb-776d-9cdb-adfa91682e83",
-      "to": "0198cdb3-7c47-740c-8612-013d6f496d55",
+      "id": "0198d2a8-20a4-7788-b06d-bd356d5eeb67",
+      "from": "0198d2a7-fc79-7f5d-bffc-06e700834303",
+      "to": "0198d2a8-1635-732f-ab55-0acf4ca1b340",
       "toHandle": "source",
       "fromHandle": "target"
     },
     {
-      "id": "0198cdb4-21b6-7734-86d2-6e164a9ffef3",
-      "from": "0198cdb3-7c47-740c-8612-013d6f496d55",
-      "to": "0198cdb4-00df-7e69-a042-35a17cffb5fe",
+      "id": "0198d2a8-68c4-7817-b995-6b19d1057cc4",
+      "from": "0198d2a8-1635-732f-ab55-0acf4ca1b340",
+      "to": "0198d2a8-5e64-768f-9009-7eff356fb52e",
       "toHandle": "source",
       "fromHandle": "target"
     },
     {
-      "id": "0198cdb4-8296-72a5-abd2-e73d2b3639e2",
-      "from": "0198cdb4-00df-7e69-a042-35a17cffb5fe",
-      "to": "0198cdb4-7931-78db-8c9c-3110d374f61f",
-      "toHandle": "success",
-      "fromHandle": "target"
-    },
-    {
-      "id": "0198cdb4-8b72-7709-a8d7-ca9ecef86cf9",
-      "from": "0198cdb4-7931-78db-8c9c-3110d374f61f",
-      "to": "0198cdb3-2bdc-7e5d-b2ae-f7ffcf11ccaf",
-      "toHandle": "source",
-      "fromHandle": "target"
-    },
-    {
-      "id": "0198cdb4-eb80-7c7d-ae4b-f9e1bcba2127",
-      "from": "0198cdb3-7c47-740c-8612-013d6f496d55",
-      "to": "0198cdb4-db86-7985-855b-3313d7c64a04",
+      "id": "0198d2a8-d1c6-789d-af04-ffef4f13d8ff",
+      "from": "0198d2a8-5e64-768f-9009-7eff356fb52e",
+      "to": "0198d2a8-c5f7-7a3b-afeb-07a78f8f6281",
       "toHandle": "executor",
       "fromHandle": "target"
     },
     {
-      "id": "0198cdb5-84d9-7266-a1cd-a631dbf7c665",
-      "from": "0198cdb4-db86-7985-855b-3313d7c64a04",
-      "to": "0198cdb5-7ae3-78ab-9ce8-0c8d9db01d59",
+      "id": "0198d2a9-57bc-78de-a43d-44ade6d02ebb",
+      "from": "0198d2a8-5e64-768f-9009-7eff356fb52e",
+      "to": "0198d2a9-4927-724f-898a-f9f259d81d1d",
       "toHandle": "source",
       "fromHandle": "target"
     },
     {
-      "id": "0198cdb7-a6c0-75e3-a40d-e14cf234b004",
-      "from": "0198cdb4-00df-7e69-a042-35a17cffb5fe",
-      "to": "0198cdb7-9e3a-7d8c-b603-9cdfb8ee8a3e",
-      "toHandle": "failure",
-      "fromHandle": "target"
-    },
-    {
-      "id": "0198cdb8-5862-7859-a50f-70f02f8bb677",
-      "from": "0198cdb7-9e3a-7d8c-b603-9cdfb8ee8a3e",
-      "to": "0198cdb8-4df9-7337-b195-f6a2cf3e1d50",
-      "toHandle": "success",
-      "fromHandle": "target"
-    },
-    {
-      "id": "0198cdb8-85e0-7f20-b4e1-a81c4a95c002",
-      "from": "0198cdb8-4df9-7337-b195-f6a2cf3e1d50",
-      "to": "0198cdb8-0ed8-7020-af48-90d3e0d9d188",
+      "id": "0198d2a9-5c64-7fd7-8fba-c61e0c9abd1b",
+      "from": "0198d2a9-4927-724f-898a-f9f259d81d1d",
+      "to": "0198d2a7-fc79-7f5d-bffc-06e8467022d2",
       "toHandle": "source",
       "fromHandle": "target"
     }

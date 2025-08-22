@@ -21,12 +21,14 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
 import { useBlocksContext } from "../../editor/blockEditor";
 import InputWithJs from "../../inputWithJs";
+import HelpText from "../../interactions/helpText";
 
 interface ArrayOperationsBlockProps extends NodeProps {}
 
@@ -89,12 +91,23 @@ export function ArrayOperationsBlockSidebar({ block }: { block: Node }) {
         )}
       </FormGroup>
       {data.operation != "pop" && data.operation != "shift" && (
-        <TextField
-          label="Datasource"
-          size="small"
-          value={data.datasource}
-          onChange={(e) => onDatasourceChange(e.target.value)}
-        />
+        <Stack
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap={1}
+        >
+          <TextField
+            label="Datasource"
+            size="small"
+            fullWidth
+            value={data.datasource}
+            onChange={(e) => onDatasourceChange(e.target.value)}
+          />
+          <HelpText>
+            The variable to which this operation will be applied.
+          </HelpText>
+        </Stack>
       )}
       {!data.useParamAsInput &&
         data.operation != "pop" &&
@@ -175,7 +188,7 @@ const ArrayOperationsBlock = (props: ArrayOperationsBlockProps) => {
         {data.operation != "pop" && data.operation != "shift" && (
           <>
             <Grid size={6}>
-              <Typography fontSize={6}>Use Param ass Input?</Typography>
+              <Typography fontSize={6}>Use Param as Input?</Typography>
             </Grid>
             <Grid size={4}>
               <input

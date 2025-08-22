@@ -12,7 +12,7 @@ import JsDialogEditor from "./editor/jsDialogEditor";
 
 interface Props extends BaseTextFieldProps {
   onChange?: (value: string) => void;
-  value?: string;
+  value?: string | number;
 }
 
 const InputWithJs = (props: Props) => {
@@ -38,7 +38,8 @@ const InputWithJs = (props: Props) => {
     props.onChange && props.onChange(value);
     setValue(value);
   }
-  const isJsCode = value.startsWith("js:");
+  const isJsCode = typeof value === "string" && value.startsWith("js:");
+
   return (
     <FormControl fullWidth={props.fullWidth}>
       <InputLabel htmlFor={id}>{props.label}</InputLabel>

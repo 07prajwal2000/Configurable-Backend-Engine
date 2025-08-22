@@ -1,27 +1,5 @@
 import { Button, Stack } from "@mui/material";
-
-const categories = [
-  {
-    name: "logic",
-    title: "Logic",
-  },
-  {
-    name: "debug",
-    title: "Debug",
-  },
-  {
-    name: "database",
-    title: "Database",
-  },
-  {
-    name: "logging",
-    title: "Logging",
-  },
-  {
-    name: "misc",
-    title: "Misc",
-  },
-];
+import { BlockCategories as CategoriesEnum } from "@cbe/blocks";
 
 type BlockCategoriesType = {
   onClick?: (value: string) => void;
@@ -35,13 +13,13 @@ const BlockCategories = (props: BlockCategoriesType) => {
       maxHeight={"250px"}
       sx={{ overflowY: "auto" }}
     >
-      {categories.map((category) => (
+      {Object.values(CategoriesEnum).map((category) => (
         <Button
-          onClick={() => props.onClick && props.onClick(category.name)}
+          onClick={() => props.onClick && props.onClick(category)}
           variant="text"
-          key={category.name}
+          key={category}
         >
-          {category.title}
+          {category.toUpperCase()}
         </Button>
       ))}
     </Stack>

@@ -1,6 +1,12 @@
 export enum BlockTypes {
   entrypoint = "entrypoint",
   if = "if",
+  httpGetHeader = "httpgetheader",
+  httpSetHeader = "httpsetheader",
+  httpGetParam = "httpgetparam",
+  httpGetCookie = "httpgetcookie",
+  httpSetCookie = "httpsetcookie",
+  httpGetRequestBody = "httpgetrequestbody",
   forloop = "forloop",
   foreachloop = "foreachloop",
   transformer = "transformer",

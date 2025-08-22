@@ -13,6 +13,12 @@ import { TransformerBlockSidebar } from "../blocks/builtin/transformerBlock";
 import { JsExecutorSidebar } from "../blocks/builtin/jsExecutorBlock";
 import { ConsoleLogBlockSidebar } from "../blocks/builtin/logging/consoleBlock";
 import { ArrayOperationsBlockSidebar } from "../blocks/builtin/arrayOperationsBlock";
+import { GetHttpRequestHeaderBlockSidebar } from "../blocks/builtin/http/getHttpRequestHeaderBlock";
+import { SetHttpRequestHeaderBlockSidebar } from "../blocks/builtin/http/setHttpHeaderBlock";
+import { GetHttpCookieBlockSidebar } from "../blocks/builtin/http/getHttpCookieBlock";
+import { SetHttpCookieBlockSidebar } from "../blocks/builtin/http/setHttpCookieBlock";
+import { GetHttpParamBlockSidebar } from "../blocks/builtin/http/getHttpParamBlock";
+import { GetHttpRequestBodySidebar } from "../blocks/builtin/http/getHttpRequestBody";
 
 const EditorSidebar = () => {
   const { selectedBlock } = useBlockStore();
@@ -40,6 +46,25 @@ const EditorSidebar = () => {
       )}
       {block.type === BlockTypes.getvar && <GetVarBlockSidebar block={block} />}
       {block.type === BlockTypes.setvar && <SetVarBlockSidebar block={block} />}
+      {block.type === BlockTypes.httpGetRequestBody && (
+        <GetHttpRequestBodySidebar block={block} />
+      )}
+      {block.type === BlockTypes.httpGetParam && (
+        <GetHttpParamBlockSidebar block={block} />
+      )}
+      {block.type === BlockTypes.httpSetCookie && (
+        <SetHttpCookieBlockSidebar block={block} />
+      )}
+      {block.type === BlockTypes.httpGetCookie && (
+        <GetHttpCookieBlockSidebar block={block} />
+      )}
+      {block.type === BlockTypes.httpGetHeader && (
+        <GetHttpRequestHeaderBlockSidebar block={block} />
+      )}
+      {block.type === BlockTypes.httpSetHeader && (
+        <SetHttpRequestHeaderBlockSidebar block={block} />
+      )}
+
       {block.type === BlockTypes.arrayops && (
         <ArrayOperationsBlockSidebar block={block} />
       )}
