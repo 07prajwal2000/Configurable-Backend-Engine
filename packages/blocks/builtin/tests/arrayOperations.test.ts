@@ -46,7 +46,6 @@ describe("Testing ArrayOperationsBlock", () => {
       expect(result.output!.includes("apple")).toBe(true);
     });
     it("should return false when data is incorrect", async () => {
-      console.log(context);
       const sut = new ArrayOperationsBlock(
         context,
         {

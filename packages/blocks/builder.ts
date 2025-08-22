@@ -22,6 +22,24 @@ import {
   ArrayOperationsBlock,
   arrayOperationsBlockSchema,
 } from "./builtin/arrayOperations";
+import {
+  GetHttpHeaderBlock,
+  getHttpHeaderBlockSchema,
+} from "./builtin/http/getHttpHeader";
+import { SetHttpHeaderBlock } from "./builtin/http/setHttpHeader";
+import {
+  GetHttpParamBlock,
+  getHttpParamBlockSchema,
+} from "./builtin/http/getHttpParam";
+import {
+  GetHttpCookieBlock,
+  getHttpCookieBlockSchema,
+} from "./builtin/http/getHttpCookie";
+import {
+  SetHttpCookieBlock,
+  setHttpCookieBlockSchema,
+} from "./builtin/http/setHttpCookie";
+import { GetHttpRequestBodyBlock } from "./builtin/http/getHttpRequestBody";
 
 export const blockDTOSchema = z.object({
   id: z.uuidv7(),
@@ -105,6 +123,9 @@ export class BlockBuilder {
     this.build(entrypoint, newBlocksMap);
     return newBlocksMap;
   }
+  public getEntrypoint() {
+    return this.entrypoint;
+  }
   private build(id: string, newBlockMap: { [id: string]: BaseBlock }) {
     if (id in newBlockMap || !(id in this.blocksMap)) return;
     const block = this.blocksMap[id];
@@ -138,10 +159,63 @@ export class BlockBuilder {
         return this.createResponseBlock(block);
       case BlockTypes.arrayops:
         return this.createArrayOperationsBlock(block);
+      case BlockTypes.httpGetHeader:
+        return this.createHttpGetHeaderBlock(block);
+      case BlockTypes.httpSetHeader:
+        return this.createHttpSetHeaderBlock(block);
+      case BlockTypes.httpGetParam:
+        return this.createHttpGetParamBlock(block);
+      case BlockTypes.httpGetCookie:
+        return this.createHttpGetCookieBlock(block);
+      case BlockTypes.httpSetCookie:
+        return this.createHttpSetCookieBlock(block);
+      case BlockTypes.httpGetRequestBody:
+        return this.createHttpGetRequestBodyBlock(block);
     }
   }
-  public getEntrypoint() {
-    return this.entrypoint;
+  private createHttpGetHeaderBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? getHttpHeaderBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new GetHttpHeaderBlock(this.context, parsedResult.data, edge);
+  }
+  private createHttpSetHeaderBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? getHttpHeaderBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new SetHttpHeaderBlock(this.context, parsedResult.data, edge);
+  }
+  private createHttpGetParamBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? getHttpParamBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new GetHttpParamBlock(this.context, parsedResult.data, edge);
+  }
+  private createHttpGetCookieBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? getHttpCookieBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new GetHttpCookieBlock(this.context, parsedResult.data, edge);
+  }
+  private createHttpSetCookieBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? setHttpCookieBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new SetHttpCookieBlock(this.context, parsedResult.data, edge);
+  }
+  private createHttpGetRequestBodyBlock(block: BlockDTOType) {
+    const edge = this.findEdge(block, "source");
+    return new GetHttpRequestBodyBlock(this.context, null, edge);
   }
   private createArrayOperationsBlock(block: BlockDTOType) {
     const parsedResult = this.shouldValidateBlockData
