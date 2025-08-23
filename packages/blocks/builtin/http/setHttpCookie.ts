@@ -21,8 +21,7 @@ export class SetHttpCookieBlock extends BaseBlock {
       const res = await this.context.vm.runAsync(js);
       value = res;
     }
-    this.context.vars.responseHttpCookies[input.name] = {
-      name: input.name,
+    this.context.vars.setCookie(input.name, {
       value: value,
       domain: input.domain,
       path: input.path,
@@ -30,7 +29,7 @@ export class SetHttpCookieBlock extends BaseBlock {
       httpOnly: input.httpOnly,
       secure: input.secure,
       samesite: input.samesite,
-    };
+    });
     return {
       continueIfFail: true,
       successful: true,

@@ -17,25 +17,15 @@ All variables in the example such as `httpRequestQuery` is a global variable and
 
 - Accessing the query parameter in Js Runner Block
 ```javascript
-  const { search, color } = httpRequestQuery;
-```
-- Accessing the route parameter in Js Runner Block
-```javascript
-  const { fruitID } = httpRequestRoute;
-```
-- Accessing the request header parameter in Js Runner Block
-```javascript
-  const { authorization } = httpRequestHeaders;
-```
-- Accessing the cookie parameter in Js Runner Block
-```javascript
-  const { sessionID } = httpRequestCookies;
-```
-- Accessing the http method parameter in Js Runner Block
-```javascript
-  const httpMethod = httpRequestMethod;
-```
-- Setting the http response header parameter in Js Runner Block
-```javascript
-  responseHttpHeaders['Content-Type'] = 'application/json';
+  const search = getQueryParam('search');
+  const fruitId = getRouteParam('fruitID');
+  const authToken = getHeader('Authorization')
+  const sessionId = getCookie('sessionID');
+  setCookie('sessionID', {
+    value: '123456',
+  });
+  setHeader('Content-Type', 'application/json');
+  const requestBody = getRequestBody(); // { "name": "Apple", "color": "Green" }
+  const method = httpRequestMethod; // GET, POST, PUT, DELETE
+  const route = httpRequestRoute; // /api/fruits/{fruitID}
 ```

@@ -27,13 +27,15 @@ export interface HttpCookieSettings {
 }
 
 export interface ContextVarsType {
-  httpRequestQuery: Record<string, string>;
-  httpRequestMethod: Record<string, string>;
-  httpRequestCookies: Record<string, string>;
-  httpRequestHeaders: Record<string, string>;
-  httpRequestRoute: Record<string, string>;
-  responseHttpHeaders: Record<string, string>;
-  responseHttpCookies: Record<string, HttpCookieSettings>;
+  getQueryParam: (key: string) => string;
+  getRouteParam: (key: string) => string;
+  getHeader: (key: string) => string;
+  setHeader: (key: string, value: string) => void;
+  getCookie: (key: string) => string;
+  setCookie(name: string, value: any): void;
+  httpRequestMethod: string;
+  httpRequestRoute: string;
+  getRequestBody: () => any;
 }
 
 export interface BlockOutput {

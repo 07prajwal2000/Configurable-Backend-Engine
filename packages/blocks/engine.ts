@@ -1,14 +1,12 @@
-import { BaseBlock } from "./baseBlock";
+import { BaseBlock, BlockOutput } from "./baseBlock";
 
 type Blocks = {
   [id: string]: BaseBlock;
 };
 
 export class Engine {
-  constructor(private readonly blocks: Blocks) {
-    console.log("new");
-  }
-  public async start(blockId: string, params?: any): Promise<void> {
+  constructor(private readonly blocks: Blocks) {}
+  public async start(blockId: string, params?: any): Promise<BlockOutput> {
     const blocks = this.blocks;
     if (!(blockId in blocks)) throw new Error("Block not found");
     let block = blocks[blockId],

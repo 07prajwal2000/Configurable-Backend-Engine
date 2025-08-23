@@ -1,4 +1,4 @@
-name: CI for @cbe/blocks package
+name: CI for @cbe/lib package
 on:
   push:
     branches:

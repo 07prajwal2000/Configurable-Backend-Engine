@@ -6,5 +6,3 @@ export enum BlockCategories {
   MISC = "misc",
   CUSTOM = "custom",
 }
-
-console.log(Object.values(BlockCategories));

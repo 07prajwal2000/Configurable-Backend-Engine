@@ -1,21 +1,23 @@
 {
-	"name": "@cbe/backend-engine",
-	"version": "1.0.0",
-	"scripts": {
-		"dev": "tsx watch src/index.ts"
-	},
-	"keywords": [
-		"configurable-backend-engine"
-	],
-	"author": "",
-	"license": "ISC",
-	"description": "",
-	"devDependencies": {
-		"tsx": "^4.20.4"
-	},
-	"dependencies": {
-		"@cbe/blocks": "file:../../packages/blocks",
-		"hono": "^4.9.1",
-		"zod": "^4.0.17"
-	}
+  "name": "@cbe/backend-engine",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsx watch deployments/standalone.ts"
+  },
+  "keywords": [
+    "configurable-backend-engine"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "tsx": "^4.20.4"
+  },
+  "dependencies": {
+    "@cbe/blocks": "file:../../packages/blocks",
+    "@cbe/lib": "file:../../packages/lib",
+    "@hono/node-server": "^1.19.0",
+    "hono": "^4.9.1",
+    "zod": "^4.0.17"
+  }
 }

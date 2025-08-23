@@ -8,7 +8,7 @@ export const getHttpHeaderBlockSchema = z.object({
 export class GetHttpHeaderBlock extends BaseBlock {
   override async executeAsync(): Promise<BlockOutput> {
     const input = this.input as z.infer<typeof getHttpHeaderBlockSchema>;
-    const header = this.context.vars.requestHttpHeaders[input.name];
+    const header = this.context.vars.getHeader(input.name);
     return {
       continueIfFail: true,
       successful: true,
