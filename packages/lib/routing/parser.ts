@@ -4,35 +4,90 @@ export type HttpRoute = {
   method: "GET" | "POST" | "PUT" | "DELETE";
 };
 
+export type RouteTree = {
+  subPath: string;
+  isParam: boolean;
+  children: Record<string, RouteTree>;
+  id?: string;
+};
+
 export class HttpRouteParser {
-  private readonly routesTree: any = {};
+  private readonly routesTree: Record<string, RouteTree> = {};
 
   public buildRoutes(routes: HttpRoute[]) {
-    for (const route of routes) {
-      const pathSegments = route.path.split("/");
+    for (let route of routes) {
       let current = this.routesTree;
-      for (const segment of pathSegments) {
-        if (!current[segment]) {
-          current[segment] = {};
-        }
-        current = current[segment];
+      const path = route.path;
+      const parts = path.split("/").filter((p) => p.trim() != "");
+      if (route.method in current) {
+        current = current[route.method].children;
+      } else {
+        current[route.method] = {
+          children: {},
+          isParam: false,
+          subPath: "",
+        };
+        current = current[route.method].children;
       }
-      current[route.method] = { "<ID>": route.routeId };
+      for (let part of parts) {
+        let route = part;
+        const isParam = route.startsWith(":");
+        if (isParam) {
+          route = route.slice(1);
+        }
+        if (route in current) {
+          current = current[route].children;
+        } else {
+          current[route] = {
+            subPath: route,
+            isParam,
+            children: {},
+          };
+          current = current[route].children;
+        }
+      }
+      current["<ID>"] = {
+        children: {},
+        isParam: false,
+        subPath: "",
+        id: route.routeId,
+      };
     }
   }
-  // TODO: Add support for path parameters
-  public getRouteId(path: string, method: HttpRoute["method"]): string | null {
-    const pathSegments = path.split("/");
+  public getRouteId(
+    path: string,
+    method: HttpRoute["method"]
+  ): { id: string; routeParams?: Record<string, string> } | null {
+    const parts = path.split("/").filter((p) => p.trim() != "");
     let current = this.routesTree;
-    for (const segment of pathSegments) {
-      if (!current[segment]) {
-        return null;
-      }
-      current = current[segment];
-    }
-    if (!current[method]) {
+    const params: Record<string, string> = {};
+    if (method in current) {
+      current = current[method].children;
+    } else {
       return null;
     }
-    return current[method]["<ID>"];
+    let match = 0;
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      if (part in current) {
+        current = current[part].children;
+        match++;
+        continue;
+      }
+      for (let key in current) {
+        if (!current[key].isParam) continue;
+        params[key] = part;
+        match++;
+        current = current[key].children;
+        break;
+      }
+    }
+    if (match == parts.length && "<ID>" in current) {
+      return {
+        id: current["<ID>"].id!,
+        routeParams: params,
+      };
+    }
+    return null;
   }
 }
