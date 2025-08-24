@@ -1,6 +1,8 @@
+import "dotenv/config";
 import { Hono } from "hono";
 import { mapRouter } from "./router";
 import { loadRoutes } from "./loaders/routesLoader";
+import { drizzleInit } from "./db";
 
 const app = new Hono();
 

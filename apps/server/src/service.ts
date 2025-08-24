@@ -40,7 +40,6 @@ export async function handleRequest(
     vars,
   };
   const executionResult = await startBlocksExecution(pathId.id, context);
-  console.log(context.vars.getRouteParam("id"));
   if (executionResult && executionResult.successful) {
     return {
       status: executionResult.output?.httpCode || 200,
