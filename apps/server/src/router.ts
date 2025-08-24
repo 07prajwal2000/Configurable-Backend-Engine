@@ -6,7 +6,8 @@ export async function mapRouter(app: Hono, parser: HttpRouteParser) {
   app.all("/api/*", async (c) => {
     try {
       const response = await handleRequest(c, parser);
-      return c.json(response.data, response.status);
+      c.status(response.status);
+      return c.json(response.data);
     } catch (error) {
       return c.json(
         { message: error?.toString() || "Internal server error" },

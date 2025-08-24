@@ -39,18 +39,19 @@ export async function handleRequest(
     vm,
     vars,
   };
-  const engine = await startBlocksExecution(pathId.id, context);
-  if (engine.successful) {
+  const executionResult = await startBlocksExecution(pathId.id, context);
+  console.log(context.vars.getRouteParam("id"));
+  if (executionResult && executionResult.successful) {
     return {
-      status: engine.output?.httpCode || 200,
-      data: engine.output?.data || engine.output || "NO RESULT",
+      status: executionResult.output?.httpCode || 200,
+      data:
+        executionResult.output?.body || executionResult?.output || "NO RESULT",
     };
   }
-
   return {
     status: 500,
     data: {
-      message: engine?.error || "Internal server error",
+      message: executionResult?.error || "Internal server error",
     },
   };
 }
