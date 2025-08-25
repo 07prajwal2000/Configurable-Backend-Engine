@@ -8,6 +8,7 @@ const app = new Hono();
 
 async function main() {
   const parser = await loadRoutes();
+  await drizzleInit();
   await mapRouter(app, parser);
 }
 main();
