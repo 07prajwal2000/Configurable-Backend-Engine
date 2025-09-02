@@ -15,7 +15,7 @@ export class ConsoleLoggerBlock extends BaseBlock {
     const data = this.input as z.infer<typeof logBlockSchema>;
     const level = data.level;
     const msgOrParams = data.message?.trim() != "" ? data.message : params;
-    const msg = this.formatMessage(msgOrParams, level);
+    const msg = this.formatMessage(msgOrParams, level, params);
     if (level == "info") {
       console.log(msg);
     } else if (level == "error") {
@@ -31,20 +31,20 @@ export class ConsoleLoggerBlock extends BaseBlock {
     };
   }
 
-  private formatMessage(params: any, level: string) {
-    const isObject = typeof params == "object";
+  private formatMessage(originalMsg: any, level: string, params?: any) {
+    const isObject = typeof originalMsg == "object";
     const datetime = new Date().toISOString().split("T");
     const date = datetime[0];
     const time = datetime[1].substring(0, datetime[1].lastIndexOf("."));
     const path = this.context.route;
     const msg = `${level.toUpperCase()}-${path}-${date} ${time}\n${
       isObject
-        ? JSON.stringify(params, null, 2)
-        : typeof params == "string"
-        ? params.startsWith("js:")
-          ? this.context.vm.run(params.slice(3))
-          : params
-        : params
+        ? JSON.stringify(originalMsg, null, 2)
+        : typeof originalMsg == "string"
+        ? originalMsg.startsWith("js:")
+          ? this.context.vm.run(originalMsg.slice(3), params)
+          : originalMsg
+        : originalMsg
     }`;
     return msg;
   }

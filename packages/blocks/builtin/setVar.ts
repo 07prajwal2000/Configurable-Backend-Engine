@@ -32,6 +32,7 @@ export class SetVarBlock extends BaseBlock {
       continueIfFail: true,
       successful: true,
       next: this.next,
+      output: value,
     };
   }
 

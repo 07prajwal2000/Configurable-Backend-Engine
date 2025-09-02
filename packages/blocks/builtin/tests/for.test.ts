@@ -4,6 +4,7 @@ import { Engine } from "../../engine";
 import { SetVarBlock } from "../setVar";
 import { Context } from "../../baseBlock";
 import { JsVM } from "@cbe/lib/vm";
+import { InterceptorBlock } from "../interceptor";
 
 describe("testing for loop block", () => {
   it("should call the callback n times", async () => {
@@ -52,7 +53,7 @@ describe("testing for loop block", () => {
     expect(idx).toBe(n - 1);
   });
   it("should run the block n times", async () => {
-    const n = 10;
+    const n = 5;
     const vars = { index: -1 };
     const context: Context = {
       apiId: "123",
@@ -60,7 +61,9 @@ describe("testing for loop block", () => {
       vars: vars as any,
       vm: new JsVM(vars),
     };
+    const mockFn = vi.fn();
     const engine = new Engine({
+      interceptor: new InterceptorBlock(context, "index_var_block", mockFn),
       index_var_block: new SetVarBlock(
         context,
         {
@@ -77,13 +80,14 @@ describe("testing for loop block", () => {
         start: 0,
         end: n,
         step: 1,
-        block: "index_var_block",
+        block: "interceptor",
       },
       engine
     );
     const result = await sut.executeAsync();
     expect(result.successful).toBe(true);
     expect(context.vars.index).toBeDefined();
+    expect(mockFn).toHaveBeenCalledTimes(n);
     expect(context.vars["index"]).toBe(n - 1);
   });
 });
