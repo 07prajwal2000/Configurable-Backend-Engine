@@ -1,4 +1,6 @@
 import { HttpRoute, HttpRouteParser } from "@cbe/lib";
+import { db } from "../db";
+import { routesEntity } from "../db/schema";
 
 const dummyRoutes: HttpRoute[] = [
   {
@@ -15,7 +17,15 @@ const dummyRoutes: HttpRoute[] = [
 
 export async function loadRoutes() {
   const parser = new HttpRouteParser();
-  parser.buildRoutes(dummyRoutes);
-  // TODO: load from Db and cache it in redis, and refresh it when Db is updated (use redis pub/sub for notifications)
+  const routes = await db
+    .select({
+      method: routesEntity.method,
+      path: routesEntity.path,
+      routeId: routesEntity.id,
+    })
+    .from(routesEntity);
+
+  // @ts-ignore
+  parser.buildRoutes(routes);
   return parser;
 }

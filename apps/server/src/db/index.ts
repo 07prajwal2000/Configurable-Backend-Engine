@@ -1,6 +1,6 @@
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 
-let db: NodePgDatabase;
+let db: NodePgDatabase = null!;
 
 export async function drizzleInit() {
   const pgUrl = process.env.PG_URL;
@@ -15,3 +15,5 @@ export async function drizzleInit() {
     throw new Error("db connection failed");
   }
 }
+
+export { db };

@@ -4,7 +4,7 @@ import { Context as BlockContext, ContextVarsType } from "@cbe/blocks";
 import { Context } from "hono";
 import { ContentfulStatusCode } from "hono/utils/http-status";
 import { JsVM } from "@cbe/lib/vm";
-import { startBlocksExecution } from "./loaders/blocksLoader";
+import { startBlocksExecution } from "../../loaders/blocksLoader";
 
 export type HandleRequestType = {
   data?: any;
