@@ -12,6 +12,7 @@ export class Engine {
   ): Promise<BlockOutput | null> {
     let result: BlockOutput | null = null;
     const blocks = this.blocks;
+
     if (!(blockId in blocks)) throw new Error("Block not found");
     let block = blocks[blockId],
       nextParams = params;

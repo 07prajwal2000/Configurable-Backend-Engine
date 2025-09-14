@@ -11,7 +11,7 @@ export class GetHttpParamBlock extends BaseBlock {
     const input = this.input as z.infer<typeof getHttpParamBlockSchema>;
     let value = this.context.vars.getQueryParam(input.name);
     if (input.source === "path") {
-      value = this.context.vars.getRouteParams;
+      value = this.context.vars.getRouteParam(input.name);
     }
     return {
       continueIfFail: true,

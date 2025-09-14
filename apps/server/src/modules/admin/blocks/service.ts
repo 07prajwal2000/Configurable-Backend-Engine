@@ -2,7 +2,10 @@ import {
   createBlock,
   getBlockById,
   getAllBlocks,
+  getTotalBlocksCount,
+  getBlocksByRouteId,
   updateBlock,
+  upsertBlock,
   deleteBlock,
 } from "./repository";
 import { getRouteById } from "../routes/repository";
@@ -11,13 +14,14 @@ import { generateID } from "@cbe/lib";
 import { db } from "../../../db";
 import { blocksEntity } from "../../../db/schema";
 import { eq, and } from "drizzle-orm";
+import { HttpError } from "../../../errors/httpError";
 
 export async function createBlockService(data: BlockType) {
   // Validate that the route exists if routeId is provided
   if (data.routeId) {
     const existingRoute = await getRouteById(data.routeId);
     if (!existingRoute) {
-      throw new Error(`Route with ID ${data.routeId} does not exist`);
+      throw new HttpError(404, `Route with ID ${data.routeId} does not exist`);
     }
   }
 
@@ -34,42 +38,68 @@ export async function getBlockByIdService(id: string) {
   return await getBlockById(id);
 }
 
-export async function getAllBlocksService() {
-  return await getAllBlocks();
+export async function getAllBlocksService(perPage: number, pageNumber: number) {
+  const offset = (pageNumber - 1) * perPage;
+
+  // Get paginated data and total count in parallel
+  const [blocks, totalRecords] = await Promise.all([
+    getAllBlocks(perPage, offset),
+    getTotalBlocksCount(),
+  ]);
+
+  const totalPages = Math.ceil(totalRecords / perPage);
+  const hasNextPage = pageNumber < totalPages;
+
+  return {
+    data: blocks,
+    pagination: {
+      currentPage: pageNumber,
+      totalRecords,
+      hasNextPage,
+    },
+  };
 }
 
-export async function updateBlockService(id: string, data: Partial<BlockType>) {
-  // Get the existing block to preserve routeId and other required fields
-  const existingBlock = await getBlockById(id);
-  if (!existingBlock) {
-    return null;
+export async function getBlocksByRouteIdService(routeId: string) {
+  return await getBlocksByRouteId(routeId);
+}
+
+export async function upsertBlockService(data: BlockType, tx?: any) {
+  // Validate that the route exists if routeId is provided
+  if (data.routeId) {
+    const existingRoute = await getRouteById(data.routeId);
+    if (!existingRoute) {
+      throw new HttpError(404, `Route with ID ${data.routeId} does not exist`);
+    }
   }
 
-  // Merge the update data with existing block data, preserving routeId
-  const updateData: BlockType = {
-    id: existingBlock.id,
-    type: data.type ?? (existingBlock.type as string),
-    position:
-      data.position ?? (existingBlock.position as { x: number; y: number }),
-    data: data.data ?? existingBlock.data,
-    createdAt: existingBlock.createdAt,
-    updatedAt: new Date(),
-    routeId: existingBlock.routeId as string,
+  // Generate ID if not provided
+  const blockId = data.id || generateID();
+
+  // Prepare upsert data with proper timestamps
+  const upsertData: BlockType = {
+    id: blockId,
+    type: data.type,
+    position: data.position,
+    data: data.data,
+    routeId: data.routeId,
+    createdAt: new Date(), // Will be ignored on update due to conflict resolution
+    updatedAt: new Date(), // Always update the updatedAt timestamp
   };
 
-  return await updateBlock(id, updateData);
+  return await upsertBlock(upsertData, tx);
 }
 
 export async function deleteBlockService(id: string) {
   // First, get the block to check its type and route
   const blockToDelete = await getBlockById(id);
   if (!blockToDelete) {
-    throw new Error(`Block with ID ${id} not found`);
+    throw new HttpError(404, `Block with ID ${id} not found`);
   }
 
   // Prevent deletion of entrypoint blocks
   if (blockToDelete.type === "entrypoint") {
-    throw new Error("Cannot delete entrypoint blocks");
+    throw new HttpError(404, "Cannot delete entrypoint blocks");
   }
 
   // If this is a response block, ensure at least one response block remains for the route
@@ -86,7 +116,8 @@ export async function deleteBlockService(id: string) {
 
     // If this is the only response block for the route, prevent deletion
     if (responseBlocksForRoute.length <= 1) {
-      throw new Error(
+      throw new HttpError(
+        404,
         "Cannot delete the last response block for this route. At least one response block must remain."
       );
     }

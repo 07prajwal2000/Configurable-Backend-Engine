@@ -4,64 +4,64 @@ import {
   createBlockSchema,
   updateBlockSchema,
   getBlockByIdSchema,
+  getBlocksByRouteIdSchema,
+  getAllBlocksPaginationSchema,
 } from "./dto";
 import {
   createBlockService,
   getBlockByIdService,
   getAllBlocksService,
-  updateBlockService,
+  getBlocksByRouteIdService,
+  upsertBlockService,
   deleteBlockService,
 } from "./service";
+import { HttpError } from "../../../errors/httpError";
 
 export function mapBlockEndpoints(app: Hono) {
   // POST /admin/blocks – Create a new block
   app.post("/blocks", zValidator("json", createBlockSchema), async (c) => {
-    try {
-      const data = c.req.valid("json");
-      const newBlock = await createBlockService(data);
-      return c.json(newBlock, 201);
-    } catch (error: any) {
-      return c.json({ error: error.message || "Failed to create block" }, 400);
-    }
+    const data = c.req.valid("json");
+    const newBlock = await createBlockService(data);
+    return c.json(newBlock, 201);
   });
 
   // GET /admin/blocks/:id – Get block by ID
   app.get("/blocks/:id", zValidator("param", getBlockByIdSchema), async (c) => {
-    try {
-      const id = c.req.param("id");
-      const block = await getBlockByIdService(id);
-      if (!block) {
-        return c.json({ error: "Block not found" }, 404);
-      }
-      return c.json(block);
-    } catch (error: any) {
-      return c.json({ error: error.message || "Failed to get block" }, 400);
+    const id = c.req.param("id");
+    const block = await getBlockByIdService(id);
+    if (!block) {
+      throw new HttpError(404, "Block not found");
     }
+    return c.json(block);
   });
 
-  // GET /admin/blocks – Get all blocks
-  app.get("/blocks", async (c) => {
-    try {
-      const allBlocks = await getAllBlocksService();
-      return c.json(allBlocks);
-    } catch (error: any) {
-      return c.json({ error: error.message || "Failed to get blocks" }, 400);
+  // GET /admin/blocks – Get all blocks with pagination
+  app.get(
+    "/blocks",
+    zValidator("query", getAllBlocksPaginationSchema),
+    async (c) => {
+      const { perPage, pageNumber } = c.req.valid("query");
+      const result = await getAllBlocksService(perPage, pageNumber);
+      return c.json(result);
     }
-  });
+  );
 
-  // PUT /admin/blocks/:id – Update block by ID
-  app.put("/blocks/:id", zValidator("json", updateBlockSchema), async (c) => {
-    try {
-      const id = c.req.param("id");
-      const data = c.req.valid("json");
-      const updatedBlock = await updateBlockService(id, data);
-      if (!updatedBlock) {
-        return c.json({ error: "Block not found" }, 404);
-      }
-      return c.json(updatedBlock);
-    } catch (error: any) {
-      return c.json({ error: error.message || "Failed to update block" }, 400);
+  // GET /admin/blocks/route/:routeId – Get all blocks by route ID
+  app.get(
+    "/blocks/route/:routeId",
+    zValidator("param", getBlocksByRouteIdSchema),
+    async (c) => {
+      const routeId = c.req.param("routeId");
+      const blocks = await getBlocksByRouteIdService(routeId);
+      return c.json(blocks);
     }
+  );
+
+  // PUT /admin/blocks – Upsert block (insert or update)
+  app.put("/blocks", zValidator("json", createBlockSchema), async (c) => {
+    const data = c.req.valid("json");
+    const upsertedBlock = await upsertBlockService(data);
+    return c.json(upsertedBlock);
   });
 
   // DELETE /admin/blocks/:id – Delete block by ID
@@ -69,19 +69,12 @@ export function mapBlockEndpoints(app: Hono) {
     "/blocks/:id",
     zValidator("param", getBlockByIdSchema),
     async (c) => {
-      try {
-        const id = c.req.param("id");
-        const deletedBlock = await deleteBlockService(id);
-        if (!deletedBlock) {
-          return c.json({ error: "Block not found" }, 404);
-        }
-        return c.json({ message: "Block deleted successfully" });
-      } catch (error: any) {
-        return c.json(
-          { error: error.message || "Failed to delete block" },
-          400
-        );
+      const id = c.req.param("id");
+      const deletedBlock = await deleteBlockService(id);
+      if (!deletedBlock) {
+        throw new HttpError(404, "Block not found");
       }
+      return c.json({ message: "Block deleted successfully" });
     }
   );
 }

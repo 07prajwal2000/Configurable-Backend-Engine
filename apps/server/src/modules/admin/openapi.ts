@@ -274,6 +274,68 @@ const openapiSpec = {
         },
       },
     },
+    "/routes/{id}/bulk": {
+      post: {
+        tags: ["Routes"],
+        summary: "Bulk operations for blocks and edges",
+        operationId: "bulkOperation",
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: {
+              type: "string",
+            },
+            description: "Route ID",
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/BulkOperationRequest",
+              },
+            },
+          },
+        },
+        description:
+          "Perform bulk operations (create, update, delete) on blocks and edges for a specific route. Operations are executed in transactions to ensure data consistency.",
+        responses: {
+          "200": {
+            description: "Bulk operation completed successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/BulkOperationResponse",
+                },
+              },
+            },
+          },
+          "404": {
+            description: "Route not found",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
 
     "/blocks": {
       post: {
@@ -315,11 +377,115 @@ const openapiSpec = {
       },
       get: {
         tags: ["Blocks"],
-        summary: "Get all blocks",
+        summary: "Get all blocks with pagination",
         operationId: "getAllBlocks",
+        parameters: [
+          {
+            name: "perPage",
+            in: "query",
+            required: false,
+            schema: {
+              type: "integer",
+              minimum: 10,
+              maximum: 50,
+              default: 20,
+            },
+            description: "Number of blocks per page (10-50)",
+          },
+          {
+            name: "pageNumber",
+            in: "query",
+            required: false,
+            schema: {
+              type: "integer",
+              minimum: 1,
+              default: 1,
+            },
+            description: "Page number (starts from 1)",
+          },
+        ],
         responses: {
           "200": {
-            description: "List of blocks",
+            description: "Paginated list of blocks",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/PaginatedBlocksResponse",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+      put: {
+        tags: ["Blocks"],
+        summary: "Upsert block (insert or update)",
+        operationId: "upsertBlock",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/CreateBlockRequest",
+              },
+            },
+          },
+        },
+        description:
+          "Upsert block by ID. If the block with the given ID exists, it will be updated. If it doesn't exist, a new block will be created. The updatedAt field is set automatically by the server and should not be provided in the request.",
+        responses: {
+          "200": {
+            description: "Block upserted successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Block",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/blocks/route/{routeId}": {
+      get: {
+        tags: ["Blocks"],
+        summary: "Get all blocks by route ID",
+        operationId: "getBlocksByRouteId",
+        parameters: [
+          {
+            name: "routeId",
+            in: "path",
+            required: true,
+            schema: {
+              type: "string",
+            },
+            description: "Route ID",
+          },
+        ],
+        responses: {
+          "200": {
+            description: "List of blocks for the route",
             content: {
               "application/json": {
                 schema: {
@@ -363,64 +529,6 @@ const openapiSpec = {
         responses: {
           "200": {
             description: "Block found",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Block",
-                },
-              },
-            },
-          },
-          "404": {
-            description: "Block not found",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/ErrorResponse",
-                },
-              },
-            },
-          },
-          "400": {
-            description: "Bad request",
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/ErrorResponse",
-                },
-              },
-            },
-          },
-        },
-      },
-      put: {
-        tags: ["Blocks"],
-        summary: "Update block by ID",
-        operationId: "updateBlock",
-        parameters: [
-          {
-            name: "id",
-            in: "path",
-            required: true,
-            schema: {
-              type: "string",
-            },
-            description: "Block ID",
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/UpdateBlockRequest",
-              },
-            },
-          },
-        },
-        responses: {
-          "200": {
-            description: "Block updated successfully",
             content: {
               "application/json": {
                 schema: {
@@ -833,13 +941,10 @@ const openapiSpec = {
             type: "object",
             description: "Block data",
           },
-          updatedAt: {
-            type: "string",
-            format: "date-time",
-            description: "Last update timestamp",
-          },
         },
         required: [],
+        description:
+          "The updatedAt field is set automatically by the server and should not be provided in the request.",
       },
       Edge: {
         type: "object",
@@ -944,6 +1049,103 @@ const openapiSpec = {
           },
         },
         required: ["id", "from", "to"],
+      },
+      PaginatedBlocksResponse: {
+        type: "object",
+        properties: {
+          data: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Block",
+            },
+            description: "Array of blocks for the current page",
+          },
+          pagination: {
+            type: "object",
+            properties: {
+              currentPage: {
+                type: "integer",
+                description: "Current page number",
+              },
+              totalRecords: {
+                type: "integer",
+                description: "Total number of blocks",
+              },
+              hasNextPage: {
+                type: "boolean",
+                description: "Whether there is a next page available",
+              },
+            },
+            required: ["currentPage", "totalRecords", "hasNextPage"],
+          },
+        },
+        required: ["data", "pagination"],
+      },
+      BulkOperationRequest: {
+        type: "object",
+        properties: {
+          blocks: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/BulkBlockOperation",
+            },
+            description: "Array of block operations to perform",
+          },
+          edges: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/BulkEdgeOperation",
+            },
+            description: "Array of edge operations to perform",
+          },
+        },
+        required: ["blocks", "edges"],
+      },
+      BulkBlockOperation: {
+        type: "object",
+        properties: {
+          action: {
+            type: "string",
+            enum: ["create", "update", "delete"],
+            description: "Operation type to perform on the block",
+          },
+          content: {
+            type: "object",
+            description:
+              "Block data for create/update operations, or block ID for delete operations",
+          },
+        },
+        required: ["action", "content"],
+      },
+      BulkEdgeOperation: {
+        type: "object",
+        properties: {
+          action: {
+            type: "string",
+            enum: ["create", "update", "delete"],
+            description: "Operation type to perform on the edge",
+          },
+          content: {
+            type: "object",
+            description:
+              "Edge data for create/update operations, or edge ID for delete operations",
+          },
+        },
+        required: ["action", "content"],
+      },
+      BulkOperationResponse: {
+        type: "object",
+        properties: {
+          success: {
+            type: "boolean",
+            description: "Whether the bulk operation was successful",
+          },
+          message: {
+            type: "string",
+            description: "Response message",
+          },
+        },
+        required: ["success", "message"],
       },
     },
   },

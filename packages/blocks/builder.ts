@@ -94,7 +94,11 @@ export class BlockBuilder {
   public loadEdges(edges: EdgeDTOSchemaType) {
     const edgesMap: EdgesType = {};
     for (const edge of edges) {
-      const handle = edge.toHandle;
+      let handle = edge.toHandle;
+      const hasUuidInHandle = handle.lastIndexOf("-") !== -1;
+      if (hasUuidInHandle) {
+        handle = handle.substring(handle.lastIndexOf("-") + 1);
+      }
       const outgoing = {
         to: edge.to,
         handle,

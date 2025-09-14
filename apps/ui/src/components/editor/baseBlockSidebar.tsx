@@ -32,6 +32,7 @@ type BaseBlockSidebarProps = {
   children?: React.ReactNode;
   showConnections?: boolean;
   moreOptions?: OptionsMenuProps[];
+  disableOptions?: boolean;
 };
 
 const BaseBlockSidebar = ({
@@ -39,6 +40,7 @@ const BaseBlockSidebar = ({
   children,
   showConnections,
   moreOptions,
+  disableOptions,
 }: BaseBlockSidebarProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const connections = useNodeConnections({
@@ -73,54 +75,61 @@ const BaseBlockSidebar = ({
         direction={"row"}
       >
         <Typography variant="h6">Block Config</Typography>
-        <IconButton
-          aria-controls={showOptions ? "basic-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={showOptions ? "true" : undefined}
-          id="sidebar-options-btn"
-          onClick={handleClick}
-        >
-          <MdMoreVert />
-        </IconButton>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={showOptions}
-          onClose={toggleOptions}
-          slotProps={{
-            list: {
-              "aria-labelledby": "basic-button",
-            },
-          }}
-        >
-          {moreOptions?.map((option) => (
-            <MenuItem sx={{ p: 0 }} onClick={() => handleClose(option.onClick)}>
-              <Button
-                sx={{ py: 1, px: 2 }}
-                fullWidth
-                disableRipple
-                startIcon={option.icon}
-                color="inherit"
-                size="small"
-              >
-                {option.title}
-              </Button>
-            </MenuItem>
-          ))}
-          {moreOptions && <Divider />}
-          <MenuItem sx={{ p: 0 }} onClick={() => deleteClicked()}>
-            <Button
-              sx={{ py: 1, px: 2 }}
-              fullWidth
-              disableRipple
-              color="error"
-              startIcon={<MdDelete />}
-              size="small"
+        {!disableOptions && (
+          <>
+            <IconButton
+              aria-controls={showOptions ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={showOptions ? "true" : undefined}
+              id="sidebar-options-btn"
+              onClick={handleClick}
             >
-              Delete
-            </Button>
-          </MenuItem>
-        </Menu>
+              <MdMoreVert />
+            </IconButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={showOptions}
+              onClose={toggleOptions}
+              slotProps={{
+                list: {
+                  "aria-labelledby": "basic-button",
+                },
+              }}
+            >
+              {moreOptions?.map((option) => (
+                <MenuItem
+                  sx={{ p: 0 }}
+                  onClick={() => handleClose(option.onClick)}
+                >
+                  <Button
+                    sx={{ py: 1, px: 2 }}
+                    fullWidth
+                    disableRipple
+                    startIcon={option.icon}
+                    color="inherit"
+                    size="small"
+                  >
+                    {option.title}
+                  </Button>
+                </MenuItem>
+              ))}
+              {moreOptions && <Divider />}
+              <MenuItem sx={{ p: 0 }} onClick={() => deleteClicked()}>
+                <Button
+                  sx={{ py: 1, px: 2 }}
+                  fullWidth
+                  disableRipple
+                  color="error"
+                  startIcon={<MdDelete />}
+                  size="small"
+                >
+                  Delete
+                </Button>
+              </MenuItem>
+            </Menu>
+          </>
+        )}
       </Stack>
       <Divider />
       <Stack mt={1} gap={2}>

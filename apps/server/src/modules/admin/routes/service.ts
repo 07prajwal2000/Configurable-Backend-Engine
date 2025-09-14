@@ -5,9 +5,23 @@ import {
   updateRoute,
   deleteRoute,
 } from "./repository";
-import { RouteType } from "./dto";
+import { RouteType, BulkOperation } from "./dto";
 import { generateID } from "@cbe/lib";
-import { createBlockService } from "../blocks/service";
+import { createBlockService, upsertBlockService } from "../blocks/service";
+import { createEdgeService, updateEdgeService } from "../edges/service";
+import {
+  getBlockById,
+  deleteBlock,
+  createBlock,
+  upsertBlock,
+} from "../blocks/repository";
+import {
+  getEdgeById,
+  deleteEdge,
+  createEdge,
+  updateEdge,
+} from "../edges/repository";
+import { db } from "../../../db";
 
 export async function createRouteService(data: RouteType) {
   // Generate ID if not provided
@@ -53,4 +67,80 @@ export async function updateRouteService(id: string, data: RouteType) {
 
 export async function deleteRouteService(id: string) {
   return await deleteRoute(id);
+}
+
+export async function bulkOperationService(
+  routeId: string,
+  data: BulkOperation
+) {
+  const { blocks, edges } = data;
+
+  // Separate operations by type
+  const blockDeletes = blocks.filter((op) => op.action === "delete");
+  const blockCreatesUpdates = blocks.filter(
+    (op) => op.action === "create" || op.action === "update"
+  );
+
+  const edgeDeletes = edges.filter((op) => op.action === "delete");
+  const edgeCreatesUpdates = edges.filter(
+    (op) => op.action === "create" || op.action === "update"
+  );
+
+  // Execute deletes first (in a transaction)
+  await db.transaction(async (tx) => {
+    // Delete edges first to avoid foreign key constraints
+    for (const edgeOp of edgeDeletes) {
+      // Check if edge exists before deleting
+      const existingEdge = await getEdgeById(edgeOp.content.id, tx);
+      if (existingEdge) {
+        await deleteEdge(edgeOp.content.id, tx);
+      }
+      // Skip if edge doesn't exist (already deleted or never existed)
+    }
+
+    // Then delete blocks
+    for (const blockOp of blockDeletes) {
+      // Check if block exists before deleting
+      const existingBlock = await getBlockById(blockOp.content.id, tx);
+      if (existingBlock) {
+        await deleteBlock(blockOp.content.id, tx);
+      }
+      // Skip if block doesn't exist (already deleted or never existed)
+    }
+  });
+
+  // Execute creates/updates (in a separate transaction)
+  await db.transaction(async (tx) => {
+    // Create/Update blocks first
+    for (const blockOp of blockCreatesUpdates) {
+      if (blockOp.action === "create") {
+        await createBlock(
+          {
+            ...blockOp.content,
+            routeId,
+          },
+          tx
+        );
+      } else if (blockOp.action === "update") {
+        await upsertBlock(
+          {
+            ...blockOp.content,
+            routeId,
+          },
+          tx
+        );
+      }
+    }
+
+    // Then create/update edges
+    for (const edgeOp of edgeCreatesUpdates) {
+      if (edgeOp.action === "create") {
+        await createEdge(edgeOp.content, tx);
+      } else if (edgeOp.action === "update") {
+        await updateEdge(edgeOp.content.id, edgeOp.content, tx);
+      }
+    }
+  });
+
+  return { success: true, message: "Bulk operation completed successfully" };
 }

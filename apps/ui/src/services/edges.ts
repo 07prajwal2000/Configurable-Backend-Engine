@@ -4,7 +4,6 @@ import type {
   EdgeWithBlocks,
   CreateEdgeRequest,
   UpdateEdgeRequest,
-  ErrorResponse,
   SuccessMessage,
 } from "./types";
 import { httpClient } from "./httpClient";

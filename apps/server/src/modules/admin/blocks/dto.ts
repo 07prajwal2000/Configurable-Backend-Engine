@@ -26,12 +26,22 @@ export const createBlockSchema = blockSchema.omit({
 
 export const updateBlockSchema = blockSchema
   .omit({
-    routeId: true,
-    id: true,
     createdAt: true,
+    updatedAt: true, // Server sets this automatically
   })
-  .partial();
+  .partial({
+    routeId: true,
+  });
 
 export const getBlockByIdSchema = z.object({
   id: z.string(),
+});
+
+export const getBlocksByRouteIdSchema = z.object({
+  routeId: z.string(),
+});
+
+export const getAllBlocksPaginationSchema = z.object({
+  perPage: z.coerce.number().min(10).max(50).default(20),
+  pageNumber: z.coerce.number().min(1).default(1),
 });

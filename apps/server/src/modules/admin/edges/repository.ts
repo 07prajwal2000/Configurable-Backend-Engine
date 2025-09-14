@@ -3,22 +3,26 @@ import { edgesEntity, blocksEntity } from "../../../db/schema";
 import { eq, and } from "drizzle-orm";
 import { EdgeType } from "./dto";
 
-export async function createEdge(data: EdgeType) {
-  const result = await db.insert(edgesEntity).values(data).returning();
+export async function createEdge(data: EdgeType, tx?: any) {
+  const dbInstance = tx || db;
+  const result = await dbInstance.insert(edgesEntity).values(data).returning();
   return result[0];
 }
 
-export async function getEdgeById(id: string) {
-  const result = await db
+export async function getEdgeById(id: string, tx?: any) {
+  const dbInstance = tx || db;
+  const result = await dbInstance
     .select()
     .from(edgesEntity)
     .where(eq(edgesEntity.id, id));
   return result[0] || null;
 }
 
-export async function getEdgesByRouteId(routeId: string) {
+export async function getEdgesByRouteId(routeId: string, tx?: any) {
+  const dbInstance = tx || db;
+
   // Get all edges first
-  const edges = await db
+  const edges = await dbInstance
     .select()
     .from(edgesEntity)
     .innerJoin(blocksEntity, eq(edgesEntity.from, blocksEntity.id))
@@ -26,21 +30,21 @@ export async function getEdgesByRouteId(routeId: string) {
 
   // For each edge, get the from and to block information
   const result = await Promise.all(
-    edges.map(async (edge) => {
+    edges.map(async (edge: any) => {
       const [fromBlock, toBlock] = await Promise.all([
         edge.edges.from
-          ? db
+          ? dbInstance
               .select()
               .from(blocksEntity)
               .where(eq(blocksEntity.id, edge.edges.from))
-              .then((res) => res[0] || null)
+              .then((res: any) => res[0] || null)
           : Promise.resolve(null),
         edge.edges.to
-          ? db
+          ? dbInstance
               .select()
               .from(blocksEntity)
               .where(eq(blocksEntity.id, edge.edges.to))
-              .then((res) => res[0] || null)
+              .then((res: any) => res[0] || null)
           : Promise.resolve(null),
       ]);
 
@@ -59,8 +63,13 @@ export async function getEdgesByRouteId(routeId: string) {
   return result;
 }
 
-export async function updateEdge(id: string, data: Partial<EdgeType>) {
-  const result = await db
+export async function updateEdge(
+  id: string,
+  data: Partial<EdgeType>,
+  tx?: any
+) {
+  const dbInstance = tx || db;
+  const result = await dbInstance
     .update(edgesEntity)
     .set(data)
     .where(eq(edgesEntity.id, id))
@@ -68,16 +77,18 @@ export async function updateEdge(id: string, data: Partial<EdgeType>) {
   return result[0] || null;
 }
 
-export async function deleteEdge(id: string) {
-  const result = await db
+export async function deleteEdge(id: string, tx?: any) {
+  const dbInstance = tx || db;
+  const result = await dbInstance
     .delete(edgesEntity)
     .where(eq(edgesEntity.id, id))
     .returning();
   return result[0] || null;
 }
 
-export async function getBlockById(blockId: string) {
-  const result = await db
+export async function getBlockById(blockId: string, tx?: any) {
+  const dbInstance = tx || db;
+  const result = await dbInstance
     .select()
     .from(blocksEntity)
     .where(eq(blocksEntity.id, blockId));

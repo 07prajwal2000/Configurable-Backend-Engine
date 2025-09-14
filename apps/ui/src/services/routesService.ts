@@ -3,6 +3,8 @@ import type {
   CreateRouteRequest,
   ErrorResponse,
   SuccessMessage,
+  BulkOperationRequest,
+  BulkOperationResponse,
 } from "./types";
 import { httpClient } from "./httpClient";
 
@@ -29,6 +31,14 @@ export const routesService = {
 
   async deleteRoute(id: string): Promise<SuccessMessage> {
     const response = await httpClient.delete(`/routes/${id}`);
+    return response.data;
+  },
+
+  async bulkOperation(
+    routeId: string,
+    data: BulkOperationRequest
+  ): Promise<BulkOperationResponse> {
+    const response = await httpClient.post(`/routes/${routeId}/bulk`, data);
     return response.data;
   },
 };

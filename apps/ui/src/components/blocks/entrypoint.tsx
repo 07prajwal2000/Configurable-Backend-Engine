@@ -25,7 +25,7 @@ const Entrypoint = (props: NodeProps) => {
 };
 
 export function EntrypointBlockSidebar({ block }: { block: Node }) {
-  return <BaseBlockSidebar block={block} showConnections />;
+  return <BaseBlockSidebar disableOptions block={block} showConnections />;
 }
 
 export default Entrypoint;

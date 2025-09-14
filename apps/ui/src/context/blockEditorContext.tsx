@@ -9,12 +9,17 @@ export type BlockEditorContextType = {
   deleteEdge: (id: string) => Promise<void>;
   deleteEdges: (ids: string[]) => Promise<void>;
   changes: {
-    blocks: Set<string>;
-    trackBlockChange: (id: string) => void;
-    edges: Set<string>;
-    trackEdgeChange: (id: string) => void;
+    blocks: Map<string, "create" | "update" | "delete">;
+    trackBlockChange: (
+      id: string,
+      action: "create" | "update" | "delete"
+    ) => void;
+    edges: Map<string, "create" | "update" | "delete">;
+    trackEdgeChange: (
+      id: string,
+      action: "create" | "update" | "delete"
+    ) => void;
     saveChanges: (blocks: Node[], edges: Edge[]) => Promise<void>;
-
     discardChanges: () => void;
   };
 };

@@ -25,6 +25,7 @@ export type Block = {
 };
 
 export type CreateBlockRequest = {
+  id?: string;
   type: string;
   position?: any;
   data?: any;
@@ -35,7 +36,7 @@ export type UpdateBlockRequest = {
   type?: string;
   position?: any;
   data?: any;
-  updatedAt?: string;
+  routeId?: string;
 };
 
 export type Edge = {
@@ -70,5 +71,37 @@ export type ErrorResponse = {
 };
 
 export type SuccessMessage = {
+  message: string;
+};
+
+export type PaginationInfo = {
+  currentPage: number;
+  totalRecords: number;
+  hasNextPage: boolean;
+};
+
+export type PaginatedBlocksResponse = {
+  data: Block[];
+  pagination: PaginationInfo;
+};
+
+// Bulk operation types
+export type BulkBlockOperation = {
+  action: "create" | "update" | "delete";
+  content: any; // Block data
+};
+
+export type BulkEdgeOperation = {
+  action: "create" | "update" | "delete";
+  content: any; // Edge data
+};
+
+export type BulkOperationRequest = {
+  blocks: BulkBlockOperation[];
+  edges: BulkEdgeOperation[];
+};
+
+export type BulkOperationResponse = {
+  success: boolean;
   message: string;
 };

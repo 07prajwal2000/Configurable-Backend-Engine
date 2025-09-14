@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import BlockEditor from "../components/editor/blockEditor";
 import { BlockEditorContext } from "../context/blockEditorContext";
 import { type Edge, type Node } from "@xyflow/react";
 import { useChangeTrackerStore } from "../store/changeTrackerStore";
-import { blocksService, edgesService } from "../services";
+import {
+  blocksService,
+  edgesService,
+  routesService,
+  type CreateBlockRequest,
+  type BulkOperationRequest,
+} from "../services";
 import { Container, CircularProgress, Alert, Typography } from "@mui/material";
-
+// TODO: fix delete edge/block tracking changes and implement change tracker api endpoint
 const Editor = () => {
   const { routeId } = useParams<{ routeId: string }>();
   const changeTrackerStore = useChangeTrackerStore();
@@ -22,7 +28,7 @@ const Editor = () => {
     error: blocksError,
   } = useQuery({
     queryKey: ["blocks", routeId],
-    queryFn: () => blocksService.getAllBlocks(),
+    queryFn: () => blocksService.getBlocksByRouteId(routeId!),
     enabled: !!routeId,
   });
 
@@ -46,8 +52,8 @@ const Editor = () => {
   });
 
   const updateBlockMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
-      blocksService.updateBlock(id, data),
+    mutationFn: ({ id, data }: { id: string; data: CreateBlockRequest }) =>
+      blocksService.upsertBlock(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["blocks", routeId] });
     },
@@ -112,106 +118,82 @@ const Editor = () => {
   }, [blocksData, edgesData]);
 
   async function addNewBlock(value: Node) {
-    changeTrackerStore.trackBlock(value.id);
+    changeTrackerStore.trackBlock(value.id, "create");
   }
 
   async function deleteBlock(value: string) {
-    changeTrackerStore.trackBlock(value);
+    // Track the block for deletion
+    changeTrackerStore.trackBlock(value, "delete");
+
+    // Also track all connected edges for deletion
+    const connectedEdges = initialEdges.filter(
+      (edge) => edge.source === value || edge.target === value
+    );
+
+    // Track each connected edge for deletion
+    connectedEdges.forEach((edge) => {
+      changeTrackerStore.trackEdge(edge.id, "delete");
+    });
   }
 
   async function updateBlock(id: string, _: Node) {
-    changeTrackerStore.trackBlock(id);
+    changeTrackerStore.trackBlock(id, "update");
   }
 
   async function addNewEdge(value: Edge) {
-    changeTrackerStore.trackEdge(value.id);
+    changeTrackerStore.trackEdge(value.id, "create");
   }
 
   async function deleteEdge(id: string) {
-    changeTrackerStore.trackEdge(id);
+    changeTrackerStore.trackEdge(id, "delete");
   }
 
   async function deleteEdges(ids: string[]) {
-    changeTrackerStore.trackEdges(ids);
+    changeTrackerStore.trackEdges(ids, "delete");
   }
 
   async function saveChanges(blocks: Node[], edges: Edge[]) {
     try {
-      // Get changed blocks
-      const changedBlocks = blocks
-        .filter((x) => changeTrackerStore.blocks.has(x.id))
-        .map((x) => ({
-          id: x.id,
-          type: x.type,
-          position: x.position,
-          data: x.data,
-          routeId: routeId,
-        }));
+      // Get changed blocks and edges with their actions
+      const blockChanges = changeTrackerStore.getBlockChanges();
+      const edgeChanges = changeTrackerStore.getEdgeChanges();
 
-      // Get changed edges
-      const changedEdges = edges
-        .filter((x) => changeTrackerStore.edges.has(x.id))
-        .map((x) => ({
-          id: x.id,
-          from: x.source!,
-          to: x.target!,
-          fromHandle: x.sourceHandle!,
-          toHandle: x.targetHandle!,
-        }));
+      // Transform changes into bulk operation format
+      const bulkData: BulkOperationRequest = {
+        blocks: blockChanges.map((change) => {
+          const block = blocks.find((b) => b.id === change.id);
+          return {
+            action: change.action,
+            content: block
+              ? {
+                  id: block.id,
+                  type: block.type || "default",
+                  position: block.position,
+                  data: block.data,
+                  routeId: routeId!,
+                }
+              : { id: change.id }, // For delete operations, only ID is needed
+          };
+        }),
+        edges: edgeChanges.map((change) => {
+          const edge = edges.find((e) => e.id === change.id);
+          return {
+            action: change.action,
+            content: edge
+              ? {
+                  id: edge.id,
+                  from: edge.source!,
+                  to: edge.target!,
+                  fromHandle: edge.sourceHandle ?? "",
+                  toHandle: edge.targetHandle ?? "",
+                }
+              : { id: change.id }, // For delete operations, only ID is needed
+          };
+        }),
+      };
 
-      // Separate new, updated, and deleted items
-      const existingBlocks = blocksData || [];
-      const existingEdges = edgesData || [];
-
-      // Process blocks
-      for (const block of changedBlocks) {
-        const existingBlock = existingBlocks.find((b) => b.id === block.id);
-        if (existingBlock) {
-          // Update existing block
-          await updateBlockMutation.mutateAsync({
-            id: block.id,
-            data: {
-              type: block.type,
-              position: block.position,
-              data: block.data,
-              updatedAt: new Date().toISOString(),
-            },
-          });
-        } else {
-          // Create new block
-          await createBlockMutation.mutateAsync({
-            type: block.type || "default",
-            position: block.position,
-            data: block.data,
-            routeId: routeId!,
-          });
-        }
-      }
-
-      // Process edges
-      for (const edge of changedEdges) {
-        const existingEdge = existingEdges.find((e) => e.id === edge.id);
-        if (existingEdge) {
-          // Update existing edge
-          await updateEdgeMutation.mutateAsync({
-            id: edge.id,
-            data: {
-              from: edge.from,
-              to: edge.to,
-              fromHandle: edge.fromHandle,
-              toHandle: edge.toHandle,
-            },
-          });
-        } else {
-          // Create new edge
-          await createEdgeMutation.mutateAsync({
-            from: edge.from,
-            to: edge.to,
-            fromHandle: edge.fromHandle,
-            toHandle: edge.toHandle,
-          });
-        }
-      }
+      // Execute bulk operation
+      await routesService.bulkOperation(routeId!, bulkData);
 
       // Reset change tracker
       changeTrackerStore.reset();
@@ -271,8 +253,14 @@ const Editor = () => {
           edges: changeTrackerStore.edges,
           saveChanges,
           discardChanges: changeTrackerStore.reset,
-          trackBlockChange: changeTrackerStore.trackBlock,
-          trackEdgeChange: changeTrackerStore.trackEdge,
+          trackBlockChange: (
+            id: string,
+            action: "create" | "update" | "delete"
+          ) => changeTrackerStore.trackBlock(id, action),
+          trackEdgeChange: (
+            id: string,
+            action: "create" | "update" | "delete"
+          ) => changeTrackerStore.trackEdge(id, action),
         },
       }}
     >

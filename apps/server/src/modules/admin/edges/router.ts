@@ -8,22 +8,18 @@ import {
 } from "./dto";
 import {
   createEdgeService,
-  getEdgeByIdService,
   getEdgesByRouteIdService,
   updateEdgeService,
   deleteEdgeService,
 } from "./service";
+import { HttpError } from "../../../errors/httpError";
 
 export function mapEdgeEndpoints(app: Hono) {
   // POST /admin/edges – Create a new edge
   app.post("/edges", zValidator("json", createEdgeSchema), async (c) => {
-    try {
-      const data = c.req.valid("json");
-      const newEdge = await createEdgeService(data);
-      return c.json(newEdge, 201);
-    } catch (error: any) {
-      return c.json({ error: error.message || "Failed to create edge" }, 400);
-    }
+    const data = c.req.valid("json");
+    const newEdge = await createEdgeService(data);
+    return c.json(newEdge, 201);
   });
 
   // GET /admin/edges/:routeId – Get all edges by routeId
@@ -31,32 +27,21 @@ export function mapEdgeEndpoints(app: Hono) {
     "/edges/:routeId",
     zValidator("param", getEdgesByRouteIdSchema),
     async (c) => {
-      try {
-        const routeId = c.req.param("routeId");
-        const edges = await getEdgesByRouteIdService(routeId);
-        return c.json(edges);
-      } catch (error: any) {
-        return c.json(
-          { error: error.message || "Failed to get edges by route ID" },
-          400
-        );
-      }
+      const routeId = c.req.param("routeId");
+      const edges = await getEdgesByRouteIdService(routeId);
+      return c.json(edges);
     }
   );
 
   // PUT /admin/edges/:id – Update edge by ID
   app.put("/edges/:id", zValidator("json", updateEdgeSchema), async (c) => {
-    try {
-      const id = c.req.param("id");
-      const data = c.req.valid("json");
-      const updatedEdge = await updateEdgeService(id, data);
-      if (!updatedEdge) {
-        return c.json({ error: "Edge not found" }, 404);
-      }
-      return c.json(updatedEdge);
-    } catch (error: any) {
-      return c.json({ error: error.message || "Failed to update edge" }, 400);
+    const id = c.req.param("id");
+    const data = c.req.valid("json");
+    const updatedEdge = await updateEdgeService(id, data);
+    if (!updatedEdge) {
+      throw new HttpError(404, "Edge not found");
     }
+    return c.json(updatedEdge);
   });
 
   // DELETE /admin/edges/:id – Delete edge by ID
@@ -64,16 +49,12 @@ export function mapEdgeEndpoints(app: Hono) {
     "/edges/:id",
     zValidator("param", getEdgeByIdSchema),
     async (c) => {
-      try {
-        const id = c.req.param("id");
-        const deletedEdge = await deleteEdgeService(id);
-        if (!deletedEdge) {
-          return c.json({ error: "Edge not found" }, 404);
-        }
-        return c.json({ message: "Edge deleted successfully" });
-      } catch (error: any) {
-        return c.json({ error: error.message || "Failed to delete edge" }, 400);
+      const id = c.req.param("id");
+      const deletedEdge = await deleteEdgeService(id);
+      if (!deletedEdge) {
+        throw new HttpError(404, "Edge not found");
       }
+      return c.json({ message: "Edge deleted successfully" });
     }
   );
 }
