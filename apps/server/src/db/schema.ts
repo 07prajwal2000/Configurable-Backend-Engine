@@ -42,10 +42,14 @@ export const blocksEntity = pgTable(
   () => [index("routeId")]
 );
 
-export const edgesEntity = pgTable("edges", {
-  id: varchar({ length: 50 }).primaryKey().default(generateID()),
-  from: varchar({ length: 50 }),
-  to: varchar({ length: 50 }),
-  fromHandle: varchar({ length: 50 }),
-  toHandle: varchar({ length: 50 }),
-});
+export const edgesEntity = pgTable(
+  "edges",
+  {
+    id: varchar({ length: 50 }).primaryKey().default(generateID()),
+    from: varchar({ length: 50 }).references(() => blocksEntity.id),
+    to: varchar({ length: 50 }).references(() => blocksEntity.id),
+    fromHandle: varchar({ length: 50 }),
+    toHandle: varchar({ length: 50 }),
+  },
+  () => [index("from"), index("to")]
+);

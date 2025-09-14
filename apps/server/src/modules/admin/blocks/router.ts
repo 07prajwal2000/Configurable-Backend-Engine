@@ -4,12 +4,10 @@ import {
   createBlockSchema,
   updateBlockSchema,
   getBlockByIdSchema,
-  getBlockByPathSchema,
 } from "./dto";
 import {
   createBlockService,
   getBlockByIdService,
-  getBlockByPathService,
   getAllBlocksService,
   updateBlockService,
   deleteBlockService,
@@ -40,27 +38,6 @@ export function mapBlockEndpoints(app: Hono) {
       return c.json({ error: error.message || "Failed to get block" }, 400);
     }
   });
-
-  // GET /admin/blocks/path/:path – Get block by path
-  app.get(
-    "/blocks/path/:path",
-    zValidator("param", getBlockByPathSchema),
-    async (c) => {
-      try {
-        const path = c.req.param("path");
-        const block = await getBlockByPathService(path);
-        if (!block) {
-          return c.json({ error: "Block not found" }, 404);
-        }
-        return c.json(block);
-      } catch (error: any) {
-        return c.json(
-          { error: error.message || "Failed to get block by path" },
-          400
-        );
-      }
-    }
-  );
 
   // GET /admin/blocks – Get all blocks
   app.get("/blocks", async (c) => {

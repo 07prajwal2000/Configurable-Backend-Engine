@@ -37,6 +37,10 @@ const openapiSpec = {
       name: "Blocks",
       description: "Operations for managing workflow blocks",
     },
+    {
+      name: "Edges",
+      description: "Operations for managing workflow edges",
+    },
   ],
   servers: [
     {
@@ -496,35 +500,175 @@ const openapiSpec = {
         },
       },
     },
-    "/blocks/path/{path}": {
+    "/edges": {
+      post: {
+        tags: ["Edges"],
+        summary: "Create a new edge",
+        operationId: "createEdge",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/CreateEdgeRequest",
+              },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "Edge created successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Edge",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/edges/{routeId}": {
       get: {
-        tags: ["Blocks"],
-        summary: "Get block by route path",
-        operationId: "getBlockByPath",
+        tags: ["Edges"],
+        summary: "Get all edges by route ID",
+        operationId: "getEdgesByRouteId",
         parameters: [
           {
-            name: "path",
+            name: "routeId",
             in: "path",
             required: true,
             schema: {
               type: "string",
             },
-            description: "Route path",
+            description: "Route ID",
           },
         ],
         responses: {
           "200": {
-            description: "Block found",
+            description: "List of edges for the route",
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/Block",
+                  type: "array",
+                  items: {
+                    $ref: "#/components/schemas/EdgeWithBlocks",
+                  },
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/edges/{id}": {
+      put: {
+        tags: ["Edges"],
+        summary: "Update edge by ID",
+        operationId: "updateEdge",
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: {
+              type: "string",
+            },
+            description: "Edge ID",
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/UpdateEdgeRequest",
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Edge updated successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Edge",
                 },
               },
             },
           },
           "404": {
-            description: "Block not found",
+            description: "Edge not found",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+          },
+        },
+      },
+      delete: {
+        tags: ["Edges"],
+        summary: "Delete edge by ID",
+        operationId: "deleteEdge",
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: {
+              type: "string",
+            },
+            description: "Edge ID",
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Edge deleted successfully",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/SuccessMessage",
+                },
+              },
+            },
+          },
+          "404": {
+            description: "Edge not found",
             content: {
               "application/json": {
                 schema: {
@@ -696,6 +840,110 @@ const openapiSpec = {
           },
         },
         required: [],
+      },
+      Edge: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+            description: "Unique identifier for the edge",
+          },
+          from: {
+            type: "string",
+            description: "Source block ID",
+          },
+          to: {
+            type: "string",
+            description: "Target block ID",
+          },
+          fromHandle: {
+            type: "string",
+            description: "Source handle identifier",
+          },
+          toHandle: {
+            type: "string",
+            description: "Target handle identifier",
+          },
+        },
+        required: ["id", "from", "to"],
+      },
+      CreateEdgeRequest: {
+        type: "object",
+        properties: {
+          from: {
+            type: "string",
+            description: "Source block ID",
+          },
+          to: {
+            type: "string",
+            description: "Target block ID",
+          },
+          fromHandle: {
+            type: "string",
+            description: "Source handle identifier",
+          },
+          toHandle: {
+            type: "string",
+            description: "Target handle identifier",
+          },
+        },
+        required: ["from", "to"],
+      },
+      UpdateEdgeRequest: {
+        type: "object",
+        properties: {
+          from: {
+            type: "string",
+            description: "Source block ID",
+          },
+          to: {
+            type: "string",
+            description: "Target block ID",
+          },
+          fromHandle: {
+            type: "string",
+            description: "Source handle identifier",
+          },
+          toHandle: {
+            type: "string",
+            description: "Target handle identifier",
+          },
+        },
+        required: [],
+      },
+      EdgeWithBlocks: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+            description: "Unique identifier for the edge",
+          },
+          from: {
+            type: "string",
+            description: "Source block ID",
+          },
+          to: {
+            type: "string",
+            description: "Target block ID",
+          },
+          fromHandle: {
+            type: "string",
+            description: "Source handle identifier",
+          },
+          toHandle: {
+            type: "string",
+            description: "Target handle identifier",
+          },
+          fromBlock: {
+            $ref: "#/components/schemas/Block",
+            description: "Source block information",
+          },
+          toBlock: {
+            $ref: "#/components/schemas/Block",
+            description: "Target block information",
+          },
+        },
+        required: ["id", "from", "to"],
       },
     },
   },

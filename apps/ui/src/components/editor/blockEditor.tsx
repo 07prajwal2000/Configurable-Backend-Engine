@@ -11,17 +11,16 @@ import {
   type Node,
   type OnSelectionChangeParams,
 } from "@xyflow/react";
-import { createContext, useCallback, useContext } from "react";
+import { createContext, useCallback, useContext, useEffect } from "react";
 import { useBlockStore } from "../../store/blockStore";
 import AddBlockMenu from "./addBlockMenu";
 import { showToast } from "../toasts";
 import { useBlockEditorContext } from "../../context/blockEditorContext";
-import { generateBlockID } from "../../services/blocks";
+import { generateBlockID, generateEdgeID } from "../../services";
 import { blockTypeMap } from "../../constants/blockType";
 import { blocksList } from "../../constants/blocksList";
 import EditorSidebar from "./editorSidebar";
 import Topbar from "./topbar";
-import { generateEdgeID } from "../../services/edges";
 import type { BlockTypes } from "@cbe/blocks";
 
 type BlockEditorProps = {
@@ -42,6 +41,15 @@ const BlockEditor = (props: BlockEditorProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(props.blocks);
   const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges);
   const { selectedBlock, setSelectedBlock } = useBlockStore();
+
+  // Sync props with internal state when they change
+  useEffect(() => {
+    setNodes(props.blocks);
+  }, [props.blocks, setNodes]);
+
+  useEffect(() => {
+    setEdges(props.edges);
+  }, [props.edges, setEdges]);
 
   function onNodeDragStop(node: Node) {
     blockEditorContext.updateBlock(node.id, node);

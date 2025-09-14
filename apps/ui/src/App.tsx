@@ -1,10 +1,11 @@
 import { Toaster } from "react-hot-toast";
-import Editor from "./pages/editor";
+import { RouterProvider } from "react-router-dom";
+import { browserRoutes } from "./routes";
 
 function App() {
   return (
     <>
-      <Editor />
+      <RouterProvider router={browserRoutes} />
       <Toaster
         position="bottom-right"
         toastOptions={{ duration: 3500, className: "react-hot-toast" }}

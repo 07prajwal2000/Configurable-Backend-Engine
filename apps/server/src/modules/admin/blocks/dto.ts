@@ -35,7 +35,3 @@ export const updateBlockSchema = blockSchema
 export const getBlockByIdSchema = z.object({
   id: z.string(),
 });
-
-export const getBlockByPathSchema = z.object({
-  path: z.string(),
-});

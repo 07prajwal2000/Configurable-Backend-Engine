@@ -15,6 +15,13 @@
       "when": 1757763619404,
       "tag": "0001_daffy_kulan_gath",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1757803720915,
+      "tag": "0002_moaning_karen_page",
+      "breakpoints": true
     }
   ]
 }

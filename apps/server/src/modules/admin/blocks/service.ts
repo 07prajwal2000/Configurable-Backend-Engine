@@ -1,7 +1,6 @@
 import {
   createBlock,
   getBlockById,
-  getBlockByPath,
   getAllBlocks,
   updateBlock,
   deleteBlock,
@@ -35,10 +34,6 @@ export async function getBlockByIdService(id: string) {
   return await getBlockById(id);
 }
 
-export async function getBlockByPathService(path: string) {
-  return await getBlockByPath(path);
-}
-
 export async function getAllBlocksService() {
   return await getAllBlocks();
 }
@@ -54,7 +49,8 @@ export async function updateBlockService(id: string, data: Partial<BlockType>) {
   const updateData: BlockType = {
     id: existingBlock.id,
     type: data.type ?? (existingBlock.type as string),
-    position: data.position ?? existingBlock.position,
+    position:
+      data.position ?? (existingBlock.position as { x: number; y: number }),
     data: data.data ?? existingBlock.data,
     createdAt: existingBlock.createdAt,
     updatedAt: new Date(),

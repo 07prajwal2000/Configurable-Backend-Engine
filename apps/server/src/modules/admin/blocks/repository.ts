@@ -16,16 +16,6 @@ export async function getBlockById(id: string) {
   return result[0] || null;
 }
 
-export async function getBlockByPath(path: string) {
-  // Join blocksEntity with routesEntity to find blocks by route path
-  const result = await db
-    .select()
-    .from(blocksEntity)
-    .innerJoin(routesEntity, eq(blocksEntity.routeId, routesEntity.id))
-    .where(eq(routesEntity.path, path));
-  return result[0] || null;
-}
-
 export async function getAllBlocks() {
   return await db.select().from(blocksEntity);
 }
