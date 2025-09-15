@@ -3,7 +3,7 @@
 # 🚀 Configurable Backend Engine (CBE)
 
 ### The Ultimate No/Low-Code Backend API Builder
-<img src="docs/assets/logo.png" width="60px">
+<img src="docs/assets/logo_rounded.png" width="60px">
 
 [📚 Documentation](docs/index.md) • [🐛 Report Bug](https://github.com/07prajwal2000/Configurable-Backend-Engine/issues) • [💡 Request Feature](https://github.com/07prajwal2000/Configurable-Backend-Engine/discussions)
 
