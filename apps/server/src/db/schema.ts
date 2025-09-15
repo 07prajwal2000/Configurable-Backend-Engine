@@ -1,13 +1,16 @@
 import { generateID } from "@cbe/lib";
 import {
+  boolean,
   index,
   json,
+  pgEnum,
   pgTable,
   serial,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import z from "zod";
 
 export enum HttpMethod {
   GET = "GET",
@@ -53,3 +56,24 @@ export const edgesEntity = pgTable(
   },
   () => [index("from"), index("to")]
 );
+
+export const encodingTypeEnum = pgEnum("encoding_types", [
+  "plaintext",
+  "base64",
+  "hex",
+]);
+
+const encodingTypeValues = z.enum(encodingTypeEnum.enumValues);
+
+export type AppConfigEncodingTypes = z.infer<typeof encodingTypeValues>;
+
+export const appConfigEntity = pgTable("app_config", {
+  id: serial().primaryKey(),
+  keyName: varchar({ length: 100 }),
+  description: text(),
+  value: text(),
+  isEncrypted: boolean().default(false),
+  encoding_type: encodingTypeEnum(),
+  createdAt: timestamp().defaultNow(),
+  updatedAt: timestamp().defaultNow(),
+});

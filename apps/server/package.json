@@ -20,10 +20,12 @@
     "@cbe/blocks": "file:../../packages/blocks",
     "@cbe/lib": "file:../../packages/lib",
     "@hono/node-server": "^1.19.0",
+    "@hono/standard-validator": "^0.1.5",
     "@hono/zod-validator": "^0.7.2",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
     "hono": "^4.9.1",
+    "hono-openapi": "^1.0.8",
     "pg": "^8.16.3",
     "zod": "^4.1.8"
   }
