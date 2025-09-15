@@ -1,0 +1,1731 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Configurable Backend Engine (CBE) is a No/Low Code Tool to build Backend Rest APIs with ease.">
+      
+      
+        <meta name="author" content="Prajwal Aradhya">
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="entrypoint/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
+    
+    
+      
+        <title>Introduction to Blocks - CBE</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.e53b48f4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduction-to-blocks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CBE" class="md-header__button md-logo" aria-label="CBE" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CBE
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introduction to Blocks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configurable Backend Engine
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Blocks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../concepts/context/" class="md-tabs__link">
+          
+  
+  
+  Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CBE" class="md-nav__button md-logo" aria-label="CBE" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CBE
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configurable Backend Engine
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Blocks
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Blocks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Introduction to Blocks
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction to Blocks
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#block-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Block Connections
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Block Categories
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📦 Block Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-blocks-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔰 Core Blocks (Required)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-flow-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔀 Control Flow Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 HTTP Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-processing-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      📝 Data Processing Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-management-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      💾 Variable Management Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-debugging-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Logging &amp; Debugging Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extension-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔌 Extension Blocks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-blocks-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ How Blocks Work
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ How Blocks Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Execution Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-custom-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎨 Creating Custom Blocks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Block Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Block Reference
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="entrypoint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Entrypoint Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="response/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Response Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Built in
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Built in
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/arrayops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Array Operations Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/console/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Console Log Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/for/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    For Loop Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/foreach/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ForEach Loop Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/getvar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Get Variable Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/if/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    If Condition Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/interceptor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Interceptor Block (Internal Use)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/jsrunner/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    JavaScript Runner Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/setvar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SetVar Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/transformer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transformer Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_11" id="__nav_2_4_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Http
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4_11">
+            <span class="md-nav__icon md-icon"></span>
+            Http
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/http/httpGetCookie/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Get HTTP Cookie Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/http/httpGetHeader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Get HTTP Header Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/http/httpGetParam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Get HTTP Parameter Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/http/httpGetRequestBody/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Get HTTP Request Body Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/http/httpSetCookie/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Set HTTP Cookie Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="built-in/http/httpSetHeader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Set HTTP Header Block
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Concepts
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Concepts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Request Context & Variables
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Getting started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation & Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#block-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Block Connections
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-categories" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Block Categories
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📦 Block Categories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-blocks-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔰 Core Blocks (Required)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-flow-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔀 Control Flow Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 HTTP Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-processing-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      📝 Data Processing Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-management-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      💾 Variable Management Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-debugging-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Logging &amp; Debugging Blocks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extension-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔌 Extension Blocks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-blocks-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ How Blocks Work
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ How Blocks Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Execution Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-custom-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎨 Creating Custom Blocks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Block Configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔧 Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#block-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Block Reference
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="introduction-to-blocks">Introduction to Blocks</h1>
+<p>Blocks are the fundamental building pieces for creating configurable backend routes. They connect together like LEGO bricks to form complex API workflows through a visual, drag-and-drop interface.</p>
+<h2 id="block-connections">🔗 Block Connections</h2>
+<p>Each block has connection points that define data flow and execution order:</p>
+<table>
+<thead>
+<tr>
+<th>Connection Type</th>
+<th>Color</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Source</strong></td>
+<td>🔵 Blue</td>
+<td>Connects to next block and optionally passes input data</td>
+</tr>
+<tr>
+<td><strong>Target</strong></td>
+<td>🟢 Green</td>
+<td>Accepts connection and input data from previous block</td>
+</tr>
+<tr>
+<td><strong>Success</strong></td>
+<td>🟢 Green</td>
+<td>Executes on successful block completion</td>
+</tr>
+<tr>
+<td><strong>Error</strong></td>
+<td>🔴 Red</td>
+<td>Executes when block encounters an error</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Block Connections" src="img/block.png" /></p>
+<h2 id="block-categories">📦 Block Categories</h2>
+<p>Blocks are organized into logical categories based on their functionality:</p>
+<h3 id="core-blocks-required">🔰 <strong>Core Blocks</strong> (Required)</h3>
+<p>These blocks are essential for every API route:</p>
+<ul>
+<li><strong><a href="entrypoint/">Entrypoint</a></strong>: Entry point for all requests</li>
+<li><strong><a href="response/">Response</a></strong>: Final output generation</li>
+</ul>
+<h3 id="control-flow-blocks">🔀 <strong>Control Flow Blocks</strong></h3>
+<p>Manage execution flow and decision making:</p>
+<ul>
+<li><strong><a href="built-in/if/">If</a></strong>: Conditional branching based on conditions</li>
+<li><strong><a href="built-in/for/">For Loop</a></strong>: Traditional for loop with start/end/step</li>
+<li><strong><a href="built-in/foreach/">ForEach Loop</a></strong>: Iterate over arrays or collections</li>
+</ul>
+<h3 id="http-blocks">🌐 <strong>HTTP Blocks</strong></h3>
+<p>Handle HTTP request/response operations:</p>
+<ul>
+<li><strong><a href="built-in/http/httpGetHeader/">Get Header</a></strong>: Extract request headers</li>
+<li><strong><a href="built-in/http/httpSetHeader/">Set Header</a></strong>: Set response headers</li>
+<li><strong><a href="built-in/http/httpGetCookie/">Get Cookie</a></strong>: Extract request cookies</li>
+<li><strong><a href="built-in/http/httpSetCookie/">Set Cookie</a></strong>: Set response cookies</li>
+<li><strong><a href="built-in/http/httpGetParam/">Get Param</a></strong>: Extract route/query parameters</li>
+<li><strong><a href="built-in/http/httpGetRequestBody/">Get Request Body</a></strong>: Parse request body</li>
+</ul>
+<h3 id="data-processing-blocks">📝 <strong>Data Processing Blocks</strong></h3>
+<p>Transform and manipulate data:</p>
+<ul>
+<li><strong><a href="built-in/jsrunner/">JavaScript Runner</a></strong>: Execute custom JavaScript code</li>
+<li><strong><a href="built-in/transformer/">Transformer</a></strong>: Transform objects using field mapping</li>
+<li><strong><a href="built-in/arrayops/">Array Operations</a></strong>: Manipulate arrays (push, pop, slice, etc.)</li>
+</ul>
+<h3 id="variable-management-blocks">💾 <strong>Variable Management Blocks</strong></h3>
+<p>Store and retrieve data within request context:</p>
+<ul>
+<li><strong><a href="built-in/setvar/">Set Variable</a></strong>: Store data in request context</li>
+<li><strong><a href="built-in/getvar/">Get Variable</a></strong>: Retrieve data from request context</li>
+</ul>
+<h3 id="logging-debugging-blocks">📊 <strong>Logging &amp; Debugging Blocks</strong></h3>
+<p>Monitor and debug API execution:</p>
+<ul>
+<li><strong><a href="built-in/console/">Console Log</a></strong>: Output to console for debugging</li>
+</ul>
+<h3 id="extension-blocks">🔌 <strong>Extension Blocks</strong></h3>
+<p>Specialized functionality:</p>
+<ul>
+<li><strong><a href="built-in/interceptor/">Interceptor</a></strong>: Intercept and modify request/response flow</li>
+</ul>
+<h2 id="how-blocks-work">🏗️ How Blocks Work</h2>
+<h3 id="execution-flow">Execution Flow</h3>
+<ol>
+<li><strong>Entrypoint Block</strong> receives the initial request</li>
+<li>Data flows through connected blocks in sequence</li>
+<li>Each block processes input and produces output</li>
+<li><strong>Response Block</strong> generates the final HTTP response</li>
+</ol>
+<h3 id="data-flow">Data Flow</h3>
+<ul>
+<li>Blocks receive input from their target connection</li>
+<li>Processing occurs based on block configuration</li>
+<li>Output is sent to the next block via source connection</li>
+<li>Variables can be set/retrieved across the entire flow</li>
+</ul>
+<h3 id="error-handling">Error Handling</h3>
+<ul>
+<li>Blocks can have success and error paths</li>
+<li>Failed blocks can continue execution or stop the flow</li>
+<li>Error information is propagated through the error connection</li>
+</ul>
+<h2 id="creating-custom-blocks">🎨 Creating Custom Blocks</h2>
+<p>The Configurable Backend Engine supports custom block development:</p>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">BaseBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">BlockOutput</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../baseBlock&quot;</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">export</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">CustomBlock</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">BaseBlock</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">executeAsync</span><span class="p">(</span><span class="nx">params?</span><span class="o">:</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">BlockOutput</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="c1">// Custom logic here</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nx">successful</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nx">output</span><span class="o">:</span><span class="w"> </span><span class="kt">processedData</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="kt">this.next</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">      </span><span class="nx">continueIfFail</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">};</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="block-configuration">📋 Block Configuration</h2>
+<p>Each block can be configured through:</p>
+<ul>
+<li><strong>Input Parameters</strong>: Define block behavior</li>
+<li><strong>Connection Settings</strong>: Control data flow</li>
+<li><strong>Validation Rules</strong>: Ensure data integrity</li>
+<li><strong>Error Handling</strong>: Define failure responses</li>
+</ul>
+<h2 id="best-practices">🔧 Best Practices</h2>
+<h3 id="design-principles">Design Principles</h3>
+<ul>
+<li>Keep blocks focused on single responsibilities</li>
+<li>Use meaningful names and descriptions</li>
+<li>Provide clear input/output documentation</li>
+<li>Handle errors gracefully</li>
+</ul>
+<h3 id="performance-considerations">Performance Considerations</h3>
+<ul>
+<li>Avoid heavy computations in frequently used blocks</li>
+<li>Use caching for expensive operations</li>
+<li>Minimize database queries within blocks</li>
+<li>Consider async operations for I/O tasks</li>
+</ul>
+<h3 id="security-guidelines">Security Guidelines</h3>
+<ul>
+<li>Validate all input parameters</li>
+<li>Sanitize data before processing</li>
+<li>Use parameterized queries for database operations</li>
+<li>Implement proper error handling without exposing sensitive information</li>
+</ul>
+<h2 id="block-reference">📚 Block Reference</h2>
+<p>For detailed information about each block, see the individual block documentation linked above. Each page includes:</p>
+<ul>
+<li>Block purpose and use cases</li>
+<li>Configuration options</li>
+<li>Input/output specifications</li>
+<li>Example usage</li>
+<li>Error handling</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "navigation.tabs", "navigation.tabs.sticky"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
