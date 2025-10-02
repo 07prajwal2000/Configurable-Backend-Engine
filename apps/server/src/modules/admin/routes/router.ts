@@ -13,6 +13,7 @@ import {
   updateRouteService,
   deleteRouteService,
   bulkOperationService,
+  invalidateRouteGraphCacheService,
 } from "./service";
 import { HttpError } from "../../../errors/httpError";
 
@@ -159,6 +160,25 @@ export function mapRouteEndpoints(app: Hono) {
       }
 
       const result = await bulkOperationService(routeId, data);
+      return c.json(result);
+    }
+  );
+
+  // DELETE /admin/routes/:id/invalidate-cache - Clear the block graph cache for the route
+  app.delete(
+    "/routes/:id/invalidate-cache",
+    describeRoute({
+      description: "Clear the block graph cache for the route",
+      responses: {
+        200: {
+          description: "Success",
+        },
+      },
+    }),
+    zValidator("param", getRouteByIdSchema),
+    async (c) => {
+      const routeId = c.req.param("id");
+      const result = await invalidateRouteGraphCacheService(routeId);
       return c.json(result);
     }
   );

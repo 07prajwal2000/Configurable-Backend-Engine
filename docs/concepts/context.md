@@ -39,6 +39,11 @@ The context consists of several key components:
 | `setHeader(key, value)` | `string`, `string` | `void` | Set response header |
 | `setCookie(name, options)` | `string`, `object` | `void` | Set response cookie |
 
+### App Config
+| Method | Parameters | Returns | Description |
+|--------|------------|---------|-------------|
+| `getConfig(key)` | `string` | `string` | Gets the config value |
+
 ## 💾 Custom Variables
 
 Variables allow you to store and retrieve data throughout the request lifecycle:

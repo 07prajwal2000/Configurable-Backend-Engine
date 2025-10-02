@@ -21,7 +21,11 @@ import {
   updateEdge,
 } from "../edges/repository";
 import { db } from "../../../db";
-import { CHAN_ON_ROUTE_CHANGE, publishMessage } from "../../../db/redis";
+import {
+  CHAN_ON_ROUTE_CHANGE,
+  deleteCacheKey,
+  publishMessage,
+} from "../../../db/redis";
 
 export async function createRouteService(data: RouteType) {
   // Generate ID if not provided
@@ -72,12 +76,19 @@ export async function deleteRouteService(id: string) {
   return await deleteRoute(id);
 }
 
+export async function invalidateRouteGraphCacheService(routeId: string) {
+  const cacheKey = `${routeId}_GRAPH`;
+  await deleteCacheKey(cacheKey);
+  return true;
+}
+
 export async function bulkOperationService(
   routeId: string,
   data: BulkOperation
 ) {
   const { blocks, edges } = data;
-
+  const cacheKey = `${routeId}_GRAPH`;
+  await deleteCacheKey(cacheKey);
   // Separate operations by type
   const blockDeletes = blocks.filter((op) => op.action === "delete");
   const blockCreatesUpdates = blocks.filter(

@@ -1,7 +1,8 @@
-import { BlockBuilder, BlockOutput, Context, Engine } from "@cbe/blocks";
+import { BlockBuilder, Context, Engine } from "@cbe/blocks";
 import { db } from "../db";
 import { blocksEntity, edgesEntity } from "../db/schema";
 import { eq } from "drizzle-orm";
+import { getCache, hasCacheKey, setCache } from "../db/redis";
 
 export async function startBlocksExecution(routeId: string, context: Context) {
   const builder = new BlockBuilder(context, {
@@ -17,13 +18,28 @@ export async function startBlocksExecution(routeId: string, context: Context) {
   builder.loadEdges(edges);
   const entrypoint = builder.getEntrypoint();
   const graph = builder.buildGraph(entrypoint);
-  // console.log(graph);
   const engine = new Engine(graph);
   const executionResult = await engine.start(entrypoint, context.requestBody);
   return executionResult;
 }
 
 async function loadBlocksAndEdgesFromDatabase(routeId: string) {
+  const cacheKey = `${routeId}_GRAPH`;
+  if (await hasCacheKey(cacheKey)) {
+    return JSON.parse(await getCache(cacheKey));
+  }
+  const blocks = await loadBlocksFromDB(routeId);
+  const edges = await loadEdgesFromDB(routeId);
+
+  await setCache(cacheKey, JSON.stringify({ blocks, edges }));
+
+  return {
+    blocks,
+    edges,
+  };
+}
+
+async function loadBlocksFromDB(routeId: string) {
   // Load blocks for the route
   const blocksResult = await db
     .select()
@@ -39,10 +55,10 @@ async function loadBlocksAndEdgesFromDatabase(routeId: string) {
       position: block.position as { x: number; y: number },
       data: block.data,
     }));
+  return blocks;
+}
 
-  // Load edges for the route using left join
-  // Since edges don't have direct route reference, we join with blocks
-  // to find edges where either the 'from' or 'to' block belongs to the route
+async function loadEdgesFromDB(routeId: string) {
   const edgesResult = await db
     .select({
       id: edgesEntity.id,
@@ -63,9 +79,5 @@ async function loadBlocksAndEdgesFromDatabase(routeId: string) {
     fromHandle: edge.toHandle as string,
     toHandle: edge.fromHandle as string,
   }));
-
-  return {
-    blocks,
-    edges,
-  };
+  return edges;
 }

@@ -36,6 +36,7 @@ export interface ContextVarsType {
   httpRequestMethod: string;
   httpRequestRoute: string;
   getRequestBody: () => any;
+  getConfig(key: string): string;
 }
 
 export interface BlockOutput {

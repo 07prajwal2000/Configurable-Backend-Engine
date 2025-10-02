@@ -1,7 +1,11 @@
 import { HttpRouteParser } from "@cbe/lib";
 import { db } from "../db";
 import { routesEntity } from "../db/schema";
-import { CHAN_ON_ROUTE_CHANGE, redisClient } from "../db/redis";
+import {
+  CHAN_ON_ROUTE_CHANGE,
+  redisClient,
+  subscribeToChannel,
+} from "../db/redis";
 
 export async function loadRoutes() {
   const parser = new HttpRouteParser();
@@ -11,8 +15,7 @@ export async function loadRoutes() {
   if (canHotreload) {
     // register to chan:on-route-change signal from redis event
     console.log("routes hot reloading enabled");
-    redisClient.on("message", async (chan, _) => {
-      if (chan !== CHAN_ON_ROUTE_CHANGE) return;
+    subscribeToChannel(CHAN_ON_ROUTE_CHANGE, async () => {
       const fetchedRoutes = await fetchRoutes();
       // @ts-ignore
       parser.rebuildRoutes(fetchedRoutes);

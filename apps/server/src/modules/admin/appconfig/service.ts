@@ -15,6 +15,7 @@ import {
 } from "./dto";
 import { EncryptionService } from "./encryption";
 import { HttpError } from "../../../errors/httpError";
+import { CHAN_ON_APPCONFIG_CHANGE, publishMessage } from "../../../db/redis";
 
 // Helper function to safely convert database result to AppConfigType
 function convertDbResultToAppConfigType(dbResult: any): AppConfigType {
@@ -75,6 +76,7 @@ export async function createAppConfigService(
 
   const result = await createAppConfig(appConfigData);
   const convertedResult = convertDbResultToAppConfigType(result);
+  await publishMessage(CHAN_ON_APPCONFIG_CHANGE, "");
   return formatAppConfigResponse(convertedResult);
 }
 
@@ -167,7 +169,7 @@ export async function updateAppConfigService(
 
   const result = await updateAppConfig(id, updateData);
   if (!result) return null;
-
+  await publishMessage(CHAN_ON_APPCONFIG_CHANGE, "");
   return formatAppConfigResponse({
     id: result.id!,
     encoding_type: result.encoding_type!,
@@ -184,6 +186,7 @@ export async function deleteAppConfigService(
   id: number
 ): Promise<AppConfigType | null> {
   const result = await deleteAppConfig(id);
+  await publishMessage(CHAN_ON_APPCONFIG_CHANGE, "");
   return {
     id: result.id!,
     encoding_type: result.encoding_type!,

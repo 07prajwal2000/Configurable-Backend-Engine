@@ -5,6 +5,7 @@ import { Context } from "hono";
 import { ContentfulStatusCode } from "hono/utils/http-status";
 import { JsVM } from "@cbe/lib/vm";
 import { startBlocksExecution } from "../../loaders/blocksLoader";
+import { appConfigCache } from "../../loaders/appconfigLoader";
 
 export type HandleRequestType = {
   data?: any;
@@ -63,6 +64,9 @@ function setupContextVars(
   return {
     getCookie(key) {
       return getCookie(ctx, key) || "";
+    },
+    getConfig(key) {
+      return appConfigCache[key];
     },
     setCookie(name, options) {
       setCookie(ctx, name, options?.value || "", {
