@@ -105,3 +105,45 @@ export type BulkOperationResponse = {
   success: boolean;
   message: string;
 };
+
+// App Config types
+export type AppConfig = {
+  id: number;
+  keyName: string;
+  description?: string;
+  isEncrypted: boolean;
+  encoding_type: "plaintext" | "base64" | "hex";
+  createdAt?: string;
+  updatedAt?: string;
+  value?: string;
+};
+
+export type AppConfigWithoutValue = Omit<AppConfig, "value">;
+
+export type CreateAppConfigRequest = {
+  keyName: string;
+  description?: string;
+  value: string;
+  isEncrypted?: boolean;
+  encoding_type?: "plaintext" | "base64" | "hex";
+};
+
+export type UpdateAppConfigRequest = {
+  keyName?: string;
+  description?: string;
+  value?: string;
+  isEncrypted?: boolean;
+  encoding_type?: "plaintext" | "base64" | "hex";
+};
+
+export type PaginatedAppConfigsResponse = {
+  data: AppConfigWithoutValue[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+};

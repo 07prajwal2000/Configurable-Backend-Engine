@@ -1,7 +1,9 @@
 import type { Edge, Node } from "@xyflow/react";
 import { createContext, useContext } from "react";
+import type { Route } from "../services";
 
 export type BlockEditorContextType = {
+  routeData: Route;
   addNewBlock: (value: Node) => Promise<void>;
   deleteBlock: (id: string) => Promise<void>;
   updateBlock: (id: string, value: Node) => Promise<void>;

@@ -9,6 +9,11 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - pg_cbe:/var/lib/postgresql/data
+  valkey:
+    image: valkey/valkey:9.0-alpine
+    container_name: valkey
+    ports:
+      - 6379:6379
 
 volumes:
   pg_cbe:

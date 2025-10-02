@@ -88,20 +88,8 @@ export class EncryptionService {
    * @param visibleChars - Number of characters to show at start and end (default: 4)
    * @returns Masked string
    */
-  static maskValue(
-    value: string,
-    maskChar: string = "*",
-    visibleChars: number = 4
-  ): string {
-    if (value.length <= visibleChars * 2) {
-      return maskChar.repeat(value.length);
-    }
-
-    const start = value.substring(0, visibleChars);
-    const end = value.substring(value.length - visibleChars);
-    const maskLength = value.length - visibleChars * 2;
-
-    return start + maskChar.repeat(maskLength) + end;
+  static maskValue(value: string, maskChar: string = "*"): string {
+    return maskChar.repeat(value.length);
   }
 
   /**

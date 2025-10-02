@@ -19,6 +19,7 @@ import { GetHttpCookieBlockSidebar } from "../blocks/builtin/http/getHttpCookieB
 import { SetHttpCookieBlockSidebar } from "../blocks/builtin/http/setHttpCookieBlock";
 import { GetHttpParamBlockSidebar } from "../blocks/builtin/http/getHttpParamBlock";
 import { GetHttpRequestBodySidebar } from "../blocks/builtin/http/getHttpRequestBody";
+import RouteInfoSidebar from "./routeInfoSidebar";
 
 const EditorSidebar = () => {
   const { selectedBlock } = useBlockStore();
@@ -26,7 +27,7 @@ const EditorSidebar = () => {
   const block = blocks.find((node) => node.id === selectedBlock);
 
   if (!block) {
-    return <Typography fontSize={15}>Main Settings</Typography>;
+    return <RouteInfoSidebar />;
   }
 
   return (

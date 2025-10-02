@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import BlockEditor from "../components/editor/blockEditor";
 import { BlockEditorContext } from "../context/blockEditorContext";
 import { type Edge, type Node } from "@xyflow/react";
@@ -9,7 +9,6 @@ import {
   blocksService,
   edgesService,
   routesService,
-  type CreateBlockRequest,
   type BulkOperationRequest,
 } from "../services";
 import { Container, CircularProgress, Alert, Typography } from "@mui/material";
@@ -17,7 +16,6 @@ import { Container, CircularProgress, Alert, Typography } from "@mui/material";
 const Editor = () => {
   const { routeId } = useParams<{ routeId: string }>();
   const changeTrackerStore = useChangeTrackerStore();
-  const queryClient = useQueryClient();
   const [initialBlocks, setInitialBlocks] = useState<Node[]>([]);
   const [initialEdges, setInitialEdges] = useState<Edge[]>([]);
 
@@ -31,6 +29,16 @@ const Editor = () => {
     queryFn: () => blocksService.getBlocksByRouteId(routeId!),
     enabled: !!routeId,
   });
+  // Load blocks for the route
+  const {
+    data: routeData,
+    isLoading: routeLoading,
+    error: routeError,
+  } = useQuery({
+    queryKey: ["routes", routeId],
+    queryFn: () => routesService.getRouteById(routeId!),
+    enabled: !!routeId,
+  });
 
   // Load edges for the route
   const {
@@ -41,51 +49,6 @@ const Editor = () => {
     queryKey: ["edges", routeId],
     queryFn: () => edgesService.getEdgesByRouteId(routeId!),
     enabled: !!routeId,
-  });
-
-  // Mutations for saving changes
-  const createBlockMutation = useMutation({
-    mutationFn: blocksService.createBlock,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blocks", routeId] });
-    },
-  });
-
-  const updateBlockMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: CreateBlockRequest }) =>
-      blocksService.upsertBlock(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blocks", routeId] });
-    },
-  });
-
-  const deleteBlockMutation = useMutation({
-    mutationFn: blocksService.deleteBlock,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blocks", routeId] });
-    },
-  });
-
-  const createEdgeMutation = useMutation({
-    mutationFn: edgesService.createEdge,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["edges", routeId] });
-    },
-  });
-
-  const updateEdgeMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
-      edgesService.updateEdge(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["edges", routeId] });
-    },
-  });
-
-  const deleteEdgeMutation = useMutation({
-    mutationFn: edgesService.deleteEdge,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["edges", routeId] });
-    },
   });
 
   // Transform server data to React Flow format
@@ -212,7 +175,7 @@ const Editor = () => {
     );
   }
 
-  if (blocksLoading || edgesLoading) {
+  if (blocksLoading || edgesLoading || routeLoading) {
     return (
       <Container
         sx={{
@@ -228,7 +191,7 @@ const Editor = () => {
     );
   }
 
-  if (blocksError || edgesError) {
+  if (blocksError || edgesError || routeError) {
     return (
       <Container>
         <Alert severity="error">
@@ -242,6 +205,7 @@ const Editor = () => {
   return (
     <BlockEditorContext
       value={{
+        routeData: routeData!,
         addNewBlock,
         deleteBlock,
         updateBlock,

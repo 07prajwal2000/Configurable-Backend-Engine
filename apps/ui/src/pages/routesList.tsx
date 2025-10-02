@@ -18,6 +18,7 @@ import RouteTable from "../components/RouteTable";
 import RouteFormModal from "../components/RouteFormModal";
 import RouteDetailsModal from "../components/RouteDetailsModal";
 import { routesService } from "../services";
+import Layout from "../components/layout";
 
 type Route = {
   id: string;
@@ -147,73 +148,75 @@ const RoutesList: React.FC = () => {
   }
 
   return (
-    <Container>
-      <Box sx={{ my: 4 }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 3,
-          }}
-        >
-          <Typography variant="h4" component="h1">
-            Routes
-          </Typography>
-          <Button
-            variant="contained"
-            startIcon={<MdAdd />}
-            onClick={handleCreate}
+    <Layout>
+      <Container>
+        <Box sx={{ my: 4 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3,
+            }}
           >
-            Create Route
-          </Button>
+            <Typography variant="h4" component="h1">
+              Routes
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<MdAdd />}
+              onClick={handleCreate}
+            >
+              Create Route
+            </Button>
+          </Box>
+
+          <RouteTable
+            routes={routes}
+            loading={isLoading}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onOpenEditor={handleOpenEditor}
+            onViewDetails={handleViewDetails}
+          />
         </Box>
 
-        <RouteTable
-          routes={routes}
-          loading={isLoading}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onOpenEditor={handleOpenEditor}
-          onViewDetails={handleViewDetails}
+        <RouteFormModal
+          open={formModalOpen}
+          onClose={handleFormClose}
+          onSubmit={handleFormSubmit}
+          initialData={selectedRoute}
+          loading={createMutation.isPending || updateMutation.isPending}
         />
-      </Box>
 
-      <RouteFormModal
-        open={formModalOpen}
-        onClose={handleFormClose}
-        onSubmit={handleFormSubmit}
-        initialData={selectedRoute}
-        loading={createMutation.isPending || updateMutation.isPending}
-      />
+        <RouteDetailsModal
+          open={detailsModalOpen}
+          onClose={handleDetailsClose}
+          route={selectedRoute}
+        />
 
-      <RouteDetailsModal
-        open={detailsModalOpen}
-        onClose={handleDetailsClose}
-        route={selectedRoute}
-      />
-
-      <Dialog open={deleteDialogOpen} onClose={handleDeleteClose}>
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete this route? This action cannot be
-            undone.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteClose}>Cancel</Button>
-          <Button
-            onClick={confirmDelete}
-            color="error"
-            variant="contained"
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? "Deleting..." : "Delete"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+        <Dialog open={deleteDialogOpen} onClose={handleDeleteClose}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Are you sure you want to delete this route? This action cannot be
+              undone.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteClose}>Cancel</Button>
+            <Button
+              onClick={confirmDelete}
+              color="error"
+              variant="contained"
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </Layout>
   );
 };
 

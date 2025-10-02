@@ -4,7 +4,6 @@ import {
   getAllBlocks,
   getTotalBlocksCount,
   getBlocksByRouteId,
-  updateBlock,
   upsertBlock,
   deleteBlock,
 } from "./repository";

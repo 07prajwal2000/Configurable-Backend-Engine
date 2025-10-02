@@ -7,8 +7,7 @@ import {
 } from "./repository";
 import { RouteType, BulkOperation } from "./dto";
 import { generateID } from "@cbe/lib";
-import { createBlockService, upsertBlockService } from "../blocks/service";
-import { createEdgeService, updateEdgeService } from "../edges/service";
+import { createBlockService } from "../blocks/service";
 import {
   getBlockById,
   deleteBlock,
@@ -22,6 +21,7 @@ import {
   updateEdge,
 } from "../edges/repository";
 import { db } from "../../../db";
+import { CHAN_ON_ROUTE_CHANGE, publishMessage } from "../../../db/redis";
 
 export async function createRouteService(data: RouteType) {
   // Generate ID if not provided
@@ -50,6 +50,7 @@ export async function createRouteService(data: RouteType) {
       httpCode: "200",
     },
   });
+  await publishMessage(CHAN_ON_ROUTE_CHANGE, "");
   return result;
 }
 
@@ -62,10 +63,12 @@ export async function getAllRoutesService() {
 }
 
 export async function updateRouteService(id: string, data: RouteType) {
+  await publishMessage(CHAN_ON_ROUTE_CHANGE, "");
   return await updateRoute(id, data);
 }
 
 export async function deleteRouteService(id: string) {
+  await publishMessage(CHAN_ON_ROUTE_CHANGE, "");
   return await deleteRoute(id);
 }
 
@@ -141,6 +144,6 @@ export async function bulkOperationService(
       }
     }
   });
-
+  await publishMessage(CHAN_ON_ROUTE_CHANGE, "");
   return { success: true, message: "Bulk operation completed successfully" };
 }

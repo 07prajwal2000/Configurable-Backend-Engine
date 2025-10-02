@@ -1,6 +1,6 @@
 import { getCookie, setCookie } from "hono/cookie";
 import { HttpRoute, HttpRouteParser } from "@cbe/lib";
-import { Context as BlockContext, ContextVarsType } from "@cbe/blocks";
+import { Context as BlockContext } from "@cbe/blocks";
 import { Context } from "hono";
 import { ContentfulStatusCode } from "hono/utils/http-status";
 import { JsVM } from "@cbe/lib/vm";

@@ -12,8 +12,11 @@ export type RouteTree = {
 };
 
 export class HttpRouteParser {
-  private readonly routesTree: Record<string, RouteTree> = {};
-
+  private routesTree: Record<string, RouteTree> = {};
+  public rebuildRoutes(routes: HttpRoute[]) {
+    this.routesTree = {};
+    this.buildRoutes(routes);
+  }
   public buildRoutes(routes: HttpRoute[]) {
     for (let route of routes) {
       let current = this.routesTree;

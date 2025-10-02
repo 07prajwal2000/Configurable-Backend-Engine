@@ -113,24 +113,3 @@ export const validateEncodingValueSchema = z.object({
   value: z.string().min(1, "Value is required"),
   encoding_type: encodingTypeEnum(),
 });
-
-// Utility function to validate encoding compatibility
-export function validateEncodingValue(
-  value: string,
-  encodingType: string
-): boolean {
-  switch (encodingType) {
-    case "plaintext":
-      return true; // Plaintext accepts any string
-    case "base64":
-      try {
-        return Buffer.from(value, "base64").toString("base64") === value;
-      } catch {
-        return false;
-      }
-    case "hex":
-      return /^[0-9a-fA-F]*$/.test(value) && value.length % 2 === 0;
-    default:
-      return false;
-  }
-}
