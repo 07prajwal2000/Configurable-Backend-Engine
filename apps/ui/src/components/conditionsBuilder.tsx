@@ -13,10 +13,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { conditionSchema } from "@cbe/blocks";
 import type z from "zod";
 import InputWithJs from "./inputWithJs";
-import { operatorSchema } from "@cbe/lib";
+import { conditionSchema, operatorSchema } from "@cbe/lib";
 import { useEffect, useState } from "react";
 import { MdAddCircleOutline, MdDelete } from "react-icons/md";
 import { JsEditorButton } from "./editor/jsDialogEditor";

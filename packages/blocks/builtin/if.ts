@@ -1,15 +1,6 @@
-import { evaluateOperator, operatorSchema } from "@cbe/lib";
+import { conditionSchema, evaluateOperator, operatorSchema } from "@cbe/lib";
 import { BaseBlock, BlockOutput, Context } from "../baseBlock";
 import { z } from "zod";
-
-export const conditionSchema = z.object({
-  // if it is prefixed with `js:` then it will use vm which is created for the request's context
-  lhs: z.string().or(z.number().or(z.boolean())),
-  rhs: z.string().or(z.number().or(z.boolean())),
-  operator: operatorSchema,
-  js: z.string().optional(),
-  chain: z.enum(["and", "or"]).default("and"),
-});
 
 export const ifBlockSchema = z.object({
   conditions: z.array(conditionSchema),

@@ -5,6 +5,15 @@ export const operatorSchema = z
   .enum(["eq", "neq", "gt", "gte", "lt", "lte", "js"])
   .describe("The operator to use for comparison");
 
+export const conditionSchema = z.object({
+  // if it is prefixed with `js:` then it will use vm which is created for the request's context
+  lhs: z.string().or(z.number().or(z.boolean())),
+  rhs: z.string().or(z.number().or(z.boolean())),
+  operator: operatorSchema,
+  js: z.string().optional(),
+  chain: z.enum(["and", "or"]).default("and"),
+});
+
 export function evaluateOperator(
   vm: JsVM,
   lhs: any,
