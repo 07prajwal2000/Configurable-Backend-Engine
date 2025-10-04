@@ -16,4 +16,11 @@ export enum BlockTypes {
   jsrunner = "jsrunner",
   response = "response",
   arrayops = "arrayops",
+  db_getsingle = "db_getsingle",
+  db_getall = "db_getall",
+  db_delete = "db_delete",
+  db_insert = "db_insert",
+  db_insertbulk = "db_insertbulk",
+  db_update = "db_update",
+  db_native = "db_native",
 }

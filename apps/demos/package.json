@@ -12,6 +12,7 @@
 		"tsx": "^4.20.4"
 	},
 	"dependencies": {
+		"@cbe/adapters": "file:../../packages/adapters",
 		"@cbe/blocks": "file:../../packages/blocks"
 	}
 }

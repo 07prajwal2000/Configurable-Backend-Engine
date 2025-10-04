@@ -9,6 +9,7 @@
     "noEmitOnError": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "isolatedModules": true,
     "types": [],
     "jsx": "react",
     "noEmit": false

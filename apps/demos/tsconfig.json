@@ -8,6 +8,7 @@
     "declarationMap": true,
     "noEmitOnError": true,
     "skipLibCheck": true,
+    "isolatedModules": true,
     "esModuleInterop": true,
     "types": ["node"],
     "jsx": "react",

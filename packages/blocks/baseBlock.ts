@@ -1,3 +1,4 @@
+import { DbFactory } from "@cbe/adapters/db";
 import { JsVM } from "@cbe/lib/vm";
 
 export interface Context {
@@ -6,6 +7,7 @@ export interface Context {
   apiId: string;
   vars: ContextVarsType & Record<string, any>;
   requestBody?: any;
+  dbFactory?: DbFactory;
 }
 
 export enum HttpCookieSameSite {
@@ -37,6 +39,7 @@ export interface ContextVarsType {
   httpRequestRoute: string;
   getRequestBody: () => any;
   getConfig(key: string): string;
+  dbQuery?: (query: string) => Promise<void>;
 }
 
 export interface BlockOutput {

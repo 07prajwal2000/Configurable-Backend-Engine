@@ -40,6 +40,19 @@ import {
   setHttpCookieBlockSchema,
 } from "./builtin/http/setHttpCookie";
 import { GetHttpRequestBodyBlock } from "./builtin/http/getHttpRequestBody";
+import {
+  GetSingleDbBlock,
+  getSingleDbBlockSchema,
+} from "./builtin/db/getSingle";
+import { GetAllDbBlock, getAllDbBlockSchema } from "./builtin/db/getAll";
+import { InsertDbBlock, insertDbBlockSchema } from "./builtin/db/insert";
+import { DeleteDbBlock, deleteDbBlockSchema } from "./builtin/db/delete";
+import {
+  InsertBulkDbBlock,
+  insertBulkDbBlockSchema,
+} from "./builtin/db/insertBulk";
+import { UpdateDbBlock, updateDbBlockSchema } from "./builtin/db/update";
+import { NativeDbBlock, nativeDbBlockSchema } from "./builtin/db/native";
 
 export const blockDTOSchema = z.object({
   id: z.uuidv7(),
@@ -175,7 +188,113 @@ export class BlockBuilder {
         return this.createHttpSetCookieBlock(block);
       case BlockTypes.httpGetRequestBody:
         return this.createHttpGetRequestBodyBlock(block);
+
+      case BlockTypes.db_getsingle:
+        return this.createDbGetSingleBlock(block);
+      case BlockTypes.db_getall:
+        return this.createDbGetAllBlock(block);
+      case BlockTypes.db_insert:
+        return this.createDbInsertBlock(block);
+      case BlockTypes.db_delete:
+        return this.createDbDeleteBlock(block);
+      case BlockTypes.db_insertbulk:
+        return this.createDbInsertBulkBlock(block);
+      case BlockTypes.db_update:
+        return this.createDbUpdateBlock(block);
+      case BlockTypes.db_native:
+        return this.createDbNativeBlock(block);
     }
+  }
+  private createDbGetSingleBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? getSingleDbBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new GetSingleDbBlock(
+      this.context,
+      this.context.dbFactory!.create(),
+      parsedResult.data,
+      edge
+    );
+  }
+  private createDbGetAllBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? getAllDbBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new GetAllDbBlock(
+      this.context,
+      this.context.dbFactory!.create(),
+      parsedResult.data,
+      edge
+    );
+  }
+  private createDbNativeBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? nativeDbBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new NativeDbBlock(
+      this.context,
+      this.context.dbFactory!.create(),
+      parsedResult.data,
+      edge
+    );
+  }
+  private createDbUpdateBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? updateDbBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new UpdateDbBlock(
+      this.context,
+      this.context.dbFactory!.create(),
+      parsedResult.data,
+      edge
+    );
+  }
+  private createDbInsertBulkBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? insertBulkDbBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new InsertBulkDbBlock(
+      this.context,
+      this.context.dbFactory!.create(),
+      parsedResult.data,
+      edge
+    );
+  }
+  private createDbDeleteBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? deleteDbBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new DeleteDbBlock(
+      this.context,
+      this.context.dbFactory!.create(),
+      parsedResult.data,
+      edge
+    );
+  }
+  private createDbInsertBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? insertDbBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new InsertDbBlock(
+      this.context,
+      this.context.dbFactory!.create(),
+      parsedResult.data,
+      edge
+    );
   }
   private createHttpGetHeaderBlock(block: BlockDTOType) {
     const parsedResult = this.shouldValidateBlockData
