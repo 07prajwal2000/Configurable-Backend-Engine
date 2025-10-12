@@ -3,6 +3,7 @@ import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
 import type { IDbAdapter } from "@cbe/adapters/db";
 
 export const insertBulkDbBlockSchema = z.object({
+  connection: z.string(),
   tableName: z.string(),
   data: z.array(z.object()),
   useParam: z.boolean(),

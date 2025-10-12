@@ -1,11 +1,7 @@
 import { HttpRouteParser } from "@cbe/lib";
 import { db } from "../db";
 import { routesEntity } from "../db/schema";
-import {
-  CHAN_ON_ROUTE_CHANGE,
-  redisClient,
-  subscribeToChannel,
-} from "../db/redis";
+import { CHAN_ON_ROUTE_CHANGE, subscribeToChannel } from "../db/redis";
 
 export async function loadRoutes() {
   const parser = new HttpRouteParser();

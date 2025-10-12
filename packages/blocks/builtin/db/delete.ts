@@ -4,6 +4,7 @@ import type { IDbAdapter } from "@cbe/adapters/db";
 import { whereConditionSchema } from "./schema";
 
 export const deleteDbBlockSchema = z.object({
+  connection: z.string(),
   tableName: z.string(),
   conditions: z.array(whereConditionSchema),
 });

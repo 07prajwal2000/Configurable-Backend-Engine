@@ -2,7 +2,7 @@ import { Paper, Stack } from "@mui/material";
 
 const LayoutTopbar = () => {
   return (
-    <Paper square sx={{ height: "8%" }} elevation={1}>
+    <Paper square sx={{ height: "8vh" }} elevation={1}>
       <Stack direction={"row"} gap={1}></Stack>
     </Paper>
   );

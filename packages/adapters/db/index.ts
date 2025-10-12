@@ -2,6 +2,8 @@ import { operatorSchema } from "@cbe/lib";
 import z from "zod";
 import { Connection, DbType } from "./connection";
 import { PostgresAdapter } from "./postgresAdapter";
+import knex, { Knex } from "knex";
+import { JsVM } from "@cbe/lib/vm";
 
 export const whereConditionSchema = z.object({
   attribute: z.string(),
@@ -42,15 +44,54 @@ export interface IDbAdapter {
 }
 
 export class DbFactory {
-  constructor(private readonly connection: Connection) {}
+  private readonly connectionMap: Record<string, IDbAdapter> = {};
+  constructor(
+    private readonly vm: JsVM,
+    private readonly dbConfig: Record<string, Connection>
+  ) {}
 
-  public create(): IDbAdapter {
-    if (this.connection.dbType === DbType.POSTGRES) {
-      return new PostgresAdapter(this.connection);
+  public getDbAdapter(connection: string): IDbAdapter {
+    const cfg = this.dbConfig[connection];
+    if (!cfg) {
+      throw new Error("config is null while creating db adapter");
+    }
+    if (connection in this.connectionMap) return this.connectionMap[connection];
+    if (cfg.dbType === DbType.POSTGRES) {
+      return (this.connectionMap[connection] = new PostgresAdapter(
+        this.getKnexConnection(cfg),
+        this.vm
+      ));
     }
     throw new Error("MongoDB Not implemented");
+  }
+
+  private static knexConnection: Knex = null!;
+  private getKnexConnection(cfg: Connection) {
+    if (DbFactory.knexConnection === null) {
+      DbFactory.knexConnection = knex({
+        client: "pg",
+        connection: {
+          host: cfg.host,
+          port: Number(cfg.port),
+          userName: cfg.username,
+          password: cfg.password,
+          database: cfg.database,
+        },
+      });
+    }
+    return DbFactory.knexConnection;
   }
 }
 
 export * from "./postgresAdapter";
 export * from "./connection";
+// this.connection = knex({
+//   client: "pg",
+//   connection: {
+//     host: connection.host,
+//     port: Number(connection.port),
+//     user: connection.username,
+//     password: connection.password,
+//     database: connection.database,
+//   },
+// });

@@ -4,6 +4,7 @@ import type { IDbAdapter } from "@cbe/adapters/db";
 import { whereConditionSchema } from "./schema";
 
 export const updateDbBlockSchema = z.object({
+  connection: z.string(),
   tableName: z.string(),
   data: z.object(),
   conditions: z.array(whereConditionSchema),

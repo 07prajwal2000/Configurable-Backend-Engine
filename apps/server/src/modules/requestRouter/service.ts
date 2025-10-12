@@ -6,6 +6,8 @@ import { ContentfulStatusCode } from "hono/utils/http-status";
 import { JsVM } from "@cbe/lib/vm";
 import { startBlocksExecution } from "../../loaders/blocksLoader";
 import { appConfigCache } from "../../loaders/appconfigLoader";
+import { DbFactory } from "@cbe/adapters/db";
+import { dbIntegrationsCache } from "../../loaders/integrationsLoader";
 
 export type HandleRequestType = {
   data?: any;
@@ -33,12 +35,14 @@ export async function handleRequest(
   let requestBody = await getRequestBody(ctx);
   const vars = setupContextVars(ctx, requestBody, pathId.routeParams);
   const vm = createJsVM(vars);
+  const dbFactory = createDbFactory(vm);
   const context: BlockContext = {
     apiId: pathId.id,
     route: ctx.req.path,
     requestBody,
     vm,
     vars,
+    dbFactory,
   };
   const executionResult = await startBlocksExecution(pathId.id, context);
   if (executionResult && executionResult.successful) {
@@ -54,6 +58,10 @@ export async function handleRequest(
       message: executionResult?.error || "Internal server error",
     },
   };
+}
+
+function createDbFactory(vm: JsVM) {
+  return new DbFactory(vm, dbIntegrationsCache);
 }
 
 function setupContextVars(

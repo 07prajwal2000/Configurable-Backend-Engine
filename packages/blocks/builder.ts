@@ -213,7 +213,7 @@ export class BlockBuilder {
     const edge = this.findEdge(block, "source");
     return new GetSingleDbBlock(
       this.context,
-      this.context.dbFactory!.create(),
+      this.context.dbFactory!.getDbAdapter(parsedResult.data.connection),
       parsedResult.data,
       edge
     );
@@ -226,7 +226,7 @@ export class BlockBuilder {
     const edge = this.findEdge(block, "source");
     return new GetAllDbBlock(
       this.context,
-      this.context.dbFactory!.create(),
+      this.context.dbFactory!.getDbAdapter(parsedResult.data.connection),
       parsedResult.data,
       edge
     );
@@ -239,7 +239,7 @@ export class BlockBuilder {
     const edge = this.findEdge(block, "source");
     return new NativeDbBlock(
       this.context,
-      this.context.dbFactory!.create(),
+      this.context.dbFactory!.getDbAdapter(parsedResult.data.connection),
       parsedResult.data,
       edge
     );
@@ -252,7 +252,7 @@ export class BlockBuilder {
     const edge = this.findEdge(block, "source");
     return new UpdateDbBlock(
       this.context,
-      this.context.dbFactory!.create(),
+      this.context.dbFactory!.getDbAdapter(parsedResult.data.connection),
       parsedResult.data,
       edge
     );
@@ -265,7 +265,7 @@ export class BlockBuilder {
     const edge = this.findEdge(block, "source");
     return new InsertBulkDbBlock(
       this.context,
-      this.context.dbFactory!.create(),
+      this.context.dbFactory!.getDbAdapter(parsedResult.data.connection),
       parsedResult.data,
       edge
     );
@@ -278,7 +278,7 @@ export class BlockBuilder {
     const edge = this.findEdge(block, "source");
     return new DeleteDbBlock(
       this.context,
-      this.context.dbFactory!.create(),
+      this.context.dbFactory!.getDbAdapter(parsedResult.data.connection),
       parsedResult.data,
       edge
     );
@@ -291,7 +291,7 @@ export class BlockBuilder {
     const edge = this.findEdge(block, "source");
     return new InsertDbBlock(
       this.context,
-      this.context.dbFactory!.create(),
+      this.context.dbFactory!.getDbAdapter(parsedResult.data.connection),
       parsedResult.data,
       edge
     );

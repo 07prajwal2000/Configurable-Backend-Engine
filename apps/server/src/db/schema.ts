@@ -3,11 +3,13 @@ import {
   boolean,
   index,
   json,
+  jsonb,
   pgEnum,
   pgTable,
   serial,
   text,
   timestamp,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 import z from "zod";
@@ -40,7 +42,7 @@ export const blocksEntity = pgTable(
     data: json(),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp(),
-    routeId: varchar({ length: 50 }).references(() => routesEntity.id),
+    routeId: varchar({ length: 50 }),
   },
   () => [index("routeId")]
 );
@@ -76,4 +78,12 @@ export const appConfigEntity = pgTable("app_config", {
   encoding_type: encodingTypeEnum(),
   createdAt: timestamp().defaultNow(),
   updatedAt: timestamp().defaultNow(),
+});
+
+export const integrationsEntity = pgTable("integrations", {
+  id: uuid().primaryKey(),
+  name: varchar({ length: 255 }),
+  group: varchar({ length: 255 }),
+  variant: varchar({ length: 255 }),
+  config: jsonb(),
 });

@@ -5,6 +5,7 @@ import {
   getAllAppConfigs,
   updateAppConfig,
   deleteAppConfig,
+  getAppConfigNames,
 } from "./repository";
 import {
   AppConfigType,
@@ -119,6 +120,10 @@ export async function getAllAppConfigsService(pagination?: PaginationInput) {
       }),
     };
   }
+}
+
+export async function listConfigNamesService() {
+  return await getAppConfigNames();
 }
 
 export async function updateAppConfigService(

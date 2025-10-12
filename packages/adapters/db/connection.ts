@@ -1,5 +1,3 @@
-import { JsVM } from "@cbe/lib/vm";
-
 export enum DbType {
   POSTGRES = "pg",
   MONGODB = "mongo",
@@ -12,5 +10,4 @@ export interface Connection {
   host: string;
   port: string | number;
   database: string;
-  vm: JsVM;
 }

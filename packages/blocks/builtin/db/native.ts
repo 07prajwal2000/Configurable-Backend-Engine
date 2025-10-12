@@ -4,6 +4,7 @@ import { IDbAdapter } from "@cbe/adapters/db";
 
 export const nativeDbBlockSchema = z.object({
   js: z.string().refine((val) => val.startsWith("js:")),
+  connection: z.string(),
 });
 
 export class NativeDbBlock extends BaseBlock {

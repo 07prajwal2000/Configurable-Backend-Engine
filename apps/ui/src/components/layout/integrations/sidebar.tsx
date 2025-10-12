@@ -1,52 +1,36 @@
 import {
+  Paper,
+  MenuList,
+  Stack,
+  MenuItem,
   ListItemIcon,
   ListItemText,
-  MenuItem,
-  MenuList,
-  Paper,
-  Stack,
   useTheme,
 } from "@mui/material";
-import { MdAltRoute, MdOutlineDashboard } from "react-icons/md";
-import { useNavigate } from "react-router";
-import { VscDebugDisconnect, VscVariableGroup } from "react-icons/vsc";
+import { useNavigate } from "react-router-dom";
+import { FiDatabase } from "react-icons/fi";
+import { MdOutlineVpnKey } from "react-icons/md";
 
 const menuItems = [
   {
-    title: "Dashboard",
-    icon: <MdOutlineDashboard />,
-    url: "/",
-    matcher() {
-      return location.pathname === "/";
-    },
-  },
-  {
-    title: "Routes",
-    icon: <MdAltRoute />,
-    url: "/routes",
-    matcher() {
-      return location.pathname.startsWith("/routes");
-    },
-  },
-  {
-    title: "Integrations",
-    icon: <VscDebugDisconnect />,
+    title: "Databases",
+    icon: <FiDatabase />,
     url: "/integrations/database/postgres",
     matcher() {
-      return location.pathname.startsWith("/integrations/");
+      return location.pathname.startsWith("/integrations/database/");
     },
   },
   {
-    title: "App Config",
-    icon: <VscVariableGroup />,
-    url: "/appconfig",
+    title: "KV Store",
+    icon: <MdOutlineVpnKey />,
+    url: "/integrations/kv/redis",
     matcher() {
-      return location.pathname.startsWith("/appconfig");
+      return location.pathname.startsWith("/integrations/kv/");
     },
   },
 ];
 
-const LayoutSidebar = () => {
+const IntegrationsSidebar = () => {
   const nav = useNavigate();
   const { palette } = useTheme();
 
@@ -74,4 +58,4 @@ const LayoutSidebar = () => {
   );
 };
 
-export default LayoutSidebar;
+export default IntegrationsSidebar;

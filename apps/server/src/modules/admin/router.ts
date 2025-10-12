@@ -3,6 +3,7 @@ import { mapRouteEndpoints } from "./routes/router";
 import { mapBlockEndpoints } from "./blocks/router";
 import { mapEdgeEndpoints } from "./edges/router";
 import { mapAppConfigEndpoints } from "./appconfig/router";
+import { mapIntegrationsEndpoint } from "./integrations/router";
 import { errorHandler } from "../../middlewares/errorHandler";
 import { openAPIRouteHandler } from "hono-openapi";
 import { readFileSync } from "fs";
@@ -25,7 +26,7 @@ export function mapAdminRouter(app: Hono) {
           description:
             "Admin API for managing routes, blocks, and configurations",
         },
-        servers: [{ url: "/_/admin", description: "Admin API server" }],
+        servers: [{ url: "", description: "Admin API server" }],
       },
     })
   );
@@ -42,6 +43,7 @@ export function mapAdminRouter(app: Hono) {
   mapBlockEndpoints(router.basePath("/"));
   mapEdgeEndpoints(router.basePath("/"));
   mapAppConfigEndpoints(router.basePath("/"));
+  mapIntegrationsEndpoint(router.basePath("/"));
 }
 
 let cachedHtmlContent: string | null = null;

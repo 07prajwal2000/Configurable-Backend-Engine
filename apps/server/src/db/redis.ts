@@ -9,6 +9,8 @@ export const CHAN_ON_EDGE_CHANGE = "chan:on-edge-change";
 export const CHAN_ON_BLOCK_CHANGE = "chan:on-block-change";
 export const CHAN_ON_APPCONFIG_CHANGE = "chan:on-appconfig-change";
 
+export const CHAN_ON_INTEGRATION_CHANGE = "chan:on-integration-change";
+
 export function initializeRedis() {
   const canHotreload = process.env.HOT_RELOAD_ROUTES == "true";
   const useCache = process.env.USE_CACHE == "true";

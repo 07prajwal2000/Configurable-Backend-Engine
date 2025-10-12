@@ -16,6 +16,15 @@ export async function getAppConfigById(id: number) {
   return result[0] || null;
 }
 
+export async function getAppConfigNames() {
+  const result = await db
+    .select({
+      name: appConfigEntity.keyName,
+    })
+    .from(appConfigEntity);
+  return result.map((x) => x.name);
+}
+
 export async function getAppConfigByKey(keyName: string) {
   const result = await db
     .select()

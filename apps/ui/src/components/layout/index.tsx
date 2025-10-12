@@ -15,7 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       }}
     >
       <LayoutTopbar />
-      <Grid container height={"92%"}>
+      <Grid container height={"92vh"}>
         <Grid size={2}>
           <LayoutSidebar />
         </Grid>

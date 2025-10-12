@@ -13,6 +13,7 @@ import {
   getAllAppConfigsService,
   updateAppConfigService,
   deleteAppConfigService,
+  listConfigNamesService,
 } from "./service";
 import { HttpError } from "../../../errors/httpError";
 
@@ -78,6 +79,25 @@ export function mapAppConfigEndpoints(app: Hono) {
         }
         throw new HttpError(500, "Failed to get app configs");
       }
+    }
+  );
+
+  app.get(
+    "/appconfig/view-list",
+    describeRoute({
+      description: "Get all app config names for dropdowns",
+      responses: {
+        200: {
+          description: "List of app config names",
+        },
+        500: {
+          description: "Internal server error",
+        },
+      },
+    }),
+    async (c) => {
+      const list = await listConfigNamesService();
+      return c.json(list);
     }
   );
 

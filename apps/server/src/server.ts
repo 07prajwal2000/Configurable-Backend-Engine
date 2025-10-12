@@ -7,6 +7,7 @@ import { drizzleInit } from "./db";
 import { mapAdminRouter } from "./modules/admin/router";
 import { initializeRedis } from "./db/redis";
 import { loadAppConfig } from "./loaders/appconfigLoader";
+import { loadIntegrations } from "./loaders/integrationsLoader";
 
 const app = new Hono();
 
@@ -34,6 +35,7 @@ async function main() {
   await drizzleInit();
   await initializeRedis();
   await loadAppConfig();
+  await loadIntegrations();
   const parser = await loadRoutes();
   await mapRouter(app, parser);
   if (adminRoutesEnabled) {

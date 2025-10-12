@@ -52,6 +52,11 @@ export const appconfigService = {
     return response.data;
   },
 
+  async listConfigNames() {
+    const response = await httpClient("/appconfig/view-list");
+    return response.data as string[];
+  },
+
   async createAppConfig(data: CreateAppConfigRequest): Promise<AppConfig> {
     const response = await httpClient.post("/appconfig", data);
     return response.data;
