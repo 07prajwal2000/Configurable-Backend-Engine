@@ -1,0 +1,23 @@
+import { Hono } from "hono";
+import routesRegister from "./routes/register";
+import { openAPIRouteHandler } from "hono-openapi";
+
+export default {
+  name: "v1",
+  registerHandler(app: Hono) {
+    const router = app.basePath("/v1");
+    router.get(
+      "/openapi.json",
+      openAPIRouteHandler(router, {
+        documentation: {
+          info: {
+            title: "CBE API",
+            version: "v1",
+            description: "CBE API Documentation",
+          },
+        },
+      })
+    );
+    routesRegister.registerHandler(router);
+  },
+};

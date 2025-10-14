@@ -8,6 +8,8 @@ import { mapAdminRouter } from "./modules/admin/router";
 import { initializeRedis } from "./db/redis";
 import { loadAppConfig } from "./loaders/appconfigLoader";
 import { loadIntegrations } from "./loaders/integrationsLoader";
+import { mapVersionedAdminRoutes } from "./api/register";
+import { errorHandler } from "./middlewares/errorHandler";
 
 const app = new Hono();
 
@@ -32,6 +34,7 @@ app.use(
 
 async function main() {
   const adminRoutesEnabled = Boolean(process.env.ENABLE_ADMIN);
+  app.onError(errorHandler);
   await drizzleInit();
   await initializeRedis();
   await loadAppConfig();
@@ -40,6 +43,7 @@ async function main() {
   await mapRouter(app, parser);
   if (adminRoutesEnabled) {
     mapAdminRouter(app);
+    mapVersionedAdminRoutes(app);
   }
 }
 main();

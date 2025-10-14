@@ -15,21 +15,6 @@ export function mapAdminRouter(app: Hono) {
   // Apply global error handler middleware
   app.onError(errorHandler);
 
-  // OpenAPI endpoint
-  router.get(
-    "/openapi.json",
-    openAPIRouteHandler(app, {
-      documentation: {
-        info: {
-          title: "Configurable Backend Engine Admin API",
-          version: "1.0.0",
-          description:
-            "Admin API for managing routes, blocks, and configurations",
-        },
-        servers: [{ url: "", description: "Admin API server" }],
-      },
-    })
-  );
   router.get("/openapi/ui", (c) => {
     try {
       const htmlContent = loadHtmlContent();

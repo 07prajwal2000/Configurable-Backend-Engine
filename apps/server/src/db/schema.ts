@@ -27,7 +27,7 @@ export const routesEntity = pgTable(
     id: varchar({ length: 50 }).primaryKey().default(generateID()),
     name: varchar({ length: 50 }),
     path: text(),
-    method: varchar({ length: 8 }).$type<HttpMethod>(),
+    method: varchar({ length: 8 }),
     createdAt: timestamp().defaultNow().notNull(),
   },
   () => [index("projectId"), index("path")]

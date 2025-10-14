@@ -2,7 +2,8 @@
   "name": "@cbe/backend-engine",
   "version": "1.0.0",
   "scripts": {
-    "dev": "tsx watch deployments/standalone.ts"
+    "dev": "tsx watch deployments/standalone.ts",
+    "test": "vitest run"
   },
   "keywords": [
     "configurable-backend-engine"
@@ -14,7 +15,8 @@
     "@types/node": "^24.3.0",
     "@types/pg": "^8.15.5",
     "drizzle-kit": "^0.31.4",
-    "tsx": "^4.20.4"
+    "tsx": "^4.20.4",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@cbe/blocks": "file:../../packages/blocks",
@@ -24,6 +26,7 @@
     "@hono/zod-validator": "^0.7.2",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
+    "drizzle-zod": "^0.8.3",
     "hono": "^4.9.1",
     "hono-openapi": "^1.0.8",
     "ioredis": "^5.8.0",
