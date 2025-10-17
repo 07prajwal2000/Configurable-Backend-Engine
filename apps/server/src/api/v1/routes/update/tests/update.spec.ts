@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, Mock } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { db } from "../../../../../db";
 import { ConflictError } from "../../../../../errors/conflictError";
 import { NotFoundError } from "../../../../../errors/notFoundError";
-import { ServerError } from "../../../../../errors/serverError";
 import { getRouteByNameOrPath, updateRoute } from "../repository";
 import handleRequest from "../service";
 import { HttpMethod } from "../../../../../db/schema";
+import { publishMessage } from "../../../../../db/redis";
 
 // Mock all imports
 vi.mock("../../../../../db", () => ({
@@ -13,7 +13,10 @@ vi.mock("../../../../../db", () => ({
     transaction: vi.fn(),
   },
 }));
-
+vi.mock("../../../../../db/redis", () => ({
+  publishMessage: vi.fn(),
+  CHAN_ON_ROUTE_CHANGE: "",
+}));
 vi.mock("../repository", () => ({
   getRouteByNameOrPath: vi.fn(),
   updateRoute: vi.fn(),
