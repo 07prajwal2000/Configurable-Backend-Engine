@@ -6,8 +6,8 @@ export const requestBodySchema = z.object({
   path: z
     .string()
     .min(1)
-    .regex(/^\/(?!.*\/\/)[a-zA-Z0-9-\/]*$/),
-  method: z.enum(HttpMethod),
+    .regex(/^\/(?!.*\/\/)[a-zA-Z0-9-\/]*$/, "Must be a valid URL path"),
+  method: z.enum(HttpMethod, "Must be a HTTP Method"),
 });
 
 export const responseSchema = z.object({

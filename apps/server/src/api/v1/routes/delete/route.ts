@@ -5,19 +5,20 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { requestBodySchema, requestRouteSchema, responseSchema } from "./dto";
+import { requestRouteSchema, responseSchema } from "./dto";
 import handleRequest from "./service";
-import zodErrorCallbackParser from "../../../../middlewares/zodErrorCallbackParser";
 import { errorSchema } from "../../../../errors/customError";
 import { validationErrorSchema } from "../../../../errors/validationError";
+import zodErrorCallbackParser from "../../../../middlewares/zodErrorCallbackParser";
 
 const openapiRouteOptions: DescribeRouteOptions = {
-  description: "Updates the existing route and returns the object",
-  operationId: "update-route",
+  description:
+    "Deletes the route and its descendants by id and returns nothing",
+  operationId: "delete-route",
   tags: ["Routes"],
   responses: {
-    200: {
-      description: "Successful",
+    204: {
+      description: "Successfully deleted",
       content: {
         "application/json": {
           schema: resolver(responseSchema),
@@ -25,7 +26,7 @@ const openapiRouteOptions: DescribeRouteOptions = {
       },
     },
     400: {
-      description: "Validation error for json body or route `id`param",
+      description: "Invalid id (uuidv7)",
       content: {
         "application/json": {
           schema: resolver(validationErrorSchema),
@@ -33,15 +34,7 @@ const openapiRouteOptions: DescribeRouteOptions = {
       },
     },
     404: {
-      description: "Not found error",
-      content: {
-        "application/json": {
-          schema: resolver(errorSchema),
-        },
-      },
-    },
-    409: {
-      description: "If any conflict with the path & method or name",
+      description: "Route not found",
       content: {
         "application/json": {
           schema: resolver(errorSchema),
@@ -52,16 +45,14 @@ const openapiRouteOptions: DescribeRouteOptions = {
 };
 
 export default function (app: Hono) {
-  app.put(
+  app.delete(
     "/:id",
     describeRoute(openapiRouteOptions),
     validator("param", requestRouteSchema, zodErrorCallbackParser),
-    validator("json", requestBodySchema, zodErrorCallbackParser),
     async (c) => {
       const { id } = c.req.valid("param");
-      const data = c.req.valid("json");
-      const result = await handleRequest(id, data);
-      return c.json(result);
+      await handleRequest(id);
+      return c.body(null, 204);
     }
   );
 }

@@ -43,6 +43,13 @@
       "when": 1760212161512,
       "tag": "0005_open_gamma_corps",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1760640271181,
+      "tag": "0006_ordinary_liz_osborn",
+      "breakpoints": true
     }
   ]
 }

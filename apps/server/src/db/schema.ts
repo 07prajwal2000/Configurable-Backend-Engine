@@ -42,7 +42,9 @@ export const blocksEntity = pgTable(
     data: json(),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp(),
-    routeId: varchar({ length: 50 }),
+    routeId: varchar({ length: 50 }).references(() => routesEntity.id, {
+      onDelete: "cascade",
+    }),
   },
   () => [index("routeId")]
 );
@@ -51,8 +53,12 @@ export const edgesEntity = pgTable(
   "edges",
   {
     id: varchar({ length: 50 }).primaryKey().default(generateID()),
-    from: varchar({ length: 50 }).references(() => blocksEntity.id),
-    to: varchar({ length: 50 }).references(() => blocksEntity.id),
+    from: varchar({ length: 50 }).references(() => blocksEntity.id, {
+      onDelete: "cascade",
+    }),
+    to: varchar({ length: 50 }).references(() => blocksEntity.id, {
+      onDelete: "cascade",
+    }),
     fromHandle: varchar({ length: 50 }),
     toHandle: varchar({ length: 50 }),
   },

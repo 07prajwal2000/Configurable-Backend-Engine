@@ -1,4 +1,4 @@
-import { count } from "drizzle-orm";
+import { count, desc } from "drizzle-orm";
 import { db, DbTransactionType } from "../../../../db";
 import { routesEntity } from "../../../../db/schema";
 
@@ -11,6 +11,7 @@ export async function getRoutesList(
     .select()
     .from(routesEntity)
     .offset(skip)
+    .orderBy(desc(routesEntity.createdAt))
     .limit(limit);
   const totalCount = await getRoutesCount(tx);
   return { result, totalCount };

@@ -10,7 +10,12 @@ export default async function handleRequest(
   data: z.infer<typeof requestBodySchema>
 ): Promise<z.infer<typeof responseSchema>> {
   const result = await db.transaction(async (tx) => {
-    const existingRoute = await checkRouteExist(data.name, data.path, tx);
+    const existingRoute = await checkRouteExist(
+      data.name,
+      data.path,
+      data.method,
+      tx
+    );
     if (existingRoute) {
       throw new ConflictError(`route with name or path already exist`);
     }

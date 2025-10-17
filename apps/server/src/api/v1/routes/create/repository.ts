@@ -1,8 +1,8 @@
 import { createInsertSchema } from "drizzle-zod";
 import z from "zod";
-import { blocksEntity, routesEntity } from "../../../../db/schema";
+import { blocksEntity, HttpMethod, routesEntity } from "../../../../db/schema";
 import { db, DbTransactionType } from "../../../../db";
-import { eq, or } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import { generateID } from "@cbe/lib";
 
 const insertSchema = createInsertSchema(routesEntity);
@@ -52,12 +52,18 @@ export async function createDependency(
 export async function checkRouteExist(
   name: string,
   path: string,
+  method: HttpMethod,
   tx?: DbTransactionType
 ) {
   const exist = await (tx ?? db)
     .select({ id: routesEntity.id })
     .from(routesEntity)
-    .where(or(eq(routesEntity.name, name), eq(routesEntity.path, path)))
+    .where(
+      or(
+        eq(routesEntity.name, name),
+        and(eq(routesEntity.path, path), eq(routesEntity.method, method))
+      )
+    )
     .limit(1);
   return exist.length > 0;
 }
