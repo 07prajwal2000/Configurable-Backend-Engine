@@ -9,7 +9,7 @@ import FormDialog from "./dialog/formDialog";
 import AppConfigForm from "./forms/appConfig";
 import RouteForm from "./forms/routeForm";
 import { routesService } from "@/services/routes";
-import { routesQueries } from "@/app/query/routerQuery";
+import { routesQueries } from "@/query/routerQuery";
 import { useQueryClient } from "@tanstack/react-query";
 
 const menuItems = [

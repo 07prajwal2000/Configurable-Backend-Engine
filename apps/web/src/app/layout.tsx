@@ -7,7 +7,7 @@ import {
   mantineHtmlProps,
 } from "@mantine/core";
 import RootAppShell from "@/components/rootAppShell";
-import QueryProvider from "./query/queryProvider";
+import QueryProvider from "../query/queryProvider";
 import { Notifications } from "@mantine/notifications";
 
 export const metadata: Metadata = {

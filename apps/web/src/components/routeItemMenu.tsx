@@ -6,11 +6,13 @@ import ConfirmDialog from "./dialog/confirmDialog";
 import { useDisclosure } from "@mantine/hooks";
 import { routesService } from "@/services/routes";
 import { showErrorNotification } from "@/lib/errorNotifier";
-import { routesQueries } from "@/app/query/routerQuery";
+import { routesQueries } from "@/query/routerQuery";
 import { useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 import FormDialog from "./dialog/formDialog";
 import RouteForm from "./forms/routeForm";
+import QueryLoader from "./query/queryLoader";
+import QueryError from "./query/queryError";
 
 type Proptypes = {
   id: string;
@@ -85,12 +87,18 @@ function RouteEditForm({ id, close }: { id: string; close: () => void }) {
     routesQueries.getById.useQuery(id);
   const client = useQueryClient();
 
-  if (isLoading) {
-    return "Loading...";
+  if (!isLoading) {
+    return <QueryLoader />;
   }
   if (isError) {
-    // TODO: need to refactor query errors logic
-    return "Error";
+    return (
+      <QueryError
+        error={error!}
+        refetcher={() => {
+          routesQueries.getById.invalidate(client, id);
+        }}
+      />
+    );
   }
 
   async function onUpdate(data: any) {

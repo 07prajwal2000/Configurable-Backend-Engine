@@ -70,6 +70,7 @@ const RouteItem = (props: Proptypes) => {
         <Grid.Col span={1}>
           <Group my={"auto"} h={"100%"} gap={"xs"}>
             <Switch
+              color="violet"
               label={active ? "Active" : "Inactive"}
               onChange={toggleActive}
               checked={active}
