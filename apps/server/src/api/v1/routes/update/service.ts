@@ -35,7 +35,11 @@ export default async function handleRequest(
   }
   await publishMessage(CHAN_ON_ROUTE_CHANGE, "");
   return {
-    ...result,
+    id: result.id,
+    name: result.name!,
+    path: result.path!,
+    method: result.method!,
     createdAt: result.createdAt.toISOString(),
+    updatedAt: result.updatedAt.toISOString(),
   };
 }

@@ -35,6 +35,7 @@ describe("update route", () => {
       path: "/a",
       method: "GET" as HttpMethod,
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
     (getRouteByNameOrPath as any).mockResolvedValueOnce(mockRoute);
     (updateRoute as any).mockResolvedValueOnce(mockRoute);
@@ -49,6 +50,7 @@ describe("update route", () => {
       path: "/a",
       method: "GET" as HttpMethod,
       createdAt: mockRoute.createdAt.toISOString(),
+      updatedAt: mockRoute.updatedAt.toISOString(),
     });
   });
   it("should throw NotFoundError if route not found", async () => {
@@ -75,6 +77,7 @@ describe("update route", () => {
       path: "/a",
       method: "GET" as HttpMethod,
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
     (getRouteByNameOrPath as any).mockResolvedValueOnce({
       ...mockRoute,

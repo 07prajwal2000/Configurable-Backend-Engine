@@ -13,7 +13,7 @@ export async function drizzleInit() {
   if (!pgUrl) {
     throw new Error("postgres connection url is required for drizzle");
   }
-  db = drizzle(pgUrl!);
+  db = drizzle(pgUrl!, { logger: false });
   const result = await db.execute(`select 1 as connected`);
   if (result.rows[0].connected) {
     console.log("db initialized");

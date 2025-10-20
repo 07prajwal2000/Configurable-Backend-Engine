@@ -15,6 +15,11 @@ export const requestRouteSchema = z.object({
   id: z.uuidv7(),
 });
 
-export const responseSchema = createSelectSchema(routesEntity).extend({
+export const responseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  path: z.string(),
+  method: z.string(),
   createdAt: z.string(),
+  updatedAt: z.string(),
 });

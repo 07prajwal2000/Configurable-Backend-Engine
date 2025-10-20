@@ -50,6 +50,55 @@
       "when": 1760640271181,
       "tag": "0006_ordinary_liz_osborn",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1760900444823,
+      "tag": "0007_nasty_giant_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1760900583078,
+      "tag": "0008_massive_the_leader",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1760910417266,
+      "tag": "0009_robust_hex",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1760910516838,
+      "tag": "0010_perpetual_pepper_potts",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1760910563534,
+      "tag": "0011_wandering_the_fury",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1760910988781,
+      "tag": "0012_shocking_bloodaxe",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1760911121340,
+      "tag": "0013_spotty_nuke",
+      "breakpoints": true
     }
   ]
 }

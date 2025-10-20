@@ -1,6 +1,11 @@
 import { createInsertSchema } from "drizzle-zod";
 import z from "zod";
-import { blocksEntity, HttpMethod, routesEntity } from "../../../../db/schema";
+import {
+  blocksEntity,
+  HttpMethod,
+  projectsEntity,
+  routesEntity,
+} from "../../../../db/schema";
 import { db, DbTransactionType } from "../../../../db";
 import { and, eq, or } from "drizzle-orm";
 import { generateID } from "@cbe/lib";
@@ -66,4 +71,13 @@ export async function checkRouteExist(
     )
     .limit(1);
   return exist.length > 0;
+}
+
+export async function checkProjectExist(id: string, tx?: DbTransactionType) {
+  const project = await (tx ?? db)
+    .select({ id: projectsEntity.id })
+    .from(projectsEntity)
+    .where(eq(projectsEntity.id, id))
+    .limit(1);
+  return project.length > 0;
 }

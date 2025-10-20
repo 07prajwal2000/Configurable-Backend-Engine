@@ -1,4 +1,5 @@
 import { generateID } from "@cbe/lib";
+import { sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -21,14 +22,38 @@ export enum HttpMethod {
   DELETE = "DELETE",
 }
 
+export const projectsEntity = pgTable(
+  "projects",
+  {
+    id: varchar({ length: 50 }).primaryKey().default(generateID()),
+    name: varchar({ length: 50 }),
+    createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp()
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
+  },
+  () => [index("name"), index("updatedAt")]
+);
+
 export const routesEntity = pgTable(
   "routes",
   {
     id: varchar({ length: 50 }).primaryKey().default(generateID()),
     name: varchar({ length: 50 }),
     path: text(),
+    active: boolean().default(false),
+    projectId: varchar({ length: 50 })
+      .references(() => projectsEntity.id, {
+        onDelete: "cascade",
+      })
+      .default(sql`NULL`),
     method: varchar({ length: 8 }),
     createdAt: timestamp().defaultNow().notNull(),
+    updatedAt: timestamp()
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   () => [index("projectId"), index("path")]
 );

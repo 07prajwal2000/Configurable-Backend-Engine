@@ -21,6 +21,7 @@ export async function updateRoute(
       name: routesEntity.name,
       path: routesEntity.path,
       createdAt: routesEntity.createdAt,
+      updatedAt: routesEntity.updatedAt,
       method: routesEntity.method,
     });
   return result.length > 0 ? result[0] : null;

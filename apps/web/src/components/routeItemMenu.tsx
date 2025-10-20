@@ -87,7 +87,7 @@ function RouteEditForm({ id, close }: { id: string; close: () => void }) {
     routesQueries.getById.useQuery(id);
   const client = useQueryClient();
 
-  if (!isLoading) {
+  if (isLoading) {
     return <QueryLoader />;
   }
   if (isError) {

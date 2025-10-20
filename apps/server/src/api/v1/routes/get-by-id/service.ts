@@ -13,5 +13,6 @@ export default async function handleRequest(
   return {
     ...route,
     createdAt: route.createdAt.toISOString(),
+    updatedAt: route.updatedAt.toISOString(),
   };
 }

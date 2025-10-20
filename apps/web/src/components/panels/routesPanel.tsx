@@ -12,7 +12,10 @@ import { useQueryClient } from "@tanstack/react-query";
 const RoutesPanel = () => {
   const { page, perPage, setPaginationLimit } = useRouterPagination();
   const { useQuery, invalidate } = routesQueries.getAll;
-  const { data, isLoading, isError, error } = useQuery({ page, perPage });
+  const { data, isLoading, isError, error, isRefetching } = useQuery({
+    page,
+    perPage,
+  });
   const client = useQueryClient();
 
   useEffect(() => {
@@ -20,7 +23,7 @@ const RoutesPanel = () => {
     setPaginationLimit(data.pagination.totalPages);
   }, [data]);
 
-  if (isLoading)
+  if (isLoading || isRefetching)
     return (
       <Box w={"100%"} mt={"xl"}>
         <QueryLoader skeletonsRows={6} />
@@ -47,7 +50,7 @@ const RoutesPanel = () => {
           name={route.name!}
           method={route.method!}
           path={route.path!}
-          updatedAt={route.createdAt}
+          updatedAt={route.updatedAt}
           createdAt={route.createdAt}
           active={true}
         />

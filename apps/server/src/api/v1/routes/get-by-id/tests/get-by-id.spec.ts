@@ -22,6 +22,7 @@ describe("handleRequest", () => {
       path: "/test",
       method: "GET",
       createdAt: new Date("2023-01-01T00:00:00Z"),
+      updatedAt: new Date("2023-01-01T00:00:00Z"),
     };
     mockGetRouteById.mockResolvedValue(mockRoute);
 
@@ -32,7 +33,8 @@ describe("handleRequest", () => {
       name: "Test Route",
       path: "/test",
       method: "GET",
-      createdAt: "2023-01-01T00:00:00.000Z",
+      createdAt: mockRoute.createdAt.toISOString(),
+      updatedAt: mockRoute.updatedAt.toISOString(),
     });
     expect(mockGetRouteById).toHaveBeenCalledWith(
       "123e4567-e89b-12d3-a456-426614174000"
@@ -58,6 +60,7 @@ describe("handleRequest", () => {
       path: null,
       method: null,
       createdAt: new Date("2023-01-01T00:00:00Z"),
+      updatedAt: new Date("2023-01-01T00:00:00Z"),
     };
     mockGetRouteById.mockResolvedValue(mockRoute);
 
@@ -68,7 +71,8 @@ describe("handleRequest", () => {
       name: null,
       path: null,
       method: null,
-      createdAt: "2023-01-01T00:00:00.000Z",
+      createdAt: mockRoute.createdAt.toISOString(),
+      updatedAt: mockRoute.updatedAt.toISOString(),
     });
   });
 });
