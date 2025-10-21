@@ -7,6 +7,7 @@ import { createSelectSchema } from "drizzle-zod";
 import { routesEntity } from "../../../../db/schema";
 
 export const fieldEnumSchema = z.enum([
+  "",
   "id",
   "name",
   "path",
@@ -19,7 +20,7 @@ export const fieldEnumSchema = z.enum([
 export const requestQuerySchema = z
   .clone(paginationRequestQuerySchema)
   .extend({
-    "filter.field": fieldEnumSchema,
+    "filter.field": fieldEnumSchema.optional(),
     "filter.operator": z
       .enum(["eq", "neq", "gt", "gte", "lt", "lte", "like"])
       .optional(),

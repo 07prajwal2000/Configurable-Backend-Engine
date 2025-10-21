@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { HttpMethod, routesEntity } from "../../../../db/schema";
-import { createSelectSchema } from "drizzle-zod";
+import { HttpMethod } from "../../../../db/schema";
 
 export const requestBodySchema = z.object({
   name: z.string().min(2).max(255),
@@ -9,6 +8,7 @@ export const requestBodySchema = z.object({
     .min(1)
     .regex(/^\/(?!.*\/\/)[a-zA-Z0-9-\/]*$/),
   method: z.enum(HttpMethod),
+  active: z.boolean(),
 });
 
 export const requestRouteSchema = z.object({

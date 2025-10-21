@@ -9,6 +9,7 @@ type MenuItemProps = {
   onClick?: () => void;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  color?: string;
 };
 
 const MenuItem = (props: MenuItemProps) => {
@@ -19,7 +20,7 @@ const MenuItem = (props: MenuItemProps) => {
       rightSection={props.rightIcon}
       variant={props.isActive ? "light" : "subtle"}
       fw={props.isActive ? "bold" : ""}
-      color={"violet"}
+      color={props.color ?? "violet"}
       justify="left"
       onClick={props.onClick}
     >

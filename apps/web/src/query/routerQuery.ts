@@ -1,15 +1,15 @@
-import { GetAllRequestType, routesService } from "@/services/routes";
+import { GetAllRequestQueryType, routesService } from "@/services/routes";
 import { QueryClient, useQuery } from "@tanstack/react-query";
 
 export const routesQueries = {
   getAll: {
-    useQuery(pagination: GetAllRequestType) {
+    useQuery(query: GetAllRequestQueryType) {
       return useQuery({
-        queryKey: ["routes", "list", pagination],
+        queryKey: ["routes", "list", JSON.stringify(query)],
         queryFn: async () => {
-          return await routesService.getAll(pagination);
+          return await routesService.getAll(query);
         },
-        staleTime: Infinity,
+        refetchOnWindowFocus: false,
       });
     },
     invalidate(client: QueryClient) {
@@ -26,7 +26,7 @@ export const routesQueries = {
         queryFn: async () => {
           return await routesService.getByID(id);
         },
-        staleTime: Infinity,
+        refetchOnWindowFocus: false,
       });
     },
     invalidate(client: QueryClient, id: string) {
@@ -35,5 +35,11 @@ export const routesQueries = {
         exact: false,
       });
     },
+  },
+  invalidateAll(client: QueryClient) {
+    client.invalidateQueries({
+      queryKey: ["routes"],
+      exact: false,
+    });
   },
 };

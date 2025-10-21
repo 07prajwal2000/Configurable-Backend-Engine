@@ -28,6 +28,7 @@ export const projectsEntity = pgTable(
     id: varchar({ length: 50 }).primaryKey().default(generateID()),
     name: varchar({ length: 50 }),
     createdAt: timestamp().defaultNow().notNull(),
+    hidden: boolean().default(false),
     updatedAt: timestamp()
       .defaultNow()
       .notNull()
@@ -50,6 +51,7 @@ export const routesEntity = pgTable(
       .default(sql`NULL`),
     method: varchar({ length: 8 }),
     createdAt: timestamp().defaultNow().notNull(),
+    createdBy: varchar({ length: 50 }),
     updatedAt: timestamp()
       .defaultNow()
       .notNull()

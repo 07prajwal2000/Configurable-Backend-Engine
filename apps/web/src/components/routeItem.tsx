@@ -14,6 +14,10 @@ import { getTimeAgo } from "@/lib/datetime";
 import { TbDots } from "react-icons/tb";
 import RouteItemMenu from "./routeItemMenu";
 import { useRouter } from "next/navigation";
+import { routesQueries } from "@/query/routerQuery";
+import { routesService } from "@/services/routes";
+import { useQueryClient } from "@tanstack/react-query";
+import { notifications } from "@mantine/notifications";
 
 type Proptypes = {
   id: string;
@@ -27,10 +31,45 @@ type Proptypes = {
 
 const RouteItem = (props: Proptypes) => {
   const [active, setActive] = useState(props.active);
+  const client = useQueryClient();
   const router = useRouter();
 
-  function toggleActive() {
-    setActive((p) => !p);
+  async function toggleActive() {
+    const loaderId = crypto.randomUUID();
+    try {
+      notifications.show({
+        id: loaderId,
+        loading: true,
+        message: active ? "Deactivating..." : "Activating...",
+        withCloseButton: false,
+        color: "violet",
+      });
+      await routesService.update(props.id, {
+        active: !active,
+        method: props.method as any,
+        path: props.path,
+        name: props.name,
+      });
+      routesQueries.invalidateAll(client);
+      setActive((p) => !p);
+      notifications.update({
+        id: loaderId,
+        loading: false,
+        message: active ? "Deactivated" : "Activated",
+        color: "green",
+        withCloseButton: true,
+      });
+    } catch (error) {
+      notifications.update({
+        id: loaderId,
+        loading: false,
+        withCloseButton: true,
+        message: "Something went wrong",
+        color: "red",
+      });
+    } finally {
+      setTimeout(() => notifications.hide(loaderId), 3_000);
+    }
   }
 
   function onItemClick() {

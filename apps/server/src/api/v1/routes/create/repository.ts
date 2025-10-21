@@ -81,3 +81,12 @@ export async function checkProjectExist(id: string, tx?: DbTransactionType) {
     .limit(1);
   return project.length > 0;
 }
+
+export async function getPersonalProjectId(tx?: DbTransactionType) {
+  const project = await (tx ?? db)
+    .select({ id: projectsEntity.id })
+    .from(projectsEntity)
+    .where(eq(projectsEntity.name, "__personal"))
+    .limit(1);
+  return project[0].id;
+}

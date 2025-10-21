@@ -1,4 +1,4 @@
-import { count, desc } from "drizzle-orm";
+import { count, desc, ne } from "drizzle-orm";
 import { db, DbTransactionType } from "../../../../db";
 import { projectsEntity } from "../../../../db/schema";
 
@@ -10,6 +10,7 @@ export async function getProjectsList(
   const result = await (tx ?? db)
     .select()
     .from(projectsEntity)
+    .where(ne(projectsEntity.name, "__personal"))
     .orderBy(desc(projectsEntity.updatedAt))
     .offset(skip)
     .limit(limit);

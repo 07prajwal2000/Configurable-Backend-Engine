@@ -13,6 +13,7 @@ import {
 import UpdatesButton from "./updatesButton";
 import MenuItem from "./menuItem";
 import ProfileSection from "./profileSection";
+import ProjectList from "./projectList";
 
 const topMenuItems = [
   {
@@ -48,7 +49,9 @@ const RootSidebar = () => {
   const router = useRouter();
   const path = usePathname();
 
-  function onMenuItemClick(to: string) {}
+  function onMenuItemClick(to: string) {
+    router.push(to);
+  }
 
   return (
     <Stack
@@ -76,6 +79,7 @@ const RootSidebar = () => {
           />
         ))}
       </Stack>
+      <ProjectList />
       <Stack mt={"auto"} gap={4}>
         <UpdatesButton />
         {bottomMenuItems.map((item) => (

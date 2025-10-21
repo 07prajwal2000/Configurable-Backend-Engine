@@ -10,9 +10,11 @@ import { requestBodySchema, responseSchema } from "./dto";
 import { errorSchema } from "../../../../errors/customError";
 import handleRequest from "./service";
 import { validationErrorSchema } from "../../../../errors/validationError";
+import { generateID } from "@cbe/lib";
 
 const openapiRouteOptions: DescribeRouteOptions = {
-  description: "Creates a new route and returns the object with id",
+  description:
+    "Creates a new route and returns the object with id. (set projectId=personal for personal routes)",
   operationId: "create-route",
   tags: ["Routes"],
   responses: {
@@ -50,7 +52,8 @@ export default function (app: Hono) {
     validator("json", requestBodySchema, zodErrorCallbackParser),
     async (ctx) => {
       const data = ctx.req.valid("json");
-      const result = await handleRequest(data);
+      const userId = generateID();
+      const result = await handleRequest(userId, data);
       return ctx.json(result);
     }
   );

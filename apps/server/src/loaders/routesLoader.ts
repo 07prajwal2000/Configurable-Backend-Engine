@@ -2,6 +2,7 @@ import { HttpRouteParser } from "@cbe/lib";
 import { db } from "../db";
 import { routesEntity } from "../db/schema";
 import { CHAN_ON_ROUTE_CHANGE, subscribeToChannel } from "../db/redis";
+import { eq } from "drizzle-orm";
 
 export async function loadRoutes() {
   const parser = new HttpRouteParser();
@@ -31,5 +32,6 @@ async function fetchRoutes() {
       path: routesEntity.path,
       routeId: routesEntity.id,
     })
-    .from(routesEntity);
+    .from(routesEntity)
+    .where(eq(routesEntity.active, true));
 }

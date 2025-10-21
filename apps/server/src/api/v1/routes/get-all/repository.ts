@@ -13,7 +13,7 @@ export async function getRoutesList(
     .from(routesEntity)
     .where(filter)
     .offset(skip)
-    .orderBy(desc(routesEntity.createdAt))
+    .orderBy(desc(routesEntity.updatedAt))
     .limit(limit);
   const totalCount = await getRoutesCount(filter, tx);
   return { result, totalCount };

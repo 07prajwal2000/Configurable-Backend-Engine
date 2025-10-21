@@ -1,12 +1,20 @@
 "use client";
 
-import { Box, Group, Tabs } from "@mantine/core";
+import { Group, Tabs } from "@mantine/core";
 import React from "react";
 import RoutesPanel from "./panels/routesPanel";
 import RouterFilter from "./filters/routerFilter";
 import RouterPagination from "./filters/routerPagination";
 
-const OverviewTabs = () => {
+type PropTypes = {
+  tabs?: {
+    label: string;
+    content: React.ReactNode;
+  }[];
+  projectId?: string;
+};
+
+const OverviewTabs = (props: PropTypes) => {
   return (
     <Tabs
       style={{
@@ -27,6 +35,11 @@ const OverviewTabs = () => {
         <Tabs.List>
           <Tabs.Tab value={"routes"}>Routes</Tabs.Tab>
           <Tabs.Tab value={"executions"}>Executions</Tabs.Tab>
+          {props.tabs?.map((tab, index) => (
+            <Tabs.Tab key={index} value={tab.label}>
+              {tab.label}
+            </Tabs.Tab>
+          ))}
         </Tabs.List>
         <Group ml={"auto"}>
           <RouterPagination />
@@ -34,9 +47,14 @@ const OverviewTabs = () => {
         </Group>
       </Group>
       <Tabs.Panel value="routes">
-        <RoutesPanel />
+        <RoutesPanel projectId={props.projectId} />
       </Tabs.Panel>
       <Tabs.Panel value="executions">Executions panel</Tabs.Panel>
+      {props.tabs?.map((tab, index) => (
+        <Tabs.Panel key={index} value={tab.label}>
+          {tab.content}
+        </Tabs.Panel>
+      ))}
     </Tabs>
   );
 };

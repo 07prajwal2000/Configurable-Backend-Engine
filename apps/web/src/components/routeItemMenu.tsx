@@ -32,7 +32,7 @@ const RouteItemMenu = (props: Proptypes) => {
   async function onDeleteConfirm() {
     try {
       await routesService.delete(props.id);
-      routesQueries.getAll.invalidate(client);
+      routesQueries.invalidateAll(client);
       notifications.show({
         message: "Successfully deleted",
         color: "green",
@@ -105,8 +105,7 @@ function RouteEditForm({ id, close }: { id: string; close: () => void }) {
     try {
       setSaving(true);
       await routesService.update(id, data);
-      routesQueries.getById.invalidate(client, id);
-      routesQueries.getAll.invalidate(client);
+      routesQueries.invalidateAll(client);
       close();
     } catch (error: any) {
       showErrorNotification(error);

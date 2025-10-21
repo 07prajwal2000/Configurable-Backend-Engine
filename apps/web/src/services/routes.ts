@@ -16,14 +16,22 @@ import { httpClient } from "@/lib/http";
 
 const baseUrl = `/v1/routes`;
 
-export type GetAllRequestType = z.infer<typeof getAllRequestQuerySchema>;
+export type GetAllRequestQueryType = z.infer<typeof getAllRequestQuerySchema>;
 export const routesService = {
   async getAll(
-    pagination: GetAllRequestType
+    query: GetAllRequestQueryType
   ): Promise<z.infer<typeof getAllResponseSchema>> {
-    const { data } = getAllRequestQuerySchema.safeParse(pagination);
+    const { data } = getAllRequestQuerySchema.safeParse(query);
+    const filterParams = new URLSearchParams();
+    if (query.filter.field && query.filter.value && query.filter.operator) {
+      filterParams.append("filter.field", query.filter.field);
+      filterParams.append("filter.value", query.filter.value);
+      filterParams.append("filter.operator", query.filter.operator);
+    }
     const result = await httpClient.get(
-      `${baseUrl}/list?page=${data?.page}&perPage=${data?.perPage}`
+      `${baseUrl}/list?page=${data?.page ?? 1}&perPage=${
+        data?.perPage ?? 10
+      }&${filterParams.toString()}`
     );
     return result.data;
   },

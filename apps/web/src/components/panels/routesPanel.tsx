@@ -9,12 +9,21 @@ import QueryLoader from "../query/queryLoader";
 import QueryError from "../query/queryError";
 import { useQueryClient } from "@tanstack/react-query";
 
-const RoutesPanel = () => {
+type PropTypes = {
+  projectId?: string;
+};
+
+const RoutesPanel = (props: PropTypes) => {
   const { page, perPage, setPaginationLimit } = useRouterPagination();
   const { useQuery, invalidate } = routesQueries.getAll;
-  const { data, isLoading, isError, error, isRefetching } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     page,
     perPage,
+    filter: {
+      field: props.projectId ? "projectId" : "",
+      operator: "eq",
+      value: props.projectId ? props.projectId : "",
+    },
   });
   const client = useQueryClient();
 
@@ -23,7 +32,7 @@ const RoutesPanel = () => {
     setPaginationLimit(data.pagination.totalPages);
   }, [data]);
 
-  if (isLoading || isRefetching)
+  if (isLoading)
     return (
       <Box w={"100%"} mt={"xl"}>
         <QueryLoader skeletonsRows={6} />
@@ -52,7 +61,7 @@ const RoutesPanel = () => {
           path={route.path!}
           updatedAt={route.updatedAt}
           createdAt={route.createdAt}
-          active={true}
+          active={route.active!}
         />
       ))}
     </Stack>
