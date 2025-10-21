@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/nprogress/styles.css";
+
 import {
   ColorSchemeScript,
   MantineProvider,
@@ -9,6 +11,7 @@ import {
 import RootAppShell from "@/components/rootAppShell";
 import QueryProvider from "../query/queryProvider";
 import { Notifications } from "@mantine/notifications";
+import { NavigationProgress } from "@mantine/nprogress";
 
 export const metadata: Metadata = {
   title: "Configurable Backend Engine",
@@ -25,6 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <MantineProvider>
           <Notifications />
           <QueryProvider>
+            <NavigationProgress color="violet" size={2} />
             <RootAppShell>{children}</RootAppShell>
           </QueryProvider>
         </MantineProvider>
