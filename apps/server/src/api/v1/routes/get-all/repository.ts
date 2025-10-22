@@ -1,6 +1,6 @@
-import { count, desc, SQL } from "drizzle-orm";
+import { count, desc, eq, SQL } from "drizzle-orm";
 import { db, DbTransactionType } from "../../../../db";
-import { routesEntity } from "../../../../db/schema";
+import { projectsEntity, routesEntity } from "../../../../db/schema";
 
 export async function getRoutesList(
   skip: number,
@@ -9,8 +9,20 @@ export async function getRoutesList(
   tx?: DbTransactionType
 ) {
   const result = await (tx ?? db)
-    .select()
+    .select({
+      id: routesEntity.id,
+      name: routesEntity.name,
+      path: routesEntity.path,
+      method: routesEntity.method,
+      active: routesEntity.active,
+      createdBy: routesEntity.createdBy,
+      projectId: routesEntity.projectId,
+      createdAt: routesEntity.createdAt,
+      updatedAt: routesEntity.updatedAt,
+      projectName: projectsEntity.name,
+    })
     .from(routesEntity)
+    .leftJoin(projectsEntity, eq(routesEntity.projectId, projectsEntity.id))
     .where(filter)
     .offset(skip)
     .orderBy(desc(routesEntity.updatedAt))

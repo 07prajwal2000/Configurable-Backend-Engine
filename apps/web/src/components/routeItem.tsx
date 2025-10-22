@@ -4,20 +4,22 @@ import {
   Center,
   Grid,
   Group,
+  Paper,
   Stack,
   Switch,
   Text,
+  Tooltip,
 } from "@mantine/core";
 import React, { useState } from "react";
 import HttpMethodText from "./httpMethodText";
 import { getTimeAgo } from "@/lib/datetime";
-import { TbDots } from "react-icons/tb";
 import RouteItemMenu from "./routeItemMenu";
 import { useRouter } from "next/navigation";
 import { routesQueries } from "@/query/routerQuery";
 import { routesService } from "@/services/routes";
 import { useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
+import { TbStack2, TbUser } from "react-icons/tb";
 
 type Proptypes = {
   id: string;
@@ -26,6 +28,7 @@ type Proptypes = {
   path: string;
   updatedAt: string;
   createdAt: string;
+  projectName: string;
   active: boolean;
 };
 
@@ -44,11 +47,8 @@ const RouteItem = (props: Proptypes) => {
         withCloseButton: false,
         color: "violet",
       });
-      await routesService.update(props.id, {
+      await routesService.updatePartial(props.id, {
         active: !active,
-        method: props.method as any,
-        path: props.path,
-        name: props.name,
       });
       routesQueries.invalidateAll(client);
       setActive((p) => !p);
@@ -76,6 +76,9 @@ const RouteItem = (props: Proptypes) => {
     router.push(`/editor/${props.id}`);
   }
 
+  const projectName =
+    props.projectName === "__personal" ? "Personal" : props.projectName;
+
   return (
     <Card shadow="md" p={"xs"} withBorder>
       <Grid>
@@ -90,7 +93,7 @@ const RouteItem = (props: Proptypes) => {
             <HttpMethodText method={props.method as any} />
           </Center>
         </Grid.Col>
-        <Grid.Col onClick={onItemClick} style={{ cursor: "pointer" }} span={9}>
+        <Grid.Col onClick={onItemClick} style={{ cursor: "pointer" }} span={8}>
           <Stack gap={4}>
             <Text>{props.name}</Text>
             <Group gap={"xs"}>
@@ -106,20 +109,33 @@ const RouteItem = (props: Proptypes) => {
             </Group>
           </Stack>
         </Grid.Col>
-        <Grid.Col span={1}>
-          <Group my={"auto"} h={"100%"} gap={"xs"}>
+        <Grid.Col span={3}>
+          <Group my={"auto"} h={"100%"} gap={"lg"} justify="end">
+            <Tooltip
+              bg={"dark"}
+              label={
+                <Text size={"xs"}>Route associated with {projectName}</Text>
+              }
+            >
+              <Paper shadow="sm" withBorder>
+                <Group gap={"xs"} w={"fit-content"} px={"xs"} py={4} bdrs="sm">
+                  {props.projectName === "__personal" ? (
+                    <TbUser size={20} />
+                  ) : (
+                    <TbStack2 size={20} />
+                  )}
+                  <Text size="xs">{projectName}</Text>
+                </Group>
+              </Paper>
+            </Tooltip>
             <Switch
               color="violet"
               label={active ? "Active" : "Inactive"}
               onChange={toggleActive}
               checked={active}
             />
-          </Group>
-        </Grid.Col>
-        <Grid.Col span={1} my={"auto"} h={"100%"}>
-          <Center>
             <RouteItemMenu id={props.id} />
-          </Center>
+          </Group>
         </Grid.Col>
       </Grid>
     </Card>

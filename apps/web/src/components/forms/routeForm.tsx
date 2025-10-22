@@ -43,8 +43,6 @@ const RouteForm = (props: PropTypes) => {
   });
 
   function onSubmit(value: typeof form.values) {
-    console.log(value);
-
     const { success, data, error } = props.zodSchema.safeParse(value);
     if (!success) {
       for (let err of error.issues) {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@mantine/core/styles.css";
+import EditorAppShell from "@/components/editor/editorAppShell";
 
 export const metadata: Metadata = {
   title: "Editor | Configurable Backend Engine",
@@ -11,5 +12,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  return <EditorAppShell>{children}</EditorAppShell>;
 }

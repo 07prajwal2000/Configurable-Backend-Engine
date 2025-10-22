@@ -4,6 +4,7 @@ import registerGetByIdRoute from "./get-by-id/route";
 import registerCreateRoute from "./create/route";
 import registerUpdateRoute from "./update/route";
 import registerDeleteRoute from "./delete/route";
+import registerUpdatePartialRoute from "./update-partial/route";
 
 export default {
   name: "routes",
@@ -14,5 +15,6 @@ export default {
     registerCreateRoute(router);
     registerUpdateRoute(router);
     registerDeleteRoute(router);
+    registerUpdatePartialRoute(router);
   },
 };

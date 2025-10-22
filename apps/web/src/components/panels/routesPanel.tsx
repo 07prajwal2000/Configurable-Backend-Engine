@@ -4,7 +4,7 @@ import { Box, Stack } from "@mantine/core";
 import React, { useEffect } from "react";
 import RouteItem from "../routeItem";
 import { routesQueries } from "@/query/routerQuery";
-import { useRouterPagination } from "@/app/store/routes";
+import { useRouterPagination } from "@/store/routes";
 import QueryLoader from "../query/queryLoader";
 import QueryError from "../query/queryError";
 import { useQueryClient } from "@tanstack/react-query";
@@ -35,7 +35,7 @@ const RoutesPanel = (props: PropTypes) => {
   if (isLoading)
     return (
       <Box w={"100%"} mt={"xl"}>
-        <QueryLoader skeletonsRows={6} />
+        <QueryLoader type="spinner" skeletonsRows={6} />
       </Box>
     );
 
@@ -62,6 +62,7 @@ const RoutesPanel = (props: PropTypes) => {
           updatedAt={route.updatedAt}
           createdAt={route.createdAt}
           active={route.active!}
+          projectName={route.projectName!}
         />
       ))}
     </Stack>

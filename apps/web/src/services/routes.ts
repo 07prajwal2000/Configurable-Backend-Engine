@@ -11,6 +11,10 @@ import {
   requestBodySchema as updateRequestSchema,
   responseSchema as updateResponseSchema,
 } from "@cbe/backend-engine/src/api/v1/routes/update/dto";
+import {
+  requestBodySchema as updatePartialRequestSchema,
+  responseSchema as updatePartialResponseSchema,
+} from "@cbe/backend-engine/src/api/v1/routes/update-partial/dto";
 import { responseSchema as getByIdResponseSchema } from "@cbe/backend-engine/src/api/v1/routes/get-by-id/dto";
 import { httpClient } from "@/lib/http";
 
@@ -52,10 +56,18 @@ export const routesService = {
     const result = await httpClient.put(`${baseUrl}/${id}`, data);
     return result.data;
   },
+  async updatePartial(
+    id: string,
+    data: z.infer<typeof updatePartialRequestSchema>
+  ): Promise<z.infer<typeof updatePartialResponseSchema>> {
+    const result = await httpClient.put(`${baseUrl}/partial/${id}`, data);
+    return result.data;
+  },
   async delete(id: string) {
     await httpClient.delete(`${baseUrl}/${id}`);
   },
   // zod schemas
   createRequestSchema,
   updateRequestSchema,
+  updatePartialRequestSchema,
 };

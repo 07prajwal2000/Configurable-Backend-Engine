@@ -1,4 +1,4 @@
-import { useRouterPagination } from "@/app/store/routes";
+import { useRouterPagination } from "@/store/routes";
 import { ActionIcon, Group, Input, Select } from "@mantine/core";
 import React from "react";
 import { TbCaretLeft, TbCaretRight } from "react-icons/tb";

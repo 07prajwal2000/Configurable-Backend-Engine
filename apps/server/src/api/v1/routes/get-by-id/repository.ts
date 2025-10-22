@@ -1,11 +1,23 @@
 import { eq } from "drizzle-orm";
 import { db, DbTransactionType } from "../../../../db";
-import { routesEntity } from "../../../../db/schema";
+import { projectsEntity, routesEntity } from "../../../../db/schema";
 
 export async function getRouteById(id: string, tx?: DbTransactionType) {
   const route = await (tx ?? db)
-    .select()
+    .select({
+      id: routesEntity.id,
+      name: routesEntity.name,
+      path: routesEntity.path,
+      method: routesEntity.method,
+      active: routesEntity.active,
+      createdBy: routesEntity.createdBy,
+      projectId: routesEntity.projectId,
+      createdAt: routesEntity.createdAt,
+      updatedAt: routesEntity.updatedAt,
+      projectName: projectsEntity.name,
+    })
     .from(routesEntity)
+    .leftJoin(projectsEntity, eq(routesEntity.projectId, projectsEntity.id))
     .where(eq(routesEntity.id, id))
     .limit(1);
   return route.length > 0 ? route[0] : null;

@@ -41,6 +41,7 @@ export const responseSchema = z.object({
     createSelectSchema(routesEntity).extend({
       createdAt: z.string(),
       updatedAt: z.string(),
+      projectName: z.string(),
     })
   ),
   pagination: paginationResponseSchema,
