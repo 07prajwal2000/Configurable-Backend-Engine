@@ -11,7 +11,7 @@ const AddStickyNoteButton = () => {
       bg={"dark"}
       label={<Text size={"xs"}>Add Sticky Note</Text>}
     >
-      <ActionIcon size={"lg"} color="violet" variant="outline">
+      <ActionIcon bg={"white"} size={"lg"} color="violet" variant="outline">
         <TbNote size={20} />
       </ActionIcon>
     </Tooltip>

@@ -27,7 +27,7 @@ const AiButton = () => {
         size={48}
         color="violet"
         variant="outline"
-        bg={opened ? violet[1] : ""}
+        bg={opened ? violet[1] : "white"}
       >
         <Stack gap={0} justify="center" align="center">
           <TbCpu size={25} />

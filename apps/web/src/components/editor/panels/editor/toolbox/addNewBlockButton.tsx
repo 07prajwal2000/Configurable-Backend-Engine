@@ -15,6 +15,7 @@ const AddNewBlockButton = () => {
       label={<Text size={"xs"}>Add New Block</Text>}
     >
       <ActionIcon
+        bg={"white"}
         id="add-new-block"
         onClick={open}
         size={"lg"}

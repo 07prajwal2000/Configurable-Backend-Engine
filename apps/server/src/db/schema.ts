@@ -68,7 +68,7 @@ export const blocksEntity = pgTable(
     position: json(),
     data: json(),
     createdAt: timestamp().defaultNow().notNull(),
-    updatedAt: timestamp(),
+    updatedAt: timestamp().$onUpdate(() => new Date()),
     routeId: varchar({ length: 50 }).references(() => routesEntity.id, {
       onDelete: "cascade",
     }),

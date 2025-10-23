@@ -11,7 +11,7 @@ import EditorTopbarTabs from "./editorTopbarTabs";
 const Topbar = () => {
   const { id } = useParams();
   return (
-    <Paper shadow="sm" p={"sm"} pos={"relative"}>
+    <Paper style={{ zIndex: 10 }} shadow="sm" p={"sm"} pos={"relative"}>
       <Grid justify="space-between" align="center">
         <Box
           style={{
