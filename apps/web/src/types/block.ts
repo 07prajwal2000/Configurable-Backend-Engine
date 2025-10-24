@@ -38,6 +38,8 @@ export type EdgeType = {
   id: string;
   source: string;
   target: string;
+  sourceHandle: string;
+  targetHandle: string;
 };
 
 export type EditorActionStateType =

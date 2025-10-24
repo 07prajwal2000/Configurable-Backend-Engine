@@ -30,7 +30,7 @@ type State = {
     disableRecording: boolean;
   };
   changeTracker: {
-    tracker: Set<string>;
+    tracker: Map<string, "edge" | "block">;
   };
 };
 
@@ -62,7 +62,7 @@ type Actions = {
     reset: () => void;
   };
   changeTracker: {
-    add: (id: string) => void;
+    add: (id: string, type: "edge" | "block") => void;
     remove: (id: string) => void;
     reset: () => void;
   };
@@ -127,7 +127,8 @@ export const useEditorStore = create<State & Actions>()(
             const item = draft.undoStack.pop()!;
             copiedData = JSON.parse(JSON.stringify(item));
             const listSelected = item.variant === "block" ? blocks : edges;
-            const itemToPush = listSelected.find((i) => i.id === item.id)!;
+            const itemToPush =
+              listSelected.find((i) => i.id === item.id)! || item;
             if (itemToPush)
               draft.redoStack.push({
                 actionType: item.actionType,
@@ -150,7 +151,8 @@ export const useEditorStore = create<State & Actions>()(
             const item = draft.redoStack.pop()!;
             copiedData = JSON.parse(JSON.stringify(item));
             const listSelected = item.variant === "block" ? blocks : edges;
-            const itemToPush = listSelected.find((i) => i.id === item.id)!;
+            const itemToPush =
+              listSelected.find((i) => i.id === item.id)! || item;
             if (itemToPush) {
               draft.undoStack.push({
                 actionType: item.actionType,
@@ -183,13 +185,13 @@ export const useEditorStore = create<State & Actions>()(
       },
     },
     changeTracker: {
-      tracker: new Set(),
-      add(id) {
+      tracker: new Map(),
+      add(id, type) {
         set((state) => {
           state.changeTracker.tracker = produce(
             state.changeTracker.tracker,
             (draft) => {
-              draft.add(id);
+              draft.set(id, type);
             }
           );
         });
@@ -207,7 +209,7 @@ export const useEditorStore = create<State & Actions>()(
       reset() {
         set((state) => {
           state.changeTracker = produce(state.changeTracker, (draft) => {
-            draft.tracker = new Set();
+            draft.tracker = new Map();
           });
         });
       },

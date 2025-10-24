@@ -23,8 +23,7 @@ type Actions = {
     edges: {
       addEdge: (edge: EdgeType) => void;
       deleteEdge: (id: string) => void;
-      onEdgeChange: (changes: EdgeChange[]) => void;
-      updateEdge: (id: string, edge: Partial<EdgeType>) => void;
+      onEdgeChange: (changes: Partial<EdgeChange>[]) => void;
     };
   };
 };
@@ -32,19 +31,24 @@ type Actions = {
 const useCanvasStore = create<State & Actions>((set, get) => ({
   blocks: [
     {
-      id: "as",
-      data: {},
+      id: "weas",
+      data: {
+        label: "entrypoint",
+      },
       position: { x: 0, y: 0 },
       type: BlockTypes.entrypoint,
     },
     {
-      id: "as2",
+      id: "as2wewe",
       data: {},
-      position: { x: 0, y: 50 },
+      position: { x: 80, y: 130 },
       type: BlockTypes.entrypoint,
     },
   ],
-  edges: [],
+  edges: [
+    // { id: "wesdsdas", source: "weas", target: "as2wewe" },
+    // { id: "wse2esdsdas", source: "as2wewe", target: "weas" },
+  ],
   actions: {
     blocks: {
       addBlock(block) {
@@ -73,15 +77,8 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
       deleteEdge(id) {
         set({ edges: get().edges.filter((e) => e.id !== id) });
       },
-      updateEdge(id, newEdge) {
-        set({
-          edges: get().edges.map((edge) =>
-            edge.id === id ? { ...edge, ...newEdge } : edge
-          ),
-        });
-      },
       onEdgeChange(changes) {
-        set({ edges: applyEdgeChanges(changes, get().edges) });
+        set({ edges: applyEdgeChanges(changes as any, get().edges) });
       },
     },
   },

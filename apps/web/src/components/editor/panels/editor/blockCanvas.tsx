@@ -1,26 +1,21 @@
 import { Box } from "@mantine/core";
-import {
-  Background,
-  Panel,
-  ReactFlow,
-  ReactFlowProvider,
-  useEdgesState,
-  useNodesState,
-} from "@xyflow/react";
-import React, { createContext, useEffect } from "react";
+import { Background, Panel, ReactFlow, ReactFlowProvider } from "@xyflow/react";
+import React, { createContext } from "react";
 import "@xyflow/react/dist/style.css";
 import { blocksList } from "../../blocks/blocksList";
 import {
   useEditorActionsStore,
   useEditorChangeTrackerStore,
 } from "@/store/editor";
-import { BaseBlockType, BlockTypes } from "@/types/block";
+import { BaseBlockType, EdgeType } from "@/types/block";
 import {
   useCanvasActionsStore,
   useCanvasBlocksStore,
   useCanvasEdgesStore,
 } from "@/store/canvas";
 import CanvasToolboxPanel from "./toolbox/canvasToolboxPanel";
+import { generateID } from "@cbe/lib";
+import { edgeTypes } from "../../blocks/customEdge";
 
 type Props = {
   readonly?: boolean;
@@ -34,7 +29,7 @@ export const BlockCanvasContext = createContext<{
 const BlockCanvas = (props: Props) => {
   const {
     blocks: { onBlockChange, updateBlock, addBlock, deleteBlock },
-    edges: { onEdgeChange, updateEdge, addEdge, deleteEdge },
+    edges: { onEdgeChange, addEdge, deleteEdge },
   } = useCanvasActionsStore();
   const actions = useEditorActionsStore();
   const blocks = useCanvasBlocksStore();
@@ -42,7 +37,7 @@ const BlockCanvas = (props: Props) => {
   const changeTracker = useEditorChangeTrackerStore();
 
   function onBlockDragStop(block: BaseBlockType) {
-    changeTracker.add(block.id);
+    changeTracker.add(block.id, "block");
     actions.record(
       JSON.parse(
         JSON.stringify({
@@ -64,21 +59,38 @@ const BlockCanvas = (props: Props) => {
         if (item.actionType === "edit") {
           updateBlock(item.id, { position: item.position });
         } else if (item.actionType === "add") {
-          deleteBlock(item.id);
+          type == "undo" ? deleteBlock(item.id) : addBlock(item);
         } else if (item.actionType === "delete") {
-          addBlock(item);
+          type == "undo" ? addBlock(item) : deleteBlock(item.id);
         }
         break;
       case "edge":
         if (item.actionType === "add") {
-          deleteEdge(item.id);
+          type == "undo" ? deleteEdge(item.id) : addEdge(item);
         } else if (item.actionType === "delete") {
-          addEdge(item);
+          type == "undo" ? addEdge(item) : deleteEdge(item.id);
         }
         break;
     }
     if (type === "undo") changeTracker.remove(item.id);
-    else changeTracker.add(item.id);
+    else changeTracker.add(item.id, item.variant);
+  }
+
+  function onEdgeConnect(edge: EdgeType) {
+    edge.id = generateID();
+    changeTracker.add(edge.id, "edge");
+    // @ts-ignore
+    edge.type = "custom";
+    actions.record(
+      JSON.parse(
+        JSON.stringify({
+          variant: "edge",
+          actionType: "add",
+          ...edge,
+        })
+      )
+    );
+    addEdge(edge);
   }
 
   return (
@@ -90,6 +102,7 @@ const BlockCanvas = (props: Props) => {
           <ReactFlow
             onEdgesChange={onEdgeChange}
             onNodesChange={onBlockChange}
+            onConnect={(e) => onEdgeConnect(e as any)}
             nodes={blocks}
             edges={edges}
             onNodeDragStart={(_, node) =>
@@ -106,7 +119,8 @@ const BlockCanvas = (props: Props) => {
             nodesConnectable={!props.readonly}
             fitView
             zoomOnScroll={false}
-            panOnDrag={[1]}
+            panOnDrag={[0]}
+            edgeTypes={edgeTypes}
           >
             <Background />
             <Panel position="bottom-left">
