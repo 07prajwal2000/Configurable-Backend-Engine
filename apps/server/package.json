@@ -21,6 +21,7 @@
   "dependencies": {
     "@cbe/blocks": "file:../../packages/blocks",
     "@cbe/lib": "file:../../packages/lib",
+    "@electric-sql/pglite": "^0.3.11",
     "@hono/node-server": "^1.19.0",
     "@hono/standard-validator": "^0.1.5",
     "@hono/zod-validator": "^0.7.2",

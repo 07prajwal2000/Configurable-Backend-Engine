@@ -19,9 +19,7 @@ export async function createRoute(
   const newRoute = await (tx ?? db)
     .insert(routesEntity)
     .values(data)
-    .returning({
-      id: routesEntity.id,
-    });
+    .returning();
   return newRoute[0].id;
 }
 

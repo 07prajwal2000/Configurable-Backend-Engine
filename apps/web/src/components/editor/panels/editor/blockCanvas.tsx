@@ -16,15 +16,11 @@ import {
 import CanvasToolboxPanel from "./toolbox/canvasToolboxPanel";
 import { generateID } from "@cbe/lib";
 import { edgeTypes } from "../../blocks/customEdge";
+import { BlockCanvasContext } from "@/context/blockCanvas";
 
 type Props = {
   readonly?: boolean;
 };
-
-export const BlockCanvasContext = createContext<{
-  undo: () => void;
-  redo: () => void;
-}>({} as any);
 
 const BlockCanvas = (props: Props) => {
   const {
@@ -38,44 +34,11 @@ const BlockCanvas = (props: Props) => {
 
   function onBlockDragStop(block: BaseBlockType) {
     changeTracker.add(block.id, "block");
-    actions.record(
-      JSON.parse(
-        JSON.stringify({
-          variant: "block",
-          actionType: "edit",
-          ...block,
-        })
-      )
-    );
   }
+  // TODO: Need to implement Undo/Redo
   function doAction(type: "undo" | "redo") {
-    const item =
-      type === "undo"
-        ? actions.undo(blocks, edges)
-        : actions.redo(blocks, edges);
-    if (!item) return;
-    switch (item.variant) {
-      case "block":
-        if (item.actionType === "edit") {
-          updateBlock(item.id, { position: item.position });
-        } else if (item.actionType === "add") {
-          type == "undo" ? deleteBlock(item.id) : addBlock(item);
-        } else if (item.actionType === "delete") {
-          type == "undo" ? addBlock(item) : deleteBlock(item.id);
-        }
-        break;
-      case "edge":
-        if (item.actionType === "add") {
-          type == "undo" ? deleteEdge(item.id) : addEdge(item);
-        } else if (item.actionType === "delete") {
-          type == "undo" ? addEdge(item) : deleteEdge(item.id);
-        }
-        break;
-    }
-    if (type === "undo") changeTracker.remove(item.id);
-    else changeTracker.add(item.id, item.variant);
+    // NOT IMPLEMENTED YET
   }
-
   function onEdgeConnect(edge: EdgeType) {
     edge.id = generateID();
     changeTracker.add(edge.id, "edge");
@@ -92,11 +55,22 @@ const BlockCanvas = (props: Props) => {
     );
     addEdge(edge);
   }
+  function deleteEdgeWithHistory(id: string) {
+    deleteEdge(id);
+  }
+  function deleteBlockWithHistory(id: string) {
+    deleteBlock(id);
+  }
 
   return (
     <Box w={"100%"} h={"100%"}>
       <BlockCanvasContext.Provider
-        value={{ undo: () => doAction("undo"), redo: () => doAction("redo") }}
+        value={{
+          undo: () => doAction("undo"),
+          redo: () => doAction("redo"),
+          deleteBlock: (id: string) => deleteBlockWithHistory(id),
+          deleteEdge: (id: string) => deleteEdgeWithHistory(id),
+        }}
       >
         <ReactFlowProvider>
           <ReactFlow

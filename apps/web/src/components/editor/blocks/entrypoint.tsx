@@ -5,23 +5,23 @@ import { NodeProps, Position } from "@xyflow/react";
 import BlockHandle from "./handle";
 
 const Entrypoint = (props: NodeProps) => {
-  const showTooltip = !props.dragging && props.data.label ? true : false;
   return (
     <BaseBlock
+      blockId={props.id}
       nodeProps={props}
-      icon={<TbWorldCode size={25} />}
+      icon={<TbWorldCode size={15} />}
       topLeftRounded
       topRightRounded
       tooltip={props?.data?.label?.toString() ?? ""}
-      showTooltip={showTooltip}
+      showOptionsTooltip={false}
       blockName="Entrypoint"
+      labelPlacement="left"
     >
       <BlockHandle
         type="source"
         blockId={`${props.id}`}
         position={Position.Bottom}
       />
-      <BlockHandle type="target" blockId={props.id} position={Position.Top} />
     </BaseBlock>
   );
 };

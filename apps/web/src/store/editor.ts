@@ -128,7 +128,7 @@ export const useEditorStore = create<State & Actions>()(
             copiedData = JSON.parse(JSON.stringify(item));
             const listSelected = item.variant === "block" ? blocks : edges;
             const itemToPush =
-              listSelected.find((i) => i.id === item.id)! || item;
+              listSelected.find((i) => i.id === item.id)! || copiedData;
             if (itemToPush)
               draft.redoStack.push({
                 actionType: item.actionType,
@@ -152,7 +152,7 @@ export const useEditorStore = create<State & Actions>()(
             copiedData = JSON.parse(JSON.stringify(item));
             const listSelected = item.variant === "block" ? blocks : edges;
             const itemToPush =
-              listSelected.find((i) => i.id === item.id)! || item;
+              listSelected.find((i) => i.id === item.id)! || copiedData;
             if (itemToPush) {
               draft.undoStack.push({
                 actionType: item.actionType,

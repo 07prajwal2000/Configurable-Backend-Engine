@@ -42,7 +42,7 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
       id: "as2wewe",
       data: {},
       position: { x: 80, y: 130 },
-      type: BlockTypes.entrypoint,
+      type: BlockTypes.if,
     },
   ],
   edges: [

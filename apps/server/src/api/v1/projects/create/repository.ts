@@ -13,7 +13,7 @@ export async function createProject(
   const project = await (tx ?? db)
     .insert(projectsEntity)
     .values(data)
-    .returning({ id: projectsEntity.id });
+    .returning();
   return project.length > 0 ? project[0].id : "";
 }
 

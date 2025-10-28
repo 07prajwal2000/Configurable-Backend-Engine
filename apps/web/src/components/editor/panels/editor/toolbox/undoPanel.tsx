@@ -1,8 +1,8 @@
+import { BlockCanvasContext } from "@/context/blockCanvas";
 import { useEditorActionsStore } from "@/store/editor";
 import { Button, ButtonGroup, Tooltip } from "@mantine/core";
 import React, { useContext } from "react";
 import { TbRotateClockwise } from "react-icons/tb";
-import { BlockCanvasContext } from "../blockCanvas";
 
 const UndoPanel = () => {
   const { undoStack, redoStack } = useEditorActionsStore();

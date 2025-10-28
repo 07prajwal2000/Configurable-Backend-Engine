@@ -16,14 +16,7 @@ export async function updateRoute(
     .update(routesEntity)
     .set(data)
     .where(eq(routesEntity.id, id))
-    .returning({
-      id: routesEntity.id,
-      name: routesEntity.name,
-      path: routesEntity.path,
-      createdAt: routesEntity.createdAt,
-      updatedAt: routesEntity.updatedAt,
-      method: routesEntity.method,
-    });
+    .returning();
   return result.length > 0 ? result[0] : null;
 }
 
