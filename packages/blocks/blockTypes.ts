@@ -1,6 +1,7 @@
 export enum BlockTypes {
   entrypoint = "entrypoint",
   if = "if",
+  httprequest = "httprequest",
   httpGetHeader = "httpgetheader",
   httpSetHeader = "httpsetheader",
   httpGetParam = "httpgetparam",
@@ -23,4 +24,5 @@ export enum BlockTypes {
   db_insertbulk = "db_insertbulk",
   db_update = "db_update",
   db_native = "db_native",
+  db_transaction = "db_transaction",
 }

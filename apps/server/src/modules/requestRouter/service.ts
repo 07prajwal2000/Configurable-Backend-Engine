@@ -1,6 +1,6 @@
 import { getCookie, setCookie } from "hono/cookie";
-import { HttpRoute, HttpRouteParser } from "@cbe/lib";
-import { Context as BlockContext } from "@cbe/blocks";
+import { HttpClient, HttpRoute, HttpRouteParser } from "@cbe/lib";
+import { Context as BlockContext, ContextVarsType } from "@cbe/blocks";
 import { Context } from "hono";
 import { ContentfulStatusCode } from "hono/utils/http-status";
 import { JsVM } from "@cbe/lib/vm";
@@ -36,14 +36,7 @@ export async function handleRequest(
   const vars = setupContextVars(ctx, requestBody, pathId.routeParams);
   const vm = createJsVM(vars);
   const dbFactory = createDbFactory(vm);
-  const context: BlockContext = {
-    apiId: pathId.id,
-    route: ctx.req.path,
-    requestBody,
-    vm,
-    vars,
-    dbFactory,
-  };
+  const context = createContext(pathId, ctx, requestBody, vm, vars, dbFactory);
   const executionResult = await startBlocksExecution(pathId.id, context);
   if (executionResult && executionResult.successful) {
     return {
@@ -58,6 +51,29 @@ export async function handleRequest(
       message: executionResult?.error || "Internal server error",
     },
   };
+}
+
+function createContext(
+  pathId: { id: string; routeParams?: Record<string, string> },
+  ctx: Context<any, any, {}>,
+  requestBody: any,
+  vm: JsVM,
+  vars: ContextVarsType & Record<string, any>,
+  dbFactory: DbFactory
+): BlockContext {
+  return {
+    apiId: pathId.id,
+    route: ctx.req.path,
+    requestBody,
+    vm,
+    vars,
+    dbFactory,
+    httpClient: createHttpClient(),
+  };
+}
+
+function createHttpClient() {
+  return new HttpClient();
 }
 
 function createDbFactory(vm: JsVM) {

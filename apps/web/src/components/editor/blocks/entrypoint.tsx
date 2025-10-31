@@ -15,7 +15,7 @@ const Entrypoint = (props: NodeProps) => {
       tooltip={props?.data?.label?.toString() ?? ""}
       showOptionsTooltip={false}
       blockName="Entrypoint"
-      labelPlacement="left"
+      labelPlacement="top"
     >
       <BlockHandle
         type="source"

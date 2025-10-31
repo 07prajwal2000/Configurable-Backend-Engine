@@ -1,39 +1,34 @@
 import React from "react";
 import { NodeProps, Position } from "@xyflow/react";
+import { TbInfinity } from "react-icons/tb";
+import { useMantineTheme } from "@mantine/core";
 import BaseBlock from "../base";
 import BlockHandle from "../handle";
-import { FaMapSigns } from "react-icons/fa";
-import { useMantineTheme } from "@mantine/core";
 
-const IfCondition = (props: NodeProps) => {
-  const theme = useMantineTheme();
-  const successColor = theme.colors.green[8];
-  const errorColor = theme.colors.red[8];
+const ForeachLoop = (props: NodeProps) => {
+  const violetColor = useMantineTheme().colors.violet[8];
 
   return (
     <BaseBlock
       blockId={props.id}
       nodeProps={props}
-      icon={<FaMapSigns size={15} />}
+      icon={<TbInfinity color={violetColor} size={15} />}
       tooltip={props?.data?.label?.toString() ?? ""}
       showOptionsTooltip={!props.dragging}
       optionsTooltip={["delete", "options"]}
-      blockName="If"
-      labelPlacement="bottom"
+      blockName="Foreach"
+      labelPlacement="left"
     >
       <BlockHandle
         type="source"
         blockId={`${props.id}`}
-        position={Position.Left}
-        color={successColor}
-        handleVariant="success"
+        position={Position.Bottom}
       />
       <BlockHandle
         type="source"
         blockId={`${props.id}`}
         position={Position.Right}
-        color={errorColor}
-        handleVariant="failure"
+        handleVariant="executor"
       />
       <BlockHandle
         type="target"
@@ -44,4 +39,4 @@ const IfCondition = (props: NodeProps) => {
   );
 };
 
-export default IfCondition;
+export default ForeachLoop;

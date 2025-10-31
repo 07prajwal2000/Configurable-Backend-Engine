@@ -1,4 +1,5 @@
 import { DbFactory } from "@cbe/adapters/db";
+import { HttpClient } from "@cbe/lib";
 import { JsVM } from "@cbe/lib/vm";
 
 export interface Context {
@@ -8,6 +9,7 @@ export interface Context {
   vars: ContextVarsType & Record<string, any>;
   requestBody?: any;
   dbFactory?: DbFactory;
+  httpClient?: HttpClient;
 }
 
 export enum HttpCookieSameSite {

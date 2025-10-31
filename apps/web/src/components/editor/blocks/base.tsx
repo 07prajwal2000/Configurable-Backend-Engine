@@ -83,7 +83,7 @@ const BaseBlock = (props: PropTypes) => {
           withBorder
         >
           <Stack gap={8}>
-            <Center>{props.icon}</Center>
+            <Center pos="relative">{props.icon}</Center>
             {props.children}
           </Stack>
           <Text

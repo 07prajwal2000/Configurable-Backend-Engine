@@ -1,39 +1,35 @@
 import React from "react";
-import { NodeProps, Position } from "@xyflow/react";
-import BaseBlock from "../base";
-import BlockHandle from "../handle";
-import { FaMapSigns } from "react-icons/fa";
+import BaseBlock from "../../base";
+import BlockHandle from "../../handle";
+import { NodeProps } from "@xyflow/react";
+import { Position } from "@xyflow/react";
+import { LuDatabaseZap } from "react-icons/lu";
 import { useMantineTheme } from "@mantine/core";
 
-const IfCondition = (props: NodeProps) => {
-  const theme = useMantineTheme();
-  const successColor = theme.colors.green[8];
-  const errorColor = theme.colors.red[8];
-
+const Transaction = (props: NodeProps) => {
+  const green = useMantineTheme().colors.green;
   return (
     <BaseBlock
       blockId={props.id}
       nodeProps={props}
-      icon={<FaMapSigns size={15} />}
+      icon={<LuDatabaseZap size={15} />}
       tooltip={props?.data?.label?.toString() ?? ""}
       showOptionsTooltip={!props.dragging}
       optionsTooltip={["delete", "options"]}
-      blockName="If"
-      labelPlacement="bottom"
+      blockName="Database Transaction"
+      labelPlacement="left"
     >
       <BlockHandle
         type="source"
         blockId={`${props.id}`}
-        position={Position.Left}
-        color={successColor}
-        handleVariant="success"
+        position={Position.Bottom}
       />
       <BlockHandle
         type="source"
         blockId={`${props.id}`}
         position={Position.Right}
-        color={errorColor}
-        handleVariant="failure"
+        handleVariant="executor"
+        color={green[8]}
       />
       <BlockHandle
         type="target"
@@ -44,4 +40,4 @@ const IfCondition = (props: NodeProps) => {
   );
 };
 
-export default IfCondition;
+export default Transaction;

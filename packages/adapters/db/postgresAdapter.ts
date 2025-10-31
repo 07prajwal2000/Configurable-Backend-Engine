@@ -69,15 +69,17 @@ export class PostgresAdapter implements IDbAdapter {
     }
     this.mode = mode;
   }
-  commitTransaction() {
+  async commitTransaction() {
     if (this.mode !== DbAdapterMode.TRANSACTION)
       throw new Error("db adapter is not in transaction mode");
-    this.transaction?.commit();
+    await this.transaction?.commit();
+    this.setMode(DbAdapterMode.NORMAL);
   }
-  rollbackTransaction() {
+  async rollbackTransaction() {
     if (this.mode !== DbAdapterMode.TRANSACTION)
       throw new Error("db adapter is not in transaction mode");
-    this.transaction?.rollback();
+    await this.transaction?.rollback();
+    this.setMode(DbAdapterMode.NORMAL);
   }
   private buildQuery(
     conditions: DBConditionType[],

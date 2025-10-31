@@ -39,8 +39,8 @@ export interface IDbAdapter {
   raw(query: string | unknown): Promise<any>;
   delete(table: string, conditions: DBConditionType[]): Promise<boolean>;
   setMode(mode: DbAdapterMode): void;
-  commitTransaction(): void;
-  rollbackTransaction(): void;
+  commitTransaction(): Promise<void>;
+  rollbackTransaction(): Promise<void>;
 }
 
 export class DbFactory {

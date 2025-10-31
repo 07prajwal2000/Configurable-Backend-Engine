@@ -36,19 +36,22 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
         label: "entrypoint",
       },
       position: { x: 0, y: 0 },
-      type: BlockTypes.entrypoint,
+      type: BlockTypes.db_native,
     },
     {
       id: "as2wewe",
       data: {},
       position: { x: 80, y: 130 },
-      type: BlockTypes.if,
+      type: BlockTypes.db_transaction,
+    },
+    {
+      id: "as2wewes",
+      data: {},
+      position: { x: 180, y: 130 },
+      type: BlockTypes.db_insert,
     },
   ],
-  edges: [
-    // { id: "wesdsdas", source: "weas", target: "as2wewe" },
-    // { id: "wse2esdsdas", source: "as2wewe", target: "weas" },
-  ],
+  edges: [],
   actions: {
     blocks: {
       addBlock(block) {

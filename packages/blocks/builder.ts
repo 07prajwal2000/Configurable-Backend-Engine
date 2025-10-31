@@ -53,6 +53,14 @@ import {
 } from "./builtin/db/insertBulk";
 import { UpdateDbBlock, updateDbBlockSchema } from "./builtin/db/update";
 import { NativeDbBlock, nativeDbBlockSchema } from "./builtin/db/native";
+import {
+  TransactionBlock,
+  transactionDbBlockSchema,
+} from "./builtin/db/transaction";
+import {
+  HttpRequestBlock,
+  httpRequestBlockSchema,
+} from "./builtin/httpRequest";
 
 export const blockDTOSchema = z.object({
   id: z.uuidv7(),
@@ -188,6 +196,8 @@ export class BlockBuilder {
         return this.createHttpSetCookieBlock(block);
       case BlockTypes.httpGetRequestBody:
         return this.createHttpGetRequestBodyBlock(block);
+      case BlockTypes.httprequest:
+        return this.createHttpRequestBlock(block);
 
       case BlockTypes.db_getsingle:
         return this.createDbGetSingleBlock(block);
@@ -203,8 +213,36 @@ export class BlockBuilder {
         return this.createDbUpdateBlock(block);
       case BlockTypes.db_native:
         return this.createDbNativeBlock(block);
+      case BlockTypes.db_transaction:
+        return this.createDbTransactionBlock(block);
     }
   }
+  private createDbTransactionBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? transactionDbBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    const executor = this.findEdge(block, "executor");
+    parsedResult.data.executor = executor;
+    return new TransactionBlock(
+      this.context,
+      this.context.dbFactory!.getDbAdapter(parsedResult.data.connection),
+      parsedResult.data,
+      this.engineFactory.create(this, executor),
+      edge
+    );
+  }
+
+  private createHttpRequestBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? httpRequestBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
+    if (!parsedResult.success) throw new Error("Invalid response block data");
+    const edge = this.findEdge(block, "source");
+    return new HttpRequestBlock(this.context, parsedResult.data, edge);
+  }
+
   private createDbGetSingleBlock(block: BlockDTOType) {
     const parsedResult = this.shouldValidateBlockData
       ? getSingleDbBlockSchema.safeParse(block.data)

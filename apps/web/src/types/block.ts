@@ -1,5 +1,6 @@
 export enum BlockTypes {
   entrypoint = "entrypoint",
+  httprequest = "httprequest",
   if = "if",
   httpgetheader = "httpgetheader",
   httpsetheader = "httpsetheader",
@@ -23,6 +24,7 @@ export enum BlockTypes {
   db_insertbulk = "db_insertbulk",
   db_update = "db_update",
   db_native = "db_native",
+  db_transaction = "db_transaction",
 }
 export type BaseBlockType = {
   id: string;

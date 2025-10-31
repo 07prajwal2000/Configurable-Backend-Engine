@@ -17,6 +17,7 @@ import CanvasToolboxPanel from "./toolbox/canvasToolboxPanel";
 import { generateID } from "@cbe/lib";
 import { edgeTypes } from "../../blocks/customEdge";
 import { BlockCanvasContext } from "@/context/blockCanvas";
+import { showNotification } from "@mantine/notifications";
 
 type Props = {
   readonly?: boolean;
@@ -40,6 +41,14 @@ const BlockCanvas = (props: Props) => {
     // NOT IMPLEMENTED YET
   }
   function onEdgeConnect(edge: EdgeType) {
+    if (edge.source === edge.target) {
+      showNotification({
+        title: "Error",
+        message: "Cannot connect to itself",
+        color: "red",
+      });
+      return;
+    }
     edge.id = generateID();
     changeTracker.add(edge.id, "edge");
     // @ts-ignore

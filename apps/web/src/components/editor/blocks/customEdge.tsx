@@ -10,6 +10,7 @@ import {
   EdgeProps,
   EdgeTypes,
   getBezierPath,
+  getSmoothStepPath,
 } from "@xyflow/react";
 import { TbX } from "react-icons/tb";
 
@@ -29,7 +30,7 @@ export function CustomEdge({
   sourceHandleId,
   targetHandleId,
 }: EdgeProps) {
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     targetX,
