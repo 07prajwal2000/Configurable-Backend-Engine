@@ -2,15 +2,16 @@ import {
   useEditorAiWindowStore,
   useEditorSearchbarStore,
 } from "@/store/editor";
-import { Box, Button, Flex, Paper, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Group, Kbd, Paper, Stack, Text } from "@mantine/core";
 import React, { useEffect } from "react";
 import SearchInput from "./searchInput";
 import BlockSearchList from "./blockSearchList";
 
 const BlockSearchDrawer = () => {
-  const { opened, close } = useEditorSearchbarStore();
+  const { opened, close, setSearchQuery } = useEditorSearchbarStore();
   const aiWindowStore = useEditorAiWindowStore();
   const divRef = React.useRef<HTMLDivElement>(null);
+  const ref = React.useRef<HTMLInputElement>(null);
   const addNewBtnRef = React.useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -21,8 +22,12 @@ const BlockSearchDrawer = () => {
     if (opened) {
       if (aiWindowStore.opened) aiWindowStore.toggle();
       document.addEventListener("click", handleClickEvent);
+      setTimeout(() => {
+        ref.current?.focus();
+      }, 300);
     } else {
       document.removeEventListener("click", handleClickEvent);
+      setSearchQuery("");
     }
   }, [opened]);
 
@@ -55,18 +60,24 @@ const BlockSearchDrawer = () => {
       >
         <Stack h={"100%"} gap={"sm"}>
           <Box>
-            <Text
-              size="md"
-              fw={"400"}
-              c={"white"}
-              py={"sm"}
-              bg={"gray.7"}
-              px={"md"}
-            >
-              Search Block to add
-            </Text>
+            <Group bg={"gray.7"} c={"white"} justify="space-between">
+              <Text size="md" fw={"400"} py={"sm"} px={"md"}>
+                Search Block to add
+              </Text>
+              <ActionIcon
+                c={"white"}
+                variant="subtle"
+                onClick={close}
+                size="xs"
+                mr={"md"}
+                w={"fit-content"}
+                h={"fit-content"}
+              >
+                <Kbd size="xs">Esc</Kbd>
+              </ActionIcon>
+            </Group>
             <Box p={"sm"} pb={0}>
-              <SearchInput />
+              <SearchInput ref={ref} />
             </Box>
           </Box>
           <Box flex={1} mb={"md"} style={{ overflowY: "auto" }}>

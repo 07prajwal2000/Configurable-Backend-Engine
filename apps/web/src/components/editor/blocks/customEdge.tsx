@@ -9,7 +9,6 @@ import {
   EdgeLabelRenderer,
   EdgeProps,
   EdgeTypes,
-  getBezierPath,
   getSmoothStepPath,
 } from "@xyflow/react";
 import { TbX } from "react-icons/tb";

@@ -20,6 +20,7 @@ type State = {
   searchbar: {
     opened: boolean;
     searchQuery: string;
+    currentIndex: number;
   };
   aiWindow: {
     opened: boolean;
@@ -42,6 +43,9 @@ type Actions = {
     open: () => void;
     close: () => void;
     setSearchQuery: (query: string) => void;
+    setCurrentIndex: (index: number) => void;
+    incrementIndex: (max: number) => void;
+    decrementIndex: () => void;
   };
   aiWindow: {
     toggle: () => void;
@@ -81,9 +85,23 @@ export const useEditorStore = create<State & Actions>()(
     searchbar: {
       opened: false,
       searchQuery: "",
+      currentIndex: -1,
       open() {
         set((state) => {
           state.searchbar.opened = true;
+        });
+      },
+      incrementIndex(max) {
+        max--;
+        set((state) => {
+          state.searchbar.currentIndex +=
+            state.searchbar.currentIndex < max ? 1 : 0;
+        });
+      },
+      decrementIndex() {
+        set((state) => {
+          state.searchbar.currentIndex +=
+            state.searchbar.currentIndex > 0 ? -1 : 0;
         });
       },
       setSearchQuery(query) {
@@ -94,6 +112,11 @@ export const useEditorStore = create<State & Actions>()(
       close() {
         set((state) => {
           state.searchbar.opened = false;
+        });
+      },
+      setCurrentIndex(index) {
+        set((state) => {
+          state.searchbar.currentIndex = index;
         });
       },
     },

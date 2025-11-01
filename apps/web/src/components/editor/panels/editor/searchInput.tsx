@@ -1,10 +1,10 @@
 import { useEditorSearchbarStore } from "@/store/editor";
 import { ActionIcon, TextInput } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { TbSearch, TbX } from "react-icons/tb";
 
-const SearchInput = () => {
+const SearchInput = forwardRef<HTMLInputElement>((props, ref) => {
   const { searchQuery, setSearchQuery } = useEditorSearchbarStore();
   const [searchQueryState, setSearchQueryState] = useState(searchQuery);
   const onSearchDebounced = useDebouncedCallback(setSearchQuery, 300);
@@ -13,12 +13,19 @@ const SearchInput = () => {
     onSearchDebounced(searchQueryState);
   }, [searchQueryState]);
 
+  React.useEffect(() => {
+    if (searchQuery !== searchQueryState) {
+      setSearchQueryState(searchQuery);
+    }
+  }, [searchQuery]);
+
   function resetSearch() {
     setSearchQueryState("");
   }
 
   return (
     <TextInput
+      ref={ref}
       value={searchQueryState}
       onChange={(e) => setSearchQueryState(e.target.value)}
       placeholder="Search blocks..."
@@ -36,6 +43,6 @@ const SearchInput = () => {
       }
     />
   );
-};
+});
 
 export default SearchInput;

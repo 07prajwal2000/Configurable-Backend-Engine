@@ -73,6 +73,7 @@ const BlockCanvas = (props: Props) => {
 
   return (
     <Box w={"100%"} h={"100%"}>
+      {/* TODO: Move context to root index file for better accessibility to other components */}
       <BlockCanvasContext.Provider
         value={{
           undo: () => doAction("undo"),

@@ -26,6 +26,16 @@ export enum BlockTypes {
   db_native = "db_native",
   db_transaction = "db_transaction",
 }
+
+export enum BlockCategory {
+  Core = "Core", // set/get var, array operations
+  Flow = "Flow", // if, for loop, foreach loop
+  Database = "Database",
+  HTTP = "HTTP", // all req/res blocks, http request
+  Logging = "Logging",
+  Misc = "Misc", // js runner, transformer
+}
+
 export type BaseBlockType = {
   id: string;
   type: BlockTypes;

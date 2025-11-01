@@ -14,7 +14,7 @@ const Native = (props: NodeProps) => {
       tooltip={props?.data?.label?.toString() ?? ""}
       showOptionsTooltip={!props.dragging}
       optionsTooltip={["delete", "options"]}
-      blockName="Database Native"
+      blockName="Native Database"
       labelPlacement="left"
     >
       <BlockHandle

@@ -1,12 +1,13 @@
-import { Box, Center, Flex, Grid, Group, Paper, Text } from "@mantine/core";
+import { BlockCategory, BlockTypes } from "@/types/block";
+import { Box, Center, Flex, Grid, Paper, Text } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import React from "react";
-import {
-  TbArrowNarrowRight,
-  TbArrowRight,
-  TbCodeVariable,
-  TbMap,
-} from "react-icons/tb";
+import { TbArrowNarrowRight, TbCodeVariable } from "react-icons/tb";
+
+type OnClickParams = {
+  itemType: "block" | "category";
+  value: string;
+};
 
 type Props = {
   id: string;
@@ -15,14 +16,21 @@ type Props = {
   icon?: React.ReactNode;
   active?: boolean;
   showRightArrow?: boolean;
-  onClick?: (id: string) => void;
+  onClick?: (params: OnClickParams) => void;
+  itemType: "block" | "category";
+  blockType?: BlockTypes;
+  category?: BlockCategory;
 };
 
 const SearchBlockItem = (props: Props) => {
   const { ref, hovered } = useHover();
 
   function onClick() {
-    props.onClick && props.onClick(props.id);
+    props.onClick &&
+      props.onClick({
+        itemType: props.itemType,
+        value: props.blockType || props.category || "",
+      });
   }
 
   return (
@@ -61,7 +69,7 @@ const SearchBlockItem = (props: Props) => {
         </Grid.Col>
         <Grid.Col span={1} h={"100%"} c="dark">
           <Center my={"auto"} h={"100%"} w={"100%"}>
-            {!props.showRightArrow && <TbArrowNarrowRight size={30} />}
+            {props.showRightArrow && <TbArrowNarrowRight size={30} />}
           </Center>
         </Grid.Col>
       </Grid>

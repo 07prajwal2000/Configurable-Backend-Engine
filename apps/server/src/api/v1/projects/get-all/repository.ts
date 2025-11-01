@@ -10,9 +10,7 @@ export async function getProjectsList(
   const result = await (tx ?? db)
     .select()
     .from(projectsEntity)
-    .where(
-      or(eq(projectsEntity.hidden, true), eq(projectsEntity.name, "__personal"))
-    )
+    .where(eq(projectsEntity.hidden, false))
     .orderBy(desc(projectsEntity.updatedAt))
     .offset(skip)
     .limit(limit);
@@ -27,8 +25,6 @@ export async function getTotalCount() {
   const result = await db
     .select({ count: count(projectsEntity.id) })
     .from(projectsEntity)
-    .where(
-      or(eq(projectsEntity.hidden, true), eq(projectsEntity.name, "__personal"))
-    );
+    .where(eq(projectsEntity.hidden, false));
   return result[0].count;
 }

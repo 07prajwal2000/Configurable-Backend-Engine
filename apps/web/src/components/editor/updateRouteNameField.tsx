@@ -54,7 +54,9 @@ const UpdateRouteNameField = () => {
   }
 
   function onProjectClick() {
-    router.push(`/${data?.projectId}`);
+    router.push(
+      data?.projectName === "__personal" ? `/` : `/${data?.projectId}`
+    );
   }
 
   const projectName =
