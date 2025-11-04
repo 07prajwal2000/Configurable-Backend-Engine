@@ -73,8 +73,7 @@ async function loadEdgesFromDB(routeId: string) {
       toHandle: edgesEntity.toHandle,
     })
     .from(edgesEntity)
-    .leftJoin(blocksEntity, eq(edgesEntity.from, blocksEntity.id))
-    .where(eq(blocksEntity.routeId, routeId));
+    .where(eq(edgesEntity.routeId, routeId));
 
   // Filter out edges with null values and ensure proper typing
   const edges = edgesResult.map((edge) => ({
