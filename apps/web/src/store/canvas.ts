@@ -27,6 +27,7 @@ type Actions = {
       deleteEdge: (id: string) => void;
       onEdgeChange: (changes: Partial<EdgeChange>[]) => void;
     };
+    bulkInsert(blocks: BaseBlockType[], edges: EdgeType[]): void;
   };
 };
 
@@ -103,6 +104,10 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
       onEdgeChange(changes) {
         set({ edges: applyEdgeChanges(changes as any, get().edges) });
       },
+    },
+    bulkInsert(blocks, edges) {
+      set({ blocks: [...blocks] });
+      set({ edges: [...edges] });
     },
   },
 }));

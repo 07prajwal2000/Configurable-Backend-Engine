@@ -1,11 +1,11 @@
 import z from "zod";
 import { BaseBlock, BlockOutput } from "../baseBlock";
 
-export const setVarSchema = z.object({
+export const stickyNotesSchema = z.object({
   notes: z.string(),
 });
 
-export class SetVarBlock extends BaseBlock {
+export class stickyNoteBlock extends BaseBlock {
   public override async executeAsync(): Promise<BlockOutput> {
     return {
       continueIfFail: true,

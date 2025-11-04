@@ -36,6 +36,24 @@ export const routesQueries = {
       });
     },
   },
+  getCanvasItems: {
+    useQuery(id: string) {
+      return useQuery({
+        queryKey: ["routes", id, "canvas-items"],
+        queryFn: async () => {
+          return await routesService.getCanvasItems(id);
+        },
+        refetchOnWindowFocus: false,
+        staleTime: Infinity,
+      });
+    },
+    invalidate(client: QueryClient, id: string) {
+      client.invalidateQueries({
+        queryKey: ["routes", id, "canvas-items"],
+        exact: false,
+      });
+    },
+  },
   invalidateAll(client: QueryClient) {
     client.invalidateQueries({
       queryKey: ["routes"],

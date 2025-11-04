@@ -5,9 +5,12 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { requestBodySchema, requestRouteSchema, responseSchema } from "./dto";
+import { requestBodySchema, requestRouteSchema } from "./dto";
 import { validationErrorSchema } from "../../../../errors/validationError";
 import { errorSchema } from "../../../../errors/customError";
+import zodErrorCallbackParser from "../../../../middlewares/zodErrorCallbackParser";
+import { requestBodyValidator } from "./middleware";
+import handleRequest from "./service";
 
 const openapiRouteOptions: DescribeRouteOptions = {
   description:
@@ -15,13 +18,8 @@ const openapiRouteOptions: DescribeRouteOptions = {
   operationId: "save-canvas-state",
   tags: ["Routes"],
   responses: {
-    200: {
-      description: "Successful",
-      content: {
-        "application/json": {
-          schema: resolver(responseSchema),
-        },
-      },
+    204: {
+      description: "No content returned after successful operation",
     },
     400: {
       description: "Invalid ID/Data format",
@@ -39,15 +37,29 @@ const openapiRouteOptions: DescribeRouteOptions = {
         },
       },
     },
+    409: {
+      description: "Any conflict between IDs/data",
+      content: {
+        "application/json": {
+          schema: resolver(errorSchema),
+        },
+      },
+    },
   },
 };
 
 export default function (app: Hono) {
-  app.get(
+  app.put(
     "/:id/save-canvas",
     describeRoute(openapiRouteOptions),
-    validator("param", requestRouteSchema),
-    validator("json", requestBodySchema),
-    async (c) => {}
+    validator("param", requestRouteSchema, zodErrorCallbackParser),
+    validator("json", requestBodySchema, zodErrorCallbackParser),
+    requestBodyValidator,
+    async (c) => {
+      const { id } = c.req.valid("param");
+      const data = c.req.valid("json");
+      await handleRequest(id, data);
+      return c.body(null, 204);
+    }
   );
 }

@@ -8,7 +8,7 @@ const changeSchema = z.object({
   id: z.uuidv7(),
   // action is just for reference, but all blocks/edges are checked against for deletions
   // create/update will do the upsert operation on IDs
-  action: z.enum(["create", "update", "delete"]),
+  action: z.enum(["upsert", "delete"]),
 });
 
 export const requestBodySchema = z.object({
@@ -39,5 +39,3 @@ export const requestBodySchema = z.object({
     ),
   }),
 });
-
-export const responseSchema = z.object({});

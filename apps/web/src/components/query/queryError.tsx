@@ -14,6 +14,7 @@ const QueryError = (props: PropTypes) => {
   if (!fontSize) fontSize = "xl";
 
   const isAxiosErr = isAxiosError(props.error);
+
   return (
     <Center p={"xl"} bd={"2px solid red"} m={"xl"} bdrs={"sm"}>
       <Stack ta={"center"}>

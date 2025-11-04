@@ -1,7 +1,6 @@
 import { Box } from "@mantine/core";
 import React from "react";
 import EditorToolbox from "./editorToolbox";
-import BlockSearchDrawer from "./blockSearchDrawer";
 import BlockCanvas from "./blockCanvas";
 import { ReactFlowProvider } from "@xyflow/react";
 

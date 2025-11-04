@@ -5,14 +5,47 @@ import React, { useEffect } from "react";
 import EditorPanel from "./panels/editor";
 import ExecutionPanel from "./panels/executionPanel";
 import TestingPanel from "./panels/testingPanel";
+import { routesQueries } from "@/query/routerQuery";
+import { useParams } from "next/navigation";
+import QueryLoader from "../query/queryLoader";
+import QueryError from "../query/queryError";
+import { useCanvasActionsStore } from "@/store/canvas";
 
 const EditorWindow = () => {
   const resetStore = useEditorStore((state) => state.reset);
+  const { bulkInsert } = useCanvasActionsStore();
+  const { id } = useParams<{ id: string }>();
+  const { useQuery } = routesQueries.getCanvasItems;
+  const { data, isLoading, isError, error, refetch } = useQuery(id);
+  useEffect(() => {
+    if (data) {
+      bulkInsert(
+        data.blocks as any,
+        data.edges.map((edge) => ({
+          id: edge.id,
+          source: edge.from,
+          target: edge.to,
+          sourceHandle: edge.fromHandle,
+          targetHandle: edge.toHandle,
+          type: "custom",
+        }))
+      );
+    }
+  }, [data]);
   useEffect(() => {
     return resetStore;
   }, []);
 
   const { activeTab } = useEditorTabStore();
+
+  if (isLoading) {
+    return <QueryLoader type="spinner" />;
+  }
+
+  if (isError) {
+    return <QueryError error={error} refetcher={refetch} />;
+  }
+
   if (activeTab === EditorTab.EDITOR) return <EditorPanel />;
   else if (activeTab === EditorTab.EXECUTIONS) <ExecutionPanel />;
   return <TestingPanel />;

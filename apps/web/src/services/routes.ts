@@ -16,6 +16,8 @@ import {
   responseSchema as updatePartialResponseSchema,
 } from "@cbe/backend-engine/src/api/v1/routes/update-partial/dto";
 import { responseSchema as getByIdResponseSchema } from "@cbe/backend-engine/src/api/v1/routes/get-by-id/dto";
+import { responseSchema as getCanvasItemsResponseSchema } from "@cbe/backend-engine/src/api/v1/routes/get-canvas-items/dto";
+import { requestBodySchema as saveCanvasItemsRequestSchema } from "@cbe/backend-engine/src/api/v1/routes/save-canvas-state/dto";
 import { httpClient } from "@/lib/http";
 
 const baseUrl = `/v1/routes`;
@@ -65,6 +67,18 @@ export const routesService = {
   },
   async delete(id: string) {
     await httpClient.delete(`${baseUrl}/${id}`);
+  },
+  async getCanvasItems(
+    routeId: string
+  ): Promise<z.infer<typeof getCanvasItemsResponseSchema>> {
+    const result = await httpClient.get(`${baseUrl}/${routeId}/canvas-items`);
+    return result.data;
+  },
+  async saveCanvasItems(
+    routeId: string,
+    data: z.infer<typeof saveCanvasItemsRequestSchema>
+  ) {
+    await httpClient.put(`${baseUrl}/${routeId}/save-canvas`, data);
   },
   // zod schemas
   createRequestSchema,

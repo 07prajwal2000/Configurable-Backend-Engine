@@ -27,14 +27,14 @@ export const projectsEntity = pgTable(
   {
     id: varchar({ length: 50 }).primaryKey().default(generateID()),
     name: varchar({ length: 50 }),
-    createdAt: timestamp().defaultNow().notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     hidden: boolean().default(false),
-    updatedAt: timestamp()
+    updatedAt: timestamp("updated_at")
       .defaultNow()
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  () => [index("name"), index("updatedAt")]
+  () => [index("name"), index("updated_at")]
 );
 
 export const routesEntity = pgTable(
@@ -44,20 +44,20 @@ export const routesEntity = pgTable(
     name: varchar({ length: 50 }),
     path: text(),
     active: boolean().default(false),
-    projectId: varchar({ length: 50 })
+    projectId: varchar("project_id", { length: 50 })
       .references(() => projectsEntity.id, {
         onDelete: "cascade",
       })
       .default(sql`NULL`),
     method: varchar({ length: 8 }),
-    createdAt: timestamp().defaultNow().notNull(),
-    createdBy: varchar({ length: 50 }),
-    updatedAt: timestamp()
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdBy: varchar("created_by", { length: 50 }),
+    updatedAt: timestamp("updated_at")
       .defaultNow()
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  () => [index("projectId"), index("path")]
+  () => [index("project_id"), index("path")]
 );
 
 export const blocksEntity = pgTable(
@@ -67,13 +67,16 @@ export const blocksEntity = pgTable(
     type: varchar({ length: 100 }),
     position: json(),
     data: json(),
-    createdAt: timestamp().defaultNow().notNull(),
-    updatedAt: timestamp().$onUpdate(() => new Date()),
-    routeId: varchar({ length: 50 }).references(() => routesEntity.id, {
-      onDelete: "cascade",
-    }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
+    routeId: varchar("route_id", { length: 50 }).references(
+      () => routesEntity.id,
+      {
+        onDelete: "cascade",
+      }
+    ),
   },
-  () => [index("routeId")]
+  () => [index("route_id")]
 );
 
 export const edgesEntity = pgTable(
@@ -86,11 +89,14 @@ export const edgesEntity = pgTable(
     to: varchar({ length: 50 }).references(() => blocksEntity.id, {
       onDelete: "cascade",
     }),
-    fromHandle: varchar({ length: 50 }),
-    toHandle: varchar({ length: 50 }),
-    routeId: varchar({ length: 50 }).references(() => routesEntity.id, {
-      onDelete: "cascade",
-    }),
+    fromHandle: varchar("from_handle", { length: 50 }),
+    toHandle: varchar("to_handle", { length: 50 }),
+    routeId: varchar("route_id", { length: 50 }).references(
+      () => routesEntity.id,
+      {
+        onDelete: "cascade",
+      }
+    ),
   },
   () => [index("from"), index("to")]
 );
@@ -107,13 +113,13 @@ export type AppConfigEncodingTypes = z.infer<typeof encodingTypeValues>;
 
 export const appConfigEntity = pgTable("app_config", {
   id: serial().primaryKey(),
-  keyName: varchar({ length: 100 }),
+  keyName: varchar("key_name", { length: 100 }),
   description: text(),
   value: text(),
-  isEncrypted: boolean().default(false),
+  isEncrypted: boolean("is_encrypted").default(false),
   encoding_type: encodingTypeEnum(),
-  createdAt: timestamp().defaultNow(),
-  updatedAt: timestamp().defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const integrationsEntity = pgTable("integrations", {

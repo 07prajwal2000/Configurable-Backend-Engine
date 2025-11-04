@@ -55,7 +55,7 @@ export function CustomEdge({
 
   return (
     <>
-      <BaseEdge id={id} data-jjj path={edgePath} />
+      <BaseEdge id={id} path={edgePath} />
       <EdgeLabelRenderer>
         <Box
           style={{

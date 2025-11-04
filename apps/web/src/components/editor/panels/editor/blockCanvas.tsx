@@ -118,7 +118,6 @@ const BlockCanvas = (props: Props) => {
           snapGrid={[5, 5]}
           onlyRenderVisibleElements
           selectNodesOnDrag
-          onSelectionEnd={(e) => console.log("select", e)}
           onNodeDoubleClick={(e) => console.log("dblclick", e)}
           nodeTypes={blocksList}
           nodesDraggable={!props.readonly}

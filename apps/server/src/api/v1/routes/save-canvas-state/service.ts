@@ -1,7 +1,46 @@
 import { z } from "zod";
-import { responseSchema } from "./dto";
+import { requestBodySchema } from "./dto";
+import {
+  deleteBlocks,
+  deleteEdges,
+  routeExist,
+  upsertBlocks,
+  upsertEdges,
+} from "./repository";
+import { NotFoundError } from "../../../../errors/notFoundError";
+import { db } from "../../../../db";
+import { ServerError } from "../../../../errors/serverError";
 
-export default function handleRequest(): Promise<z.infer<typeof responseSchema>> {
-  return {} as any;
+export default async function handleRequest(
+  routeId: string,
+  data: z.infer<typeof requestBodySchema>
+) {
+  const exist = await routeExist(routeId);
+  if (!exist) {
+    throw new NotFoundError("Route not found");
+  }
+  const deleteBlockIds: string[] = [];
+  const deleteEdgeIds: string[] = [];
+  for (const change of data.actionsToPerform.blocks) {
+    if (change.action === "delete") deleteBlockIds.push(change.id);
+  }
+  for (const change of data.actionsToPerform.edges) {
+    if (change.action === "delete") deleteEdgeIds.push(change.id);
+  }
+  const blocksToUpsert = data.changes.blocks.map((block) => ({
+    ...block,
+    routeId: routeId,
+  }));
+  const edgesToUpsert = data.changes.edges.map((edge) => ({
+    ...edge,
+    routeId: routeId,
+  }));
+  const result = await db.transaction(async (tx) => {
+    if (blocksToUpsert.length > 0) await upsertBlocks(blocksToUpsert, tx);
+    if (edgesToUpsert.length > 0) await upsertEdges(edgesToUpsert, tx);
+    if (deleteBlockIds.length > 0) await deleteBlocks(deleteBlockIds, tx);
+    if (deleteEdgeIds.length > 0) await deleteEdges(deleteEdgeIds, tx);
+    return true;
+  });
+  if (!result) throw new ServerError("Something went wrong");
 }
-      
