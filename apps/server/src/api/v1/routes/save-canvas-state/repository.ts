@@ -2,8 +2,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { db, DbTransactionType } from "../../../../db";
 import { blocksEntity, edgesEntity, routesEntity } from "../../../../db/schema";
 import z from "zod";
-import { Column, eq, inArray, sql } from "drizzle-orm";
-import { PgTable, PgUpdateSetSource } from "drizzle-orm/pg-core";
+import { eq, inArray, sql } from "drizzle-orm";
 
 const insertBlocksSchema = createInsertSchema(blocksEntity);
 const insertEntitySchema = createInsertSchema(edgesEntity);
@@ -21,9 +20,8 @@ export async function upsertBlocks(
         type: sql`excluded.type`,
         position: sql`excluded.position`,
         data: sql`excluded.data`,
-        updatedAt: sql`excluded.updatedAt`,
-        routeId: sql`excluded.routeId`,
-        createdAt: sql`excluded.createdAt`,
+        updatedAt: sql`excluded.updated_at`,
+        routeId: sql`excluded.route_id`,
       },
     });
 }
@@ -34,17 +32,11 @@ export async function deleteBlocks(blockIds: string[], tx?: DbTransactionType) {
     .where(inArray(blocksEntity.id, blockIds));
 }
 
-export async function upsertEdges(
+export async function insertEdges(
   edges: z.infer<typeof insertEntitySchema>[],
   tx?: DbTransactionType
 ) {
-  await (tx ?? db)
-    .insert(edgesEntity)
-    .values(edges)
-    .onConflictDoUpdate({
-      target: [edgesEntity.id],
-      set: {},
-    });
+  await (tx ?? db).insert(edgesEntity).values(edges);
 }
 
 export async function deleteEdges(edgeIds: string[], tx?: DbTransactionType) {
@@ -60,16 +52,4 @@ export async function routeExist(routeId: string, tx?: DbTransactionType) {
     .where(eq(routesEntity.id, routeId))
     .limit(1);
   return route.length > 0;
-}
-
-function conflictUpdateSet<TTable extends PgTable>(
-  table: TTable,
-  columns: (keyof TTable["_"]["columns"] & keyof TTable)[]
-): PgUpdateSetSource<TTable> {
-  return Object.assign(
-    {},
-    ...columns.map((k) => ({
-      [k]: sql.raw(`'excluded.${(table[k] as Column).name}'`),
-    }))
-  ) as PgUpdateSetSource<TTable>;
 }

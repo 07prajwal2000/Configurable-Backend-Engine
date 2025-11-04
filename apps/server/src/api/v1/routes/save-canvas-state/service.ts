@@ -5,7 +5,7 @@ import {
   deleteEdges,
   routeExist,
   upsertBlocks,
-  upsertEdges,
+  insertEdges,
 } from "./repository";
 import { NotFoundError } from "../../../../errors/notFoundError";
 import { db } from "../../../../db";
@@ -37,7 +37,7 @@ export default async function handleRequest(
   }));
   const result = await db.transaction(async (tx) => {
     if (blocksToUpsert.length > 0) await upsertBlocks(blocksToUpsert, tx);
-    if (edgesToUpsert.length > 0) await upsertEdges(edgesToUpsert, tx);
+    if (edgesToUpsert.length > 0) await insertEdges(edgesToUpsert, tx);
     if (deleteBlockIds.length > 0) await deleteBlocks(deleteBlockIds, tx);
     if (deleteEdgeIds.length > 0) await deleteEdges(deleteEdgeIds, tx);
     return true;
