@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@cbe/backend-engine": "file:../server",
+    "@dagrejs/dagre": "^1.1.5",
     "@mantine/core": "^8.3.5",
     "@mantine/form": "^8.3.5",
     "@mantine/hooks": "^8.3.5",

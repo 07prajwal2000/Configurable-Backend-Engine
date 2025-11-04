@@ -23,13 +23,6 @@ export class IfBlock extends BaseBlock {
   }
 
   override async executeAsync(): Promise<BlockOutput> {
-    if (!ifBlockSchema.safeParse(this.input).success) {
-      return {
-        error: "Invalid input",
-        continueIfFail: false,
-        successful: false,
-      };
-    }
     const { conditions } = this.input as z.infer<typeof ifBlockSchema>;
     const operatorResults: OperatorResult[] = [];
     for (const condition of conditions) {

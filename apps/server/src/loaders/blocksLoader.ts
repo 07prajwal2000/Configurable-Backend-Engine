@@ -1,7 +1,7 @@
-import { BlockBuilder, Context, Engine } from "@cbe/blocks";
+import { BlockBuilder, BlockTypes, Context, Engine } from "@cbe/blocks";
 import { db } from "../db";
 import { blocksEntity, edgesEntity } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { getCache, hasCacheKey, setCache } from "../db/redis";
 
 export async function startBlocksExecution(routeId: string, context: Context) {
@@ -44,7 +44,12 @@ async function loadBlocksFromDB(routeId: string) {
   const blocksResult = await db
     .select()
     .from(blocksEntity)
-    .where(eq(blocksEntity.routeId, routeId));
+    .where(
+      and(
+        eq(blocksEntity.routeId, routeId),
+        ne(blocksEntity.type, BlockTypes.sticky_note)
+      )
+    );
 
   // Filter out blocks with null types and ensure proper typing
   const blocks = blocksResult

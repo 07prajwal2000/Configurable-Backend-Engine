@@ -59,7 +59,7 @@ export default function (app: Hono) {
     async (c) => {}
   );
 }
-      `,
+`,
     },
     {
       filename: "service.ts",
@@ -85,7 +85,7 @@ export const responseSchema = z.object({});`,
       filename: `tests/${routeName}.spec.ts`,
       content: `import { describe, it } from "vitest";
 
-describe("unit tests for get-all", () => {
+describe("unit tests for ${routeName}", () => {
   it("test 01", () => {});
 });`
     },
@@ -93,7 +93,7 @@ describe("unit tests for get-all", () => {
       filename: `tests/${routeName}.test.ts`,
       content: `import { describe, it } from "vitest";
 
-describe("integration tests for get-all", () => {
+describe("integration tests for ${routeName}", () => {
   it("test 01", () => {});
 });`
     },

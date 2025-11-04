@@ -1,20 +1,22 @@
 import { useEditorSearchbarStore } from "@/store/editor";
 import { Box } from "@mantine/core";
-import React, { useEffect, useMemo } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import SearchBlockItem from "./searchBlocktem";
 import blocksForSearch, { categoryList } from "../../blocks/searchList";
+import { BlockCanvasContext } from "@/context/blockCanvas";
+import { BlockTypes } from "@/types/block";
 
 const BlockSearchList = () => {
   const {
     searchQuery,
     setSearchQuery,
-    close,
-    incrementIndex,
-    decrementIndex,
+    close: closeSearchbar,
     setCurrentIndex,
     currentIndex,
   } = useEditorSearchbarStore();
   const inCategoryMode = searchQuery?.trim().length === 0;
+
+  const { addBlock } = useContext(BlockCanvasContext);
 
   const filteredBlocks = useMemo(() => {
     return blocksForSearch.filter((block) => {
@@ -38,12 +40,8 @@ const BlockSearchList = () => {
     };
   }, [searchQuery, currentIndex]);
 
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [searchQuery]);
-
   function handleKeyDownEvent(ev: KeyboardEvent) {
-    if (ev.key === "Escape") close();
+    if (ev.key === "Escape") closeSearchbar();
     let incrementor = 0;
     if (ev.key === "ArrowUp") {
       incrementor = -1;
@@ -53,7 +51,8 @@ const BlockSearchList = () => {
       if (inCategoryMode) {
         setSearchQuery(`cat:${categoryList[currentIndex].category}`);
       } else {
-        // TODO: Add block to editor
+        addBlock(filteredBlocks[currentIndex].type);
+        closeSearchbar();
       }
     }
     if (incrementor !== 0) {
@@ -62,6 +61,18 @@ const BlockSearchList = () => {
       if (newIndex < 0) newIndex = max - 1;
       if (newIndex >= max) newIndex = 0;
       setCurrentIndex(newIndex);
+    }
+  }
+
+  function onSearchItemClick(ev: {
+    itemType: "block" | "category";
+    value: string;
+  }) {
+    if (ev.itemType === "block") {
+      addBlock(ev.value as BlockTypes);
+      closeSearchbar();
+    } else if (ev.itemType === "category") {
+      setSearchQuery(`cat:${ev.value}`);
     }
   }
 
@@ -84,7 +95,7 @@ const BlockSearchList = () => {
             description={category.description}
             icon={category.icon}
             showRightArrow
-            onClick={(e) => setSearchQuery(`cat:${e.value}`)}
+            onClick={onSearchItemClick}
           />
         ))}
       </Box>
@@ -99,6 +110,7 @@ const BlockSearchList = () => {
             title={block.title}
             description={block.description}
             icon={block.icon}
+            onClick={onSearchItemClick}
           />
         ))}
     </Box>

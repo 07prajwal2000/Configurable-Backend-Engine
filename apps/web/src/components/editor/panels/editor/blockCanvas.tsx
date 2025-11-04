@@ -1,13 +1,19 @@
 import { Box } from "@mantine/core";
-import { Background, Panel, ReactFlow, ReactFlowProvider } from "@xyflow/react";
-import React, { createContext } from "react";
+import {
+  Background,
+  Panel,
+  ReactFlow,
+  ReactFlowProvider,
+  useReactFlow,
+} from "@xyflow/react";
+import React from "react";
 import "@xyflow/react/dist/style.css";
 import { blocksList } from "../../blocks/blocksList";
 import {
   useEditorActionsStore,
   useEditorChangeTrackerStore,
 } from "@/store/editor";
-import { BaseBlockType, EdgeType } from "@/types/block";
+import { BaseBlockType, BlockTypes, EdgeType } from "@/types/block";
 import {
   useCanvasActionsStore,
   useCanvasBlocksStore,
@@ -16,8 +22,10 @@ import {
 import CanvasToolboxPanel from "./toolbox/canvasToolboxPanel";
 import { generateID } from "@cbe/lib";
 import { edgeTypes } from "../../blocks/customEdge";
-import { BlockCanvasContext } from "@/context/blockCanvas";
 import { showNotification } from "@mantine/notifications";
+import { BlockCanvasContext } from "@/context/blockCanvas";
+import BlockSearchDrawer from "./blockSearchDrawer";
+import { createBlockData } from "@/lib/blockFactory";
 
 type Props = {
   readonly?: boolean;
@@ -25,21 +33,44 @@ type Props = {
 
 const BlockCanvas = (props: Props) => {
   const {
-    blocks: { onBlockChange, updateBlock, addBlock, deleteBlock },
+    blocks: { onBlockChange, deleteBlock, addBlock },
     edges: { onEdgeChange, addEdge, deleteEdge },
   } = useCanvasActionsStore();
   const actions = useEditorActionsStore();
   const blocks = useCanvasBlocksStore();
   const edges = useCanvasEdgesStore();
   const changeTracker = useEditorChangeTrackerStore();
+  const { screenToFlowPosition } = useReactFlow();
 
-  function onBlockDragStop(block: BaseBlockType) {
-    changeTracker.add(block.id, "block");
-  }
   // TODO: Need to implement Undo/Redo
   function doAction(type: "undo" | "redo") {
     // NOT IMPLEMENTED YET
   }
+
+  function deleteEdgeWithHistory(id: string) {
+    deleteEdge(id);
+  }
+  function deleteBlockWithHistory(id: string) {
+    deleteBlock(id);
+  }
+  function addBlockWithHistory(block: BlockTypes) {
+    const position = screenToFlowPosition({
+      x: document.body.offsetWidth / 2,
+      y: document.body.offsetHeight / 2,
+    });
+    const data = createBlockData(block);
+    addBlock({
+      data,
+      id: generateID(),
+      position,
+      type: block,
+    });
+  }
+
+  function onBlockDragStop(block: BaseBlockType) {
+    changeTracker.add(block.id, "block");
+  }
+
   function onEdgeConnect(edge: EdgeType) {
     if (edge.source === edge.target) {
       showNotification({
@@ -64,54 +95,45 @@ const BlockCanvas = (props: Props) => {
     );
     addEdge(edge);
   }
-  function deleteEdgeWithHistory(id: string) {
-    deleteEdge(id);
-  }
-  function deleteBlockWithHistory(id: string) {
-    deleteBlock(id);
-  }
 
   return (
     <Box w={"100%"} h={"100%"}>
-      {/* TODO: Move context to root index file for better accessibility to other components */}
       <BlockCanvasContext.Provider
         value={{
           undo: () => doAction("undo"),
           redo: () => doAction("redo"),
           deleteBlock: (id: string) => deleteBlockWithHistory(id),
           deleteEdge: (id: string) => deleteEdgeWithHistory(id),
+          addBlock: addBlockWithHistory,
         }}
       >
-        <ReactFlowProvider>
-          <ReactFlow
-            onEdgesChange={onEdgeChange}
-            onNodesChange={onBlockChange}
-            onConnect={(e) => onEdgeConnect(e as any)}
-            nodes={blocks}
-            edges={edges}
-            onNodeDragStart={(_, node) =>
-              onBlockDragStop(node as BaseBlockType)
-            }
-            snapToGrid
-            snapGrid={[5, 5]}
-            onlyRenderVisibleElements
-            selectNodesOnDrag
-            onSelectionEnd={(e) => console.log("select", e)}
-            onNodeDoubleClick={(e) => console.log("dblclick", e)}
-            nodeTypes={blocksList}
-            nodesDraggable={!props.readonly}
-            nodesConnectable={!props.readonly}
-            fitView
-            zoomOnScroll={false}
-            panOnDrag={[0]}
-            edgeTypes={edgeTypes}
-          >
-            <Background />
-            <Panel position="bottom-left">
-              <CanvasToolboxPanel />
-            </Panel>
-          </ReactFlow>
-        </ReactFlowProvider>
+        <ReactFlow
+          onEdgesChange={onEdgeChange}
+          onNodesChange={onBlockChange}
+          onConnect={(e) => onEdgeConnect(e as any)}
+          nodes={blocks}
+          edges={edges}
+          onNodeDragStart={(_, node) => onBlockDragStop(node as BaseBlockType)}
+          snapToGrid
+          snapGrid={[5, 5]}
+          onlyRenderVisibleElements
+          selectNodesOnDrag
+          onSelectionEnd={(e) => console.log("select", e)}
+          onNodeDoubleClick={(e) => console.log("dblclick", e)}
+          nodeTypes={blocksList}
+          nodesDraggable={!props.readonly}
+          nodesConnectable={!props.readonly}
+          fitView
+          zoomOnScroll={false}
+          panOnDrag={[0]}
+          edgeTypes={edgeTypes}
+        >
+          <Background />
+          <Panel position="bottom-left">
+            <CanvasToolboxPanel />
+          </Panel>
+        </ReactFlow>
+        <BlockSearchDrawer />
       </BlockCanvasContext.Provider>
     </Box>
   );

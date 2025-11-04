@@ -6,6 +6,7 @@ import {
   NodeChange,
 } from "@xyflow/react";
 import { create } from "zustand";
+import dagre from "@dagrejs/dagre";
 
 type State = {
   blocks: BaseBlockType[];
@@ -19,6 +20,7 @@ type Actions = {
       deleteBlock: (id: string) => void;
       onBlockChange: (changes: NodeChange[]) => void;
       updateBlock: (id: string, block: Partial<BaseBlockType>) => void;
+      formatBlocks(): void;
     };
     edges: {
       addEdge: (edge: EdgeType) => void;
@@ -54,6 +56,24 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
   edges: [],
   actions: {
     blocks: {
+      formatBlocks() {
+        const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(
+          () => ({})
+        );
+        dagreGraph.setGraph({ rankdir: "TB", ranksep: 10 });
+        get().blocks.forEach((block) => {
+          dagreGraph.setNode(block.id, { width: 100, height: 100 });
+        });
+        get().edges.forEach((edge) => {
+          dagreGraph.setEdge(edge.source, edge.target);
+        });
+        dagre.layout(dagreGraph);
+        const blocks = get().blocks.map((block) => {
+          const node = dagreGraph.node(block.id);
+          return { ...block, position: { x: node.x, y: node.y } };
+        });
+        set({ blocks });
+      },
       addBlock(block) {
         set({ blocks: [...get().blocks, block] });
       },

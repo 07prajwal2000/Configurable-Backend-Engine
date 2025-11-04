@@ -85,7 +85,7 @@ export const useEditorStore = create<State & Actions>()(
     searchbar: {
       opened: false,
       searchQuery: "",
-      currentIndex: -1,
+      currentIndex: 0,
       open() {
         set((state) => {
           state.searchbar.opened = true;

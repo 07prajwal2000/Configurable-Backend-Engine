@@ -88,6 +88,9 @@ export const edgesEntity = pgTable(
     }),
     fromHandle: varchar({ length: 50 }),
     toHandle: varchar({ length: 50 }),
+    routeId: varchar({ length: 50 }).references(() => routesEntity.id, {
+      onDelete: "cascade",
+    }),
   },
   () => [index("from"), index("to")]
 );

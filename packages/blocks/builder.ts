@@ -1,8 +1,8 @@
 import z from "zod";
 import { BaseBlock, Context } from "./baseBlock";
 import { BlockTypes } from "./blockTypes";
-import { IfBlock } from "./builtin/if";
-import { JsRunnerBlock } from "./builtin/jsRunner";
+import { IfBlock, ifBlockSchema } from "./builtin/if";
+import { JsRunnerBlock, jsRunnerBlockSchema } from "./builtin/jsRunner";
 import { ConsoleLoggerBlock } from "./builtin/log/console";
 import { SetVarBlock, setVarSchema } from "./builtin/setVar";
 import {
@@ -387,13 +387,24 @@ export class BlockBuilder {
     return new ArrayOperationsBlock(this.context, parsedResult.data, edge);
   }
   private createIfBlock(block: BlockDTOType) {
+    const parsedResult = this.shouldValidateBlockData
+      ? ifBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
     const successBlock = this.findEdge(block, "success");
     const failureBlock = this.findEdge(block, "failure");
-    return new IfBlock(successBlock, failureBlock, this.context, block.data);
+    return new IfBlock(
+      successBlock,
+      failureBlock,
+      this.context,
+      parsedResult.data
+    );
   }
   private createJsRunnerBlock(block: BlockDTOType): BaseBlock {
+    const parsedResult = this.shouldValidateBlockData
+      ? jsRunnerBlockSchema.safeParse(block.data)
+      : { data: block.data, success: true };
     const edge = this.findEdge(block, "source");
-    return new JsRunnerBlock(this.context, block.data.value, edge);
+    return new JsRunnerBlock(this.context, parsedResult.data, edge);
   }
   private createConsoleLogBlock(block: BlockDTOType): BaseBlock {
     const edge = this.findEdge(block, "source");

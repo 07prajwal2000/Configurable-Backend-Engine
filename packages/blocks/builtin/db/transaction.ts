@@ -5,7 +5,7 @@ import { Engine } from "../../engine";
 
 export const transactionDbBlockSchema = z.object({
   connection: z.string(),
-  executor: z.uuidv7(),
+  executor: z.string(),
 });
 
 export class TransactionBlock extends BaseBlock {

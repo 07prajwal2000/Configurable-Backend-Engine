@@ -1,5 +1,6 @@
+import { BlockCanvasContext } from "@/context/blockCanvas";
 import { Menu, ActionIcon } from "@mantine/core";
-import React from "react";
+import React, { useContext } from "react";
 import { TbCopy, TbDots, TbExternalLink, TbTrashFilled } from "react-icons/tb";
 
 type PropTypes = {
@@ -8,6 +9,10 @@ type PropTypes = {
 };
 
 const BlockOptionsMenu = (props: PropTypes) => {
+  const canvasContext = useContext(BlockCanvasContext);
+  function onDeleteClick() {
+    canvasContext.deleteBlock(props.blockId);
+  }
   return (
     <Menu shadow="lg" width={200} withArrow position="bottom-end">
       <Menu.Target>
@@ -19,7 +24,10 @@ const BlockOptionsMenu = (props: PropTypes) => {
         <Menu.Item leftSection={<TbExternalLink size={15} />}>Open</Menu.Item>
         <Menu.Item leftSection={<TbCopy size={15} />}>Duplicate</Menu.Item>
         {props.showDelete && (
-          <Menu.Item leftSection={<TbTrashFilled size={15} />}>
+          <Menu.Item
+            onClick={onDeleteClick}
+            leftSection={<TbTrashFilled size={15} />}
+          >
             Delete
           </Menu.Item>
         )}

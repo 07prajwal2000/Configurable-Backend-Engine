@@ -1,20 +1,18 @@
 import { Hono } from "hono";
-import handleRequest from "./service";
-import { requestQuerySchema, responseSchema } from "./dto";
 import {
   describeRoute,
   DescribeRouteOptions,
   resolver,
   validator,
 } from "hono-openapi";
-import zodErrorCallbackParser from "../../../../middlewares/zodErrorCallbackParser";
+import { requestBodySchema, requestRouteSchema, responseSchema } from "./dto";
 import { validationErrorSchema } from "../../../../errors/validationError";
 import { errorSchema } from "../../../../errors/customError";
 
-const openApiOptions: DescribeRouteOptions = {
-  operationId: "get-routes-list",
+const openapiRouteOptions: DescribeRouteOptions = {
   description:
-    "Returns a list of Routes sorted by createdAt with pagination details",
+    "Upsert action and saves the state by taking changes and actions to perform operation",
+  operationId: "save-canvas-state",
   tags: ["Routes"],
   responses: {
     200: {
@@ -26,7 +24,7 @@ const openApiOptions: DescribeRouteOptions = {
       },
     },
     400: {
-      description: "Pagination Query Params Validation Error",
+      description: "Invalid ID/Data format",
       content: {
         "application/json": {
           schema: resolver(validationErrorSchema),
@@ -46,13 +44,10 @@ const openApiOptions: DescribeRouteOptions = {
 
 export default function (app: Hono) {
   app.get(
-    "/list",
-    describeRoute(openApiOptions),
-    validator("query", requestQuerySchema, zodErrorCallbackParser),
-    async (ctx) => {
-      const query = ctx.req.valid("query");
-      const result = await handleRequest(query);
-      return ctx.json(result);
-    }
+    "/:id/save-canvas",
+    describeRoute(openapiRouteOptions),
+    validator("param", requestRouteSchema),
+    validator("json", requestBodySchema),
+    async (c) => {}
   );
 }

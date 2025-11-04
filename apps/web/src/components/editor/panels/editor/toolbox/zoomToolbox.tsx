@@ -31,7 +31,7 @@ const ZoomToolbox = () => {
           >
             <Stack gap={0} align="center">
               <TbZoom />
-              <Text size={"xs"}>{Math.round(zoom * 50)}%</Text>
+              <Text size={"xs"}>{Math.round(zoom * 125)}%</Text>
             </Stack>
           </ActionIcon>
         </Tooltip>

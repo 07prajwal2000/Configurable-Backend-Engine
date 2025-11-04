@@ -1,7 +1,9 @@
+import { BlockCanvasContext } from "@/context/blockCanvas";
+import { useEditorSearchbarStore } from "@/store/editor";
 import { BlockCategory, BlockTypes } from "@/types/block";
 import { Box, Center, Flex, Grid, Paper, Text } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
-import React from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { TbArrowNarrowRight, TbCodeVariable } from "react-icons/tb";
 
 type OnClickParams = {
@@ -23,7 +25,23 @@ type Props = {
 };
 
 const SearchBlockItem = (props: Props) => {
-  const { ref, hovered } = useHover();
+  const activeElement = useRef<HTMLDivElement>(null);
+  const { ref, hovered } = useHover<HTMLDivElement>();
+
+  useEffect(() => {
+    if (!props.active || !activeElement.current) return;
+    scrollIntoViewIfNotVisible(activeElement.current);
+  }, [props.active]);
+
+  function scrollIntoViewIfNotVisible(target: HTMLDivElement) {
+    if (target.getBoundingClientRect().bottom > window.innerHeight) {
+      target.scrollIntoView(false);
+    }
+
+    if (target.getBoundingClientRect().top < 0) {
+      target.scrollIntoView(true);
+    }
+  }
 
   function onClick() {
     props.onClick &&
@@ -33,18 +51,23 @@ const SearchBlockItem = (props: Props) => {
       });
   }
 
+  const hoveredBg = hovered ? "gray.0" : "white";
+  const activeBg = props.active ? "red.0" : hoveredBg;
+
   return (
     <Paper
       onClick={onClick}
+      autoFocus={props.active}
       ref={ref}
       p={"xs"}
       pos={"relative"}
       style={{
         cursor: "pointer",
       }}
-      bg={hovered ? "gray.0" : "white"}
+      bg={activeBg}
     >
       <Box
+        ref={activeElement}
         pos={"absolute"}
         top={0}
         bottom={0}

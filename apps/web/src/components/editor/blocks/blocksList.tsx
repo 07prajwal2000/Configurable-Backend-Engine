@@ -25,6 +25,7 @@ import Update from "./builtin/database/update";
 import Delete from "./builtin/database/delete";
 import Transaction from "./builtin/database/transaction";
 import Native from "./builtin/database/native";
+import Console from "./builtin/logging/console";
 
 const blocksList: NodeTypes = {
   [BlockTypes.entrypoint]: Entrypoint,
@@ -40,6 +41,7 @@ const blocksList: NodeTypes = {
   [BlockTypes.httpsetcookie]: SetCookie,
   [BlockTypes.forloop]: Forloop,
   [BlockTypes.foreachloop]: ForeachLoop,
+  [BlockTypes.consolelog]: Console,
   [BlockTypes.httpgetheader]: GetHeader,
   [BlockTypes.httpsetheader]: SetHeader,
   [BlockTypes.httpgetparam]: GetParam,

@@ -21,6 +21,7 @@ import {
 import { VscSymbolParameter, VscSymbolMisc } from "react-icons/vsc";
 import { MdDataObject, MdHttp } from "react-icons/md";
 import { BlockCategory, BlockTypes } from "@/types/block";
+import { LuDatabaseZap } from "react-icons/lu";
 
 const iconStyles: React.CSSProperties = {};
 
@@ -276,6 +277,16 @@ const blocksForSearch = [
     icon: <TbDatabaseX size={iconSize} />,
     tags: ["database", "delete", "db"],
     type: BlockTypes.db_delete,
+    category: BlockCategory.Database,
+  },
+  {
+    id: crypto.randomUUID(),
+    title: "Start Transaction",
+    description:
+      "Start a database transaction to perform multiple database operations atomically.",
+    icon: <LuDatabaseZap size={iconSize} />,
+    tags: ["database", "transaction", "db", "acid", "atomicity"],
+    type: BlockTypes.db_transaction,
     category: BlockCategory.Database,
   },
   {
