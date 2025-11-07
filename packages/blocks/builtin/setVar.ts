@@ -1,5 +1,10 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, Context } from "../baseBlock";
+import {
+  BaseBlock,
+  baseBlockDataSchema,
+  BlockOutput,
+  Context,
+} from "../baseBlock";
 
 export const setVarSchema = z
   .object({
@@ -10,6 +15,7 @@ export const setVarSchema = z
         "The value of the variable (can be number,bool,string,object or js expression)"
       ),
   })
+  .extend(baseBlockDataSchema.shape)
   .describe("A useful block to set a variable in the context");
 
 export class SetVarBlock extends BaseBlock {

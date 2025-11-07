@@ -1,15 +1,17 @@
-import z, { optional } from "zod";
-import { BlockOutput, Context } from "../../baseBlock";
+import z from "zod";
+import { baseBlockDataSchema, BlockOutput, Context } from "../../baseBlock";
 import { Engine } from "../../engine";
 import { ForLoopBlock, forLoopBlockSchema } from "./for";
 
 const valuesSchema = z.array(z.any());
 
-export const forEachLoopBlockSchema = z.object({
-  block: z.string().optional(),
-  values: valuesSchema,
-  useParam: z.boolean().optional(),
-});
+export const forEachLoopBlockSchema = z
+  .object({
+    block: z.string().optional(),
+    values: valuesSchema,
+    useParam: z.boolean().optional(),
+  })
+  .extend(baseBlockDataSchema.shape);
 // REDESIGN THIS to accept the values from both constructor as well as params
 
 export class ForEachLoopBlock extends ForLoopBlock {
@@ -33,6 +35,8 @@ export class ForEachLoopBlock extends ForLoopBlock {
         end: input.values.length,
         step: 1,
         block: input.block,
+        blockName: input.blockName,
+        blockDescription: "",
       },
       subEngine,
       next

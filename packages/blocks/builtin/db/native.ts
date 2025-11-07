@@ -1,11 +1,18 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
+import {
+  baseBlockDataSchema,
+  BaseBlock,
+  BlockOutput,
+  Context,
+} from "../../baseBlock";
 import { IDbAdapter } from "@cbe/adapters/db";
 
-export const nativeDbBlockSchema = z.object({
-  js: z.string().refine((val) => val.startsWith("js:")),
-  connection: z.string(),
-});
+export const nativeDbBlockSchema = z
+  .object({
+    js: z.string().refine((val) => val.startsWith("js:")),
+    connection: z.string(),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class NativeDbBlock extends BaseBlock {
   constructor(

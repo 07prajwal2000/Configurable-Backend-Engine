@@ -1,9 +1,11 @@
 import z from "zod";
-import { BaseBlock, BlockOutput } from "../baseBlock";
+import { BaseBlock, baseBlockDataSchema, BlockOutput } from "../baseBlock";
 
-export const getVarBlockSchema = z.object({
-  key: z.string(),
-});
+export const getVarBlockSchema = z
+  .object({
+    key: z.string(),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class GetVarBlock extends BaseBlock {
   override async executeAsync(params?: any): Promise<BlockOutput> {

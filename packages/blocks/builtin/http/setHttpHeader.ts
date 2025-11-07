@@ -1,10 +1,12 @@
-import { BaseBlock, BlockOutput } from "../../baseBlock";
+import { baseBlockDataSchema, BaseBlock, BlockOutput } from "../../baseBlock";
 import z from "zod";
 
-export const setHttpHeaderBlockSchema = z.object({
-  name: z.string(),
-  value: z.string(),
-});
+export const setHttpHeaderBlockSchema = z
+  .object({
+    name: z.string(),
+    value: z.string(),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class SetHttpHeaderBlock extends BaseBlock {
   override async executeAsync(params?: any): Promise<BlockOutput> {

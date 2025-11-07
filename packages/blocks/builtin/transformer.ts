@@ -1,11 +1,14 @@
 import z from "zod";
 import { BaseBlock, BlockOutput, Context } from "../baseBlock";
+import { baseBlockDataSchema } from "../baseBlock";
 
-export const transformerBlockSchema = z.object({
-  fieldMap: z.record(z.string(), z.string()),
-  js: z.string().optional(),
-  useJs: z.boolean().default(false),
-});
+export const transformerBlockSchema = z
+  .object({
+    fieldMap: z.record(z.string(), z.string()),
+    js: z.string().optional(),
+    useJs: z.boolean().default(false),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export const transformerParamsSchema = z.record(z.string(), z.any().optional());
 

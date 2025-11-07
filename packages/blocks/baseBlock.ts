@@ -1,6 +1,7 @@
 import { DbFactory } from "@cbe/adapters/db";
 import { HttpClient } from "@cbe/lib";
 import { JsVM } from "@cbe/lib/vm";
+import z from "zod";
 
 export interface Context {
   vm: JsVM;
@@ -51,6 +52,11 @@ export interface BlockOutput {
   successful: boolean;
   continueIfFail: boolean;
 }
+
+export const baseBlockDataSchema = z.object({
+  blockName: z.string().optional().default("Name"),
+  blockDescription: z.string().optional().default("Description"),
+});
 
 export abstract class BaseBlock {
   constructor(

@@ -1,10 +1,13 @@
 import z from "zod";
 import { BaseBlock, BlockOutput } from "../../baseBlock";
+import { baseBlockDataSchema } from "../../baseBlock";
 
-export const getHttpParamBlockSchema = z.object({
-  name: z.string(),
-  source: z.enum(["query", "path"]),
-});
+export const getHttpParamBlockSchema = z
+  .object({
+    name: z.string(),
+    source: z.enum(["query", "path"]),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class GetHttpParamBlock extends BaseBlock {
   override async executeAsync(params?: any): Promise<BlockOutput> {

@@ -1,13 +1,20 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
+import {
+  baseBlockDataSchema,
+  BaseBlock,
+  BlockOutput,
+  Context,
+} from "../../baseBlock";
 import { Engine } from "../../engine";
 
-export const forLoopBlockSchema = z.object({
-  block: z.string().optional(),
-  start: z.number().or(z.string()),
-  end: z.number().or(z.string()),
-  step: z.number().or(z.string()).optional().default(1),
-});
+export const forLoopBlockSchema = z
+  .object({
+    block: z.string().optional(),
+    start: z.number().or(z.string()),
+    end: z.number().or(z.string()),
+    step: z.number().or(z.string()).optional().default(1),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class ForLoopBlock extends BaseBlock {
   constructor(

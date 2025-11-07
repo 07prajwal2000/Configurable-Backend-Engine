@@ -1,13 +1,20 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
+import {
+  BaseBlock,
+  baseBlockDataSchema,
+  BlockOutput,
+  Context,
+} from "../../baseBlock";
 import type { IDbAdapter } from "@cbe/adapters/db";
 import { whereConditionSchema } from "./schema";
 
-export const deleteDbBlockSchema = z.object({
-  connection: z.string(),
-  tableName: z.string(),
-  conditions: z.array(whereConditionSchema),
-});
+export const deleteDbBlockSchema = z
+  .object({
+    connection: z.string(),
+    tableName: z.string(),
+    conditions: z.array(whereConditionSchema),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class DeleteDbBlock extends BaseBlock {
   constructor(

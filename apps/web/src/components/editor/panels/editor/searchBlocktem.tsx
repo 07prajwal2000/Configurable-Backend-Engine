@@ -52,7 +52,7 @@ const SearchBlockItem = (props: Props) => {
   }
 
   const hoveredBg = hovered ? "gray.0" : "white";
-  const activeBg = props.active ? "red.0" : hoveredBg;
+  const activeBg = props.active ? "violet.0" : hoveredBg;
 
   return (
     <Paper
@@ -74,7 +74,7 @@ const SearchBlockItem = (props: Props) => {
         display={props.active || hovered ? "block" : "none"}
         left={0}
         p={1}
-        bg={props.active ? "red" : hovered ? "gray.5" : "transparent"}
+        bg={props.active ? "violet" : hovered ? "gray.5" : "transparent"}
       />
       <Grid>
         <Grid.Col span={2}>

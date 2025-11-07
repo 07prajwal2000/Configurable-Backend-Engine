@@ -1,10 +1,17 @@
 import { conditionSchema, evaluateOperator, operatorSchema } from "@cbe/lib";
-import { BaseBlock, BlockOutput, Context } from "../baseBlock";
+import {
+  BaseBlock,
+  baseBlockDataSchema,
+  BlockOutput,
+  Context,
+} from "../baseBlock";
 import { z } from "zod";
 
-export const ifBlockSchema = z.object({
-  conditions: z.array(conditionSchema),
-});
+export const ifBlockSchema = z
+  .object({
+    conditions: z.array(conditionSchema),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export enum OperatorResult {
   TRUE = 1,

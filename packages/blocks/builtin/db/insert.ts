@@ -1,13 +1,20 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
+import {
+  baseBlockDataSchema,
+  BaseBlock,
+  BlockOutput,
+  Context,
+} from "../../baseBlock";
 import { IDbAdapter } from "@cbe/adapters/db";
 
-export const insertDbBlockSchema = z.object({
-  connection: z.string(),
-  tableName: z.string(),
-  data: z.object(),
-  useParam: z.boolean(),
-});
+export const insertDbBlockSchema = z
+  .object({
+    connection: z.string(),
+    tableName: z.string(),
+    data: z.object(),
+    useParam: z.boolean(),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class InsertDbBlock extends BaseBlock {
   constructor(

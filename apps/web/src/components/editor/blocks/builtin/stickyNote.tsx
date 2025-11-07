@@ -56,7 +56,6 @@ const StickyNote = (props: NodeProps) => {
       },
       notes: data.notes,
       color: data.color,
-      sdsdsd: "sdsdsd",
     } as z.infer<typeof stickyNotesSchema>);
   }
 

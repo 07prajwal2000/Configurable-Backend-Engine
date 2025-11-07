@@ -1,12 +1,19 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
+import {
+  baseBlockDataSchema,
+  BaseBlock,
+  BlockOutput,
+  Context,
+} from "../../baseBlock";
 import { DbAdapterMode, IDbAdapter } from "@cbe/adapters/db";
 import { Engine } from "../../engine";
 
-export const transactionDbBlockSchema = z.object({
-  connection: z.string(),
-  executor: z.string(),
-});
+export const transactionDbBlockSchema = z
+  .object({
+    connection: z.string(),
+    executor: z.string(),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class TransactionBlock extends BaseBlock {
   constructor(

@@ -1,14 +1,21 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, Context } from "../../baseBlock";
+import {
+  baseBlockDataSchema,
+  BaseBlock,
+  BlockOutput,
+  Context,
+} from "../../baseBlock";
 import type { IDbAdapter } from "@cbe/adapters/db";
 import { whereConditionSchema } from "./schema";
 
-export const getAllDbBlockSchema = z.object({
-  connection: z.string(),
-  tableName: z.string(),
-  conditions: z.array(whereConditionSchema),
-  limit: z.number().default(1000),
-});
+export const getAllDbBlockSchema = z
+  .object({
+    connection: z.string(),
+    tableName: z.string(),
+    conditions: z.array(whereConditionSchema),
+    limit: z.number().default(1000),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class GetAllDbBlock extends BaseBlock {
   constructor(

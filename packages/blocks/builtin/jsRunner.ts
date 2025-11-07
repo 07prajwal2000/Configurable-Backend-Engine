@@ -1,9 +1,11 @@
 import z from "zod";
-import { BaseBlock, BlockOutput } from "../baseBlock";
+import { BaseBlock, baseBlockDataSchema, BlockOutput } from "../baseBlock";
 
-export const jsRunnerBlockSchema = z.object({
-  value: z.string(),
-});
+export const jsRunnerBlockSchema = z
+  .object({
+    value: z.string(),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class JsRunnerBlock extends BaseBlock {
   override async executeAsync(params?: any): Promise<BlockOutput> {

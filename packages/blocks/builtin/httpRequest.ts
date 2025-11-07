@@ -1,13 +1,20 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, Context } from "../baseBlock";
+import {
+  BaseBlock,
+  baseBlockDataSchema,
+  BlockOutput,
+  Context,
+} from "../baseBlock";
 
-export const httpRequestBlockSchema = z.object({
-  url: z.string(),
-  method: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH"]),
-  headers: z.record(z.string(), z.string()),
-  body: z.any(),
-  useParam: z.boolean().default(false),
-});
+export const httpRequestBlockSchema = z
+  .object({
+    url: z.string(),
+    method: z.enum(["GET", "POST", "PUT", "DELETE", "PATCH"]),
+    headers: z.record(z.string(), z.string()),
+    body: z.any(),
+    useParam: z.boolean().default(false),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class HttpRequestBlock extends BaseBlock {
   constructor(

@@ -1,16 +1,23 @@
 import z from "zod";
-import { BaseBlock, BlockOutput, HttpCookieSameSite } from "../../baseBlock";
+import {
+  baseBlockDataSchema,
+  BaseBlock,
+  BlockOutput,
+  HttpCookieSameSite,
+} from "../../baseBlock";
 
-export const setHttpCookieBlockSchema = z.object({
-  name: z.string(),
-  value: z.string().or(z.number()),
-  domain: z.string().optional(),
-  path: z.string().optional(),
-  expiry: z.date().or(z.string()),
-  httpOnly: z.boolean().optional(),
-  secure: z.boolean().optional(),
-  samesite: z.enum(HttpCookieSameSite).optional(),
-});
+export const setHttpCookieBlockSchema = z
+  .object({
+    name: z.string(),
+    value: z.string().or(z.number()),
+    domain: z.string().optional(),
+    path: z.string().optional(),
+    expiry: z.date().or(z.string()),
+    httpOnly: z.boolean().optional(),
+    secure: z.boolean().optional(),
+    samesite: z.enum(HttpCookieSameSite).optional(),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export class SetHttpCookieBlock extends BaseBlock {
   override async executeAsync(params?: any): Promise<BlockOutput> {

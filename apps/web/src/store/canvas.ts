@@ -20,7 +20,7 @@ type Actions = {
       deleteBlock: (id: string) => void;
       onBlockChange: (changes: NodeChange[]) => void;
       updateBlock: (id: string, block: Partial<BaseBlockType>) => void;
-      formatBlocks(): void;
+      formatBlocks(): string[];
       updateBlockData: (id: string, data: any) => void;
     };
     edges: {
@@ -38,29 +38,30 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
   actions: {
     blocks: {
       formatBlocks() {
+        const blocksToFormat = get().blocks.filter(
+          (block) => block.type !== BlockTypes.stickynote
+        );
+        const stickyNoteBlocks = get().blocks.filter(
+          (block) => block.type === BlockTypes.stickynote
+        );
         const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(
           () => ({})
         );
         dagreGraph.setGraph({ rankdir: "TB", ranksep: 10 });
-        get().blocks.forEach((block) => {
-          if (block.type === BlockTypes.stickynote) {
-            return;
-          } else {
-            dagreGraph.setNode(block.id, { width: 100, height: 100 });
-          }
+        blocksToFormat.forEach((block) => {
+          dagreGraph.setNode(block.id, { width: 100, height: 100 });
         });
         get().edges.forEach((edge) => {
           dagreGraph.setEdge(edge.source, edge.target);
         });
         dagre.layout(dagreGraph);
-        const blocks = get().blocks.map((block) => {
-          if (block.type === BlockTypes.stickynote) {
-            return block;
-          }
+        const blocks = blocksToFormat.map((block) => {
           const node = dagreGraph.node(block.id);
           return { ...block, position: { x: node.x, y: node.y } };
         });
-        set({ blocks });
+        const finalBlocks = blocks.concat(stickyNoteBlocks);
+        set({ blocks: finalBlocks });
+        return blocksToFormat.map((b) => b.id);
       },
       addBlock(block) {
         set({ blocks: [...get().blocks, block] });

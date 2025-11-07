@@ -1,10 +1,12 @@
 import z from "zod";
-import { BaseBlock, BlockOutput } from "../baseBlock";
+import { BaseBlock, baseBlockDataSchema, BlockOutput } from "../baseBlock";
 import { httpcodes } from "@cbe/lib";
 
-export const responseBlockSchema = z.object({
-  httpCode: z.string().refine((x) => httpcodes.some((y) => y.code == x)),
-});
+export const responseBlockSchema = z
+  .object({
+    httpCode: z.string().refine((x) => httpcodes.some((y) => y.code == x)),
+  })
+  .extend(baseBlockDataSchema.shape);
 
 export interface ResponseBlockHTTPResult extends BlockOutput {
   output?: {
