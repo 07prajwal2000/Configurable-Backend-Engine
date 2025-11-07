@@ -102,6 +102,8 @@ function NewProjectFormDialog({
   onClose: () => void;
 }) {
   const [saving, setSaving] = useState(false);
+  const { invalidateAll } = projectsQuery;
+  const client = useQueryClient();
   async function onSubmit(
     values: z.infer<typeof projectsService.createRequestBodySchema>
   ) {
@@ -109,6 +111,7 @@ function NewProjectFormDialog({
       setSaving(true);
       await projectsService.create(values);
       onClose();
+      invalidateAll(client);
     } catch (error: any) {
       showErrorNotification(error);
     } finally {

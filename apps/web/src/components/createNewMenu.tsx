@@ -68,7 +68,7 @@ const CreateNewMenu = () => {
   );
 };
 
-function CreateRouteForm({ close }: { close: () => void }) {
+export function CreateRouteForm({ close }: { close?: () => void }) {
   const [loading, setLoading] = useState(false);
   const { invalidate: useInvalidate } = routesQueries.getAll;
   const client = useQueryClient();
@@ -76,7 +76,7 @@ function CreateRouteForm({ close }: { close: () => void }) {
   async function onSubmit(values: any) {
     try {
       await routesService.create(values);
-      close();
+      close?.();
       useInvalidate(client);
     } catch (error) {
     } finally {

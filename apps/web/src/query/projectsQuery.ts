@@ -19,4 +19,9 @@ export const projectsQuery = {
       });
     },
   },
+  invalidateAll(queryClient: QueryClient) {
+    queryClient.invalidateQueries({
+      queryKey: ["projects", "list"],
+    });
+  },
 };

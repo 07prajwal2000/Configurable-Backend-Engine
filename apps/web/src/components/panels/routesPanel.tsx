@@ -8,6 +8,7 @@ import { useRouterPagination } from "@/store/routes";
 import QueryLoader from "../query/queryLoader";
 import QueryError from "../query/queryError";
 import { useQueryClient } from "@tanstack/react-query";
+import EmptyRoutePanel from "./emptyRoutePanel";
 
 type PropTypes = {
   projectId?: string;
@@ -65,6 +66,7 @@ const RoutesPanel = (props: PropTypes) => {
           projectName={route.projectName!}
         />
       ))}
+      {data?.data.length === 0 && <EmptyRoutePanel />}
     </Stack>
   );
 };

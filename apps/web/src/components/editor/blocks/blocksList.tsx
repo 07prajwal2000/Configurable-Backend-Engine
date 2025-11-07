@@ -26,6 +26,7 @@ import Delete from "./builtin/database/delete";
 import Transaction from "./builtin/database/transaction";
 import Native from "./builtin/database/native";
 import Console from "./builtin/logging/console";
+import StickyNote from "./builtin/stickyNote";
 
 const blocksList: NodeTypes = {
   [BlockTypes.entrypoint]: Entrypoint,
@@ -54,6 +55,7 @@ const blocksList: NodeTypes = {
   [BlockTypes.db_delete]: Delete,
   [BlockTypes.db_transaction]: Transaction,
   [BlockTypes.db_native]: Native,
+  [BlockTypes.stickynote]: StickyNote,
 };
 
 export { blocksList };

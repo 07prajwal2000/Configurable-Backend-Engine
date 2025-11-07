@@ -1,4 +1,6 @@
 import { BlockTypes } from "@/types/block";
+import { stickyNotesSchema } from "@cbe/blocks";
+import z from "zod";
 
 export function createBlockData(block: BlockTypes) {
   switch (block) {
@@ -136,6 +138,15 @@ export function createBlockData(block: BlockTypes) {
         connection: "",
         executor: "",
       };
+    case BlockTypes.stickynote:
+      return {
+        notes: "",
+        color: "yellow",
+        size: {
+          width: 100,
+          height: 100,
+        },
+      } as z.infer<typeof stickyNotesSchema>;
     default:
       return {};
   }

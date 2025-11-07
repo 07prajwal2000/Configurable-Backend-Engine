@@ -8,9 +8,6 @@ const EditorPanel = () => {
   return (
     <Box style={{ overflow: "hidden", position: "relative" }} h={"100%"}>
       <ReactFlowProvider>
-        <Box style={{ position: "absolute", zIndex: 10, right: 0 }} p={"lg"}>
-          <EditorToolbox />
-        </Box>
         <BlockCanvas />
       </ReactFlowProvider>
     </Box>

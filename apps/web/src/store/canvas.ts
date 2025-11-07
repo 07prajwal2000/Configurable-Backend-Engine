@@ -21,6 +21,7 @@ type Actions = {
       onBlockChange: (changes: NodeChange[]) => void;
       updateBlock: (id: string, block: Partial<BaseBlockType>) => void;
       formatBlocks(): void;
+      updateBlockData: (id: string, data: any) => void;
     };
     edges: {
       addEdge: (edge: EdgeType) => void;
@@ -32,28 +33,7 @@ type Actions = {
 };
 
 const useCanvasStore = create<State & Actions>((set, get) => ({
-  blocks: [
-    {
-      id: "weas",
-      data: {
-        label: "entrypoint",
-      },
-      position: { x: 0, y: 0 },
-      type: BlockTypes.db_native,
-    },
-    {
-      id: "as2wewe",
-      data: {},
-      position: { x: 80, y: 130 },
-      type: BlockTypes.db_transaction,
-    },
-    {
-      id: "as2wewes",
-      data: {},
-      position: { x: 180, y: 130 },
-      type: BlockTypes.db_insert,
-    },
-  ],
+  blocks: [],
   edges: [],
   actions: {
     blocks: {
@@ -63,13 +43,20 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
         );
         dagreGraph.setGraph({ rankdir: "TB", ranksep: 10 });
         get().blocks.forEach((block) => {
-          dagreGraph.setNode(block.id, { width: 100, height: 100 });
+          if (block.type === BlockTypes.stickynote) {
+            return;
+          } else {
+            dagreGraph.setNode(block.id, { width: 100, height: 100 });
+          }
         });
         get().edges.forEach((edge) => {
           dagreGraph.setEdge(edge.source, edge.target);
         });
         dagre.layout(dagreGraph);
         const blocks = get().blocks.map((block) => {
+          if (block.type === BlockTypes.stickynote) {
+            return block;
+          }
           const node = dagreGraph.node(block.id);
           return { ...block, position: { x: node.x, y: node.y } };
         });
@@ -91,6 +78,15 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
       onBlockChange(changes) {
         set({
           blocks: applyNodeChanges(changes, get().blocks) as BaseBlockType[],
+        });
+      },
+      updateBlockData(id, data) {
+        set({
+          blocks: get().blocks.map((block) =>
+            block.id === id
+              ? { ...block, data: { ...block.data, ...data } }
+              : block
+          ),
         });
       },
     },

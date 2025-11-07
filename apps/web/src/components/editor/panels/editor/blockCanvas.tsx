@@ -26,6 +26,7 @@ import { showNotification } from "@mantine/notifications";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import BlockSearchDrawer from "./blockSearchDrawer";
 import { createBlockData } from "@/lib/blockFactory";
+import EditorToolbox from "./editorToolbox";
 
 type Props = {
   readonly?: boolean;
@@ -33,7 +34,7 @@ type Props = {
 
 const BlockCanvas = (props: Props) => {
   const {
-    blocks: { onBlockChange, deleteBlock, addBlock },
+    blocks: { onBlockChange, deleteBlock, addBlock, updateBlockData },
     edges: { onEdgeChange, addEdge, deleteEdge },
   } = useCanvasActionsStore();
   const actions = useEditorActionsStore();
@@ -48,9 +49,11 @@ const BlockCanvas = (props: Props) => {
   }
 
   function deleteEdgeWithHistory(id: string) {
+    changeTracker.add(id, "edge");
     deleteEdge(id);
   }
   function deleteBlockWithHistory(id: string) {
+    changeTracker.add(id, "block");
     deleteBlock(id);
   }
   function addBlockWithHistory(block: BlockTypes) {
@@ -59,12 +62,19 @@ const BlockCanvas = (props: Props) => {
       y: document.body.offsetHeight / 2,
     });
     const data = createBlockData(block);
+    const id = generateID();
     addBlock({
       data,
-      id: generateID(),
+      id,
       position,
       type: block,
     });
+    changeTracker.add(id, "block");
+  }
+
+  function updateBlockDataWithHistory(id: string, data: any) {
+    changeTracker.add(id, "block");
+    updateBlockData(id, data);
   }
 
   function onBlockDragStop(block: BaseBlockType) {
@@ -102,11 +112,15 @@ const BlockCanvas = (props: Props) => {
         value={{
           undo: () => doAction("undo"),
           redo: () => doAction("redo"),
-          deleteBlock: (id: string) => deleteBlockWithHistory(id),
-          deleteEdge: (id: string) => deleteEdgeWithHistory(id),
+          deleteBlock: deleteBlockWithHistory,
+          deleteEdge: deleteEdgeWithHistory,
           addBlock: addBlockWithHistory,
+          updateBlockData: updateBlockDataWithHistory,
         }}
       >
+        <Box style={{ position: "absolute", zIndex: 10, right: 0 }} p={"lg"}>
+          <EditorToolbox />
+        </Box>
         <ReactFlow
           onEdgesChange={onEdgeChange}
           onNodesChange={onBlockChange}

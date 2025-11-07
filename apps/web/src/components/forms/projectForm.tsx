@@ -45,7 +45,7 @@ const ProjectForm = (props: PropTypes) => {
     <form onSubmit={form.onSubmit(onSubmit)}>
       <TextInput
         label="Name"
-        placeholder="Create user"
+        placeholder="Project Name"
         {...form.getInputProps("name")}
       />
       {props.actionSection}

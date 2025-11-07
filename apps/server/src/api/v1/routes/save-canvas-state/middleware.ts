@@ -146,6 +146,8 @@ function blockDataValidator(data: z.infer<typeof requestBodySchema>) {
     const result = schema.safeParse(block.data);
     if (!result.success) {
       errorBlocks.push(block.id);
+    } else {
+      block.data = result.data;
     }
   }
 
