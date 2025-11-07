@@ -11,6 +11,7 @@ import "@xyflow/react/dist/style.css";
 import { blocksList } from "../../blocks/blocksList";
 import {
   useEditorActionsStore,
+  useEditorBlockSettingsStore,
   useEditorChangeTrackerStore,
 } from "@/store/editor";
 import { BaseBlockType, BlockTypes, EdgeType } from "@/types/block";
@@ -27,6 +28,7 @@ import { BlockCanvasContext } from "@/context/blockCanvas";
 import BlockSearchDrawer from "./blockSearchDrawer";
 import { createBlockData } from "@/lib/blockFactory";
 import EditorToolbox from "./editorToolbox";
+import BlockSettingsDialog from "../../blocks/settingsDialog/blockSettingsDialog";
 
 type Props = {
   readonly?: boolean;
@@ -42,6 +44,7 @@ const BlockCanvas = (props: Props) => {
   const edges = useCanvasEdgesStore();
   const changeTracker = useEditorChangeTrackerStore();
   const { screenToFlowPosition } = useReactFlow();
+  const blockSettings = useEditorBlockSettingsStore();
 
   // TODO: Need to implement Undo/Redo
   function doAction(type: "undo" | "redo") {
@@ -71,16 +74,13 @@ const BlockCanvas = (props: Props) => {
     });
     changeTracker.add(id, "block");
   }
-
   function updateBlockDataWithHistory(id: string, data: any) {
     changeTracker.add(id, "block");
     updateBlockData(id, data);
   }
-
   function onBlockDragStop(block: BaseBlockType) {
     changeTracker.add(block.id, "block");
   }
-
   function onEdgeConnect(edge: EdgeType) {
     if (edge.source === edge.target) {
       showNotification({
@@ -104,6 +104,9 @@ const BlockCanvas = (props: Props) => {
       )
     );
     addEdge(edge);
+  }
+  function onBlockDblClick(block: BaseBlockType) {
+    blockSettings.open(block.id);
   }
 
   return (
@@ -132,7 +135,7 @@ const BlockCanvas = (props: Props) => {
           snapGrid={[5, 5]}
           onlyRenderVisibleElements
           selectNodesOnDrag
-          onNodeDoubleClick={(e) => console.log("dblclick", e)}
+          onNodeDoubleClick={(_, node) => onBlockDblClick(node)}
           nodeTypes={blocksList}
           nodesDraggable={!props.readonly}
           nodesConnectable={!props.readonly}
@@ -146,6 +149,7 @@ const BlockCanvas = (props: Props) => {
             <CanvasToolboxPanel />
           </Panel>
         </ReactFlow>
+        <BlockSettingsDialog />
         <BlockSearchDrawer />
       </BlockCanvasContext.Provider>
     </Box>

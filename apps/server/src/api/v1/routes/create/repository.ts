@@ -36,6 +36,7 @@ export async function createDependency(
       x: 0,
       y: 0,
     },
+    data: {},
     id: id1,
   });
   await (tx ?? db)?.insert(blocksEntity).values({

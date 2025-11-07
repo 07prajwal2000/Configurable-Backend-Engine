@@ -33,6 +33,10 @@ type State = {
   changeTracker: {
     tracker: Map<string, "edge" | "block">;
   };
+  blockSettings: {
+    opened: boolean;
+    blockId: string;
+  };
 };
 
 type Actions = {
@@ -70,10 +74,36 @@ type Actions = {
     remove: (id: string) => void;
     reset: () => void;
   };
+  blockSettings: {
+    open: (id: string) => void;
+    close: () => void;
+    setBlockId: (id: string) => void;
+  };
 };
 
 export const useEditorStore = create<State & Actions>()(
   immer((set, get) => ({
+    blockSettings: {
+      opened: false,
+      blockId: "",
+      open(id) {
+        set((state) => {
+          state.blockSettings.opened = true;
+          state.blockSettings.blockId = id;
+        });
+      },
+      close() {
+        set((state) => {
+          state.blockSettings.opened = false;
+          state.blockSettings.blockId = "";
+        });
+      },
+      setBlockId(id) {
+        set((state) => {
+          state.blockSettings.blockId = id;
+        });
+      },
+    },
     tabs: {
       activeTab: EditorTab.EDITOR,
       setEditorTab(tab) {
@@ -268,4 +298,8 @@ export function useEditorActionsStore() {
 
 export function useEditorChangeTrackerStore() {
   return useEditorStore((state) => state.changeTracker);
+}
+
+export function useEditorBlockSettingsStore() {
+  return useEditorStore((state) => state.blockSettings);
 }

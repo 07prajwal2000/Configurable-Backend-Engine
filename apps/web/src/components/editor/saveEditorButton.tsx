@@ -1,4 +1,3 @@
-import { showErrorNotification } from "@/lib/errorNotifier";
 import { routesService } from "@/services/routes";
 import { useCanvasBlocksStore, useCanvasEdgesStore } from "@/store/canvas";
 import { useEditorChangeTrackerStore } from "@/store/editor";
@@ -91,7 +90,6 @@ const SaveEditorButton = () => {
         withCloseButton: true,
       });
     } catch (error: any) {
-      showErrorNotification(error);
       notifications.update({
         id: notificationId,
         loading: false,

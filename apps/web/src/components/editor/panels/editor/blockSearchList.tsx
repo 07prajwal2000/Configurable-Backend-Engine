@@ -13,6 +13,7 @@ const BlockSearchList = () => {
     close: closeSearchbar,
     setCurrentIndex,
     currentIndex,
+    opened,
   } = useEditorSearchbarStore();
   const inCategoryMode = searchQuery?.trim().length === 0;
 
@@ -38,9 +39,10 @@ const BlockSearchList = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDownEvent);
     };
-  }, [searchQuery, currentIndex]);
+  }, [searchQuery, currentIndex, opened]);
 
   function handleKeyDownEvent(ev: KeyboardEvent) {
+    if (!opened) return;
     if (ev.key === "Escape") closeSearchbar();
     let incrementor = 0;
     if (ev.key === "ArrowUp") {

@@ -1,7 +1,7 @@
 import z from "zod";
-import { BaseBlock, BlockOutput } from "../baseBlock";
+import { BaseBlock, baseBlockDataSchema, BlockOutput } from "../baseBlock";
 
-export const entrypointBlockSchema = z.any().default({});
+export const entrypointBlockSchema = z.object(baseBlockDataSchema.shape);
 
 export class EntrypointBlock extends BaseBlock {
   async executeAsync(params?: any): Promise<BlockOutput> {

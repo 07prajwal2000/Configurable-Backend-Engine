@@ -151,3 +151,64 @@ export function createBlockData(block: BlockTypes) {
       return {};
   }
 }
+
+export function getHumanReadableBlockName(blockType: BlockTypes) {
+  switch (blockType) {
+    case BlockTypes.entrypoint:
+      return "Entrypoint";
+    case BlockTypes.httprequest:
+      return "HTTP Request";
+    case BlockTypes.if:
+      return "If";
+    case BlockTypes.httpgetheader:
+      return "HTTP Get Header";
+    case BlockTypes.httpsetheader:
+      return "HTTP Set Header";
+    case BlockTypes.httpgetparam:
+      return "HTTP Get Param";
+    case BlockTypes.httpgetcookie:
+      return "HTTP Get Cookie";
+    case BlockTypes.httpsetcookie:
+      return "HTTP Set Cookie";
+    case BlockTypes.httpgetrequestbody:
+      return "HTTP Get Request Body";
+    case BlockTypes.forloop:
+      return "For Loop";
+    case BlockTypes.foreachloop:
+      return "Foreach Loop";
+    case BlockTypes.transformer:
+      return "Transformer";
+    case BlockTypes.setvar:
+      return "Set Variable";
+    case BlockTypes.getvar:
+      return "Get Variable";
+    case BlockTypes.consolelog:
+      return "Console Log";
+    case BlockTypes.jsrunner:
+      return "JS Runner";
+    case BlockTypes.response:
+      return "Response";
+    case BlockTypes.arrayops:
+      return "Array Operations";
+    case BlockTypes.db_getsingle:
+      return "DB Get Single";
+    case BlockTypes.db_getall:
+      return "DB Get All";
+    case BlockTypes.db_delete:
+      return "DB Delete";
+    case BlockTypes.db_insert:
+      return "DB Insert";
+    case BlockTypes.db_insertbulk:
+      return "DB Insert Bulk";
+    case BlockTypes.db_update:
+      return "DB Update";
+    case BlockTypes.db_native:
+      return "DB Native";
+    case BlockTypes.db_transaction:
+      return "DB Transaction";
+    case BlockTypes.stickynote:
+      return "Sticky Note";
+    default:
+      return "Unknown";
+  }
+}

@@ -1,20 +1,23 @@
 import {
   ActionIcon,
   Box,
-  Center,
   Group,
   Paper,
+  Select,
   Stack,
   Text,
+  Textarea,
   useMantineTheme,
 } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { NodeProps, NodeResizer } from "@xyflow/react";
 import z from "zod";
 import { stickyNotesSchema } from "@cbe/blocks";
 import { useContext } from "react";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import { TbTrashFilled } from "react-icons/tb";
+import { useDebouncedCallback } from "@mantine/hooks";
+import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
 
 const colors = ["red", "green", "blue", "yellow"];
 
@@ -122,7 +125,16 @@ const StickyNote = (props: NodeProps) => {
         </Group>
       </Paper>
       {data.notes ? (
-        <Text style={{ fontSize: "8px" }}>{data.notes}</Text>
+        <Text
+          style={{
+            fontSize: "8px",
+            overflow: "hidden",
+            maxHeight: "100%",
+            maxWidth: "100%",
+          }}
+        >
+          {data.notes}
+        </Text>
       ) : (
         <Stack
           justify="center"
@@ -139,5 +151,77 @@ const StickyNote = (props: NodeProps) => {
     </Box>
   );
 };
+
+export function StickyNoteHelpPanel({
+  blockId,
+  blockData,
+}: DataSettingsProps<z.infer<typeof stickyNotesSchema>>) {
+  const { updateBlockData } = useContext(BlockCanvasContext);
+  function onColorChange(color: string) {
+    updateBlockData(blockId, {
+      color,
+    } as z.infer<typeof stickyNotesSchema>);
+  }
+  return (
+    <Stack>
+      <Select
+        leftSection={<Box bg={blockData.color} w={12} h={12} />}
+        data={colors}
+        value={blockData.color}
+        placeholder="Select a color"
+        label="Note Color"
+        onChange={(value) => onColorChange(value as string)}
+        renderOption={(item) => (
+          <Group>
+            <Box
+              bg={item.option.value}
+              style={{ cursor: "pointer" }}
+              w={12}
+              h={12}
+            />
+            <Text>{item.option.value}</Text>
+          </Group>
+        )}
+      />
+    </Stack>
+  );
+}
+
+export function StickyNoteSettingsPanel({
+  blockId,
+  blockData,
+}: DataSettingsProps<z.infer<typeof stickyNotesSchema>>) {
+  const { updateBlockData } = useContext(BlockCanvasContext);
+  const [note, setNote] = React.useState(blockData.notes);
+  const debouncedUpdate = useDebouncedCallback(() => {
+    onNoteChange(note);
+  }, 100);
+
+  useEffect(() => {
+    debouncedUpdate();
+  }, [note]);
+
+  function onNoteChange(value: string) {
+    updateBlockData(blockId, {
+      notes: value,
+    } as z.infer<typeof stickyNotesSchema>);
+  }
+
+  return (
+    <Box h={"100%"}>
+      <Textarea
+        placeholder="Add your notes here..."
+        label="Notes"
+        h={"100%"}
+        w={"100%"}
+        autosize
+        minRows={20}
+        maxRows={23}
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+      />
+    </Box>
+  );
+}
 
 export default StickyNote;

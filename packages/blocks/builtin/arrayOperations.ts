@@ -42,16 +42,18 @@ export class ArrayOperationsBlock extends BaseBlock {
         error: "value is required for array operation block",
       };
     }
+    let value = input.value;
+    if (input.operation === "push" || input.operation === "unshift") {
+      value =
+        typeof value == "string"
+          ? value.startsWith("js:")
+            ? this.context.vm.run(value.slice(3))
+            : value
+          : value;
+    }
     switch (input.operation) {
       case "push":
-        const value = input.value;
-        array.push(
-          typeof value == "string"
-            ? value.startsWith("js:")
-              ? this.context.vm.run(value.slice(3))
-              : value
-            : value
-        );
+        array.push(value);
         break;
       case "pop":
         array.pop();
@@ -60,7 +62,7 @@ export class ArrayOperationsBlock extends BaseBlock {
         array.shift();
         break;
       case "unshift":
-        array.unshift(input.value);
+        array.unshift(value);
         break;
     }
 
