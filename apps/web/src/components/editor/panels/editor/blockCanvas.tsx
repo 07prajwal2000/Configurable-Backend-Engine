@@ -29,6 +29,7 @@ import BlockSearchDrawer from "./blockSearchDrawer";
 import { createBlockData } from "@/lib/blockFactory";
 import EditorToolbox from "./editorToolbox";
 import BlockSettingsDialog from "../../blocks/settingsDialog/blockSettingsDialog";
+import { useBlockDataActionsStore } from "@/store/blockDataStore";
 
 type Props = {
   readonly?: boolean;
@@ -36,9 +37,10 @@ type Props = {
 
 const BlockCanvas = (props: Props) => {
   const {
-    blocks: { onBlockChange, deleteBlock, addBlock, updateBlockData },
+    blocks: { onBlockChange, deleteBlock, addBlock },
     edges: { onEdgeChange, addEdge, deleteEdge },
   } = useCanvasActionsStore();
+  const { updateBlockData, deleteBlockData } = useBlockDataActionsStore();
   const actions = useEditorActionsStore();
   const blocks = useCanvasBlocksStore();
   const edges = useCanvasEdgesStore();
@@ -58,6 +60,7 @@ const BlockCanvas = (props: Props) => {
   function deleteBlockWithHistory(id: string) {
     changeTracker.add(id, "block");
     deleteBlock(id);
+    deleteBlockData(id);
   }
   function addBlockWithHistory(block: BlockTypes) {
     const position = screenToFlowPosition({
@@ -67,11 +70,12 @@ const BlockCanvas = (props: Props) => {
     const data = createBlockData(block);
     const id = generateID();
     addBlock({
-      data,
       id,
       position,
       type: block,
+      data: {},
     });
+    updateBlockData(id, data);
     changeTracker.add(id, "block");
   }
   function updateBlockDataWithHistory(id: string, data: any) {

@@ -12,7 +12,6 @@ type Props = {
     id: string;
     data: any;
     type: BlockTypes;
-    position: { x: number; y: number };
   };
 };
 

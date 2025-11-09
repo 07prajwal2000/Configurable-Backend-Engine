@@ -10,10 +10,13 @@ import { useParams } from "next/navigation";
 import QueryLoader from "../query/queryLoader";
 import QueryError from "../query/queryError";
 import { useCanvasActionsStore } from "@/store/canvas";
+import { useBlockDataActionsStore } from "@/store/blockDataStore";
 
 const EditorWindow = () => {
   const resetStore = useEditorStore((state) => state.reset);
   const { bulkInsert } = useCanvasActionsStore();
+  const { bulkInsert: bulkInsertBlockData, clearBlockData } =
+    useBlockDataActionsStore();
   const { id } = useParams<{ id: string }>();
   const { useQuery } = routesQueries.getCanvasItems;
   const { data, isLoading, isError, error, refetch } = useQuery(id);
@@ -30,10 +33,14 @@ const EditorWindow = () => {
           type: "custom",
         }))
       );
+      bulkInsertBlockData(data.blocks);
     }
   }, [data]);
   useEffect(() => {
-    return resetStore;
+    return () => {
+      resetStore();
+      clearBlockData();
+    };
   }, []);
 
   const { activeTab } = useEditorTabStore();

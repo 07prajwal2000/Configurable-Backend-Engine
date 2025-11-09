@@ -19,9 +19,7 @@ type Actions = {
       addBlock: (block: BaseBlockType) => void;
       deleteBlock: (id: string) => void;
       onBlockChange: (changes: NodeChange[]) => void;
-      updateBlock: (id: string, block: Partial<BaseBlockType>) => void;
       formatBlocks(): string[];
-      updateBlockData: (id: string, data: any) => void;
     };
     edges: {
       addEdge: (edge: EdgeType) => void;
@@ -69,25 +67,12 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
       deleteBlock(id) {
         set({ blocks: get().blocks.filter((b) => b.id !== id) });
       },
-      updateBlock(id, newBlock) {
-        set({
-          blocks: get().blocks.map((block) =>
-            block.id === id ? { ...block, ...newBlock } : block
-          ),
-        });
-      },
       onBlockChange(changes) {
         set({
-          blocks: applyNodeChanges(changes, get().blocks) as BaseBlockType[],
-        });
-      },
-      updateBlockData(id, data) {
-        set({
-          blocks: get().blocks.map((block) =>
-            block.id === id
-              ? { ...block, data: { ...block.data, ...data } }
-              : block
-          ),
+          blocks: applyNodeChanges(
+            changes,
+            get().blocks as any
+          ) as BaseBlockType[],
         });
       },
     },

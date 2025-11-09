@@ -1,44 +1,50 @@
-import { enableMapSet, produce } from "immer";
 import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
 
 type State = {
-  blockData: Map<string, any>;
+  blockData: Record<string, any>;
 };
-
-enableMapSet();
 
 type Actions = {
   updateBlockData: (id: string, data: any) => void;
   deleteBlockData: (id: string) => void;
   clearBlockData: () => void;
+  bulkInsert: (blocks: { id: string; data: any }[]) => void;
 };
 
-const blockDataStore = create<State & { actions: Actions }>()(
-  immer((set, get) => ({
-    blockData: new Map(),
-    actions: {
-      updateBlockData(id, data) {
-        set((state) => {
-          produce(state, (draft) => {
-            draft.blockData.set(id, data);
-          });
-        });
-      },
-      deleteBlockData(id) {
-        set((state) => {
-          produce(state, (draft) => {
-            draft.blockData.delete(id);
-          });
-        });
-      },
-      clearBlockData() {
-        set((state) => {
-          produce(state, (draft) => {
-            draft.blockData.clear();
-          });
-        });
-      },
+const blockDataStore = create<State & { actions: Actions }>((set, get) => ({
+  blockData: {},
+  actions: {
+    updateBlockData(id, data) {
+      set((state) => ({
+        blockData: {
+          ...state.blockData,
+          [id]: { ...state.blockData[id], ...data }
+        }
+      }));
     },
-  }))
-);
+    deleteBlockData(id) {
+      set((state) => {
+        const newBlockData = { ...state.blockData };
+        delete newBlockData[id];
+        return { blockData: newBlockData };
+      });
+    },
+    clearBlockData() {
+      set({ blockData: {} });
+    },
+    bulkInsert(blocks) {
+      const newBlockData = blocks.reduce((acc, block) => {
+        acc[block.id] = block.data;
+        return acc;
+      }, {} as Record<string, any>);
+      
+      set({ blockData: newBlockData });
+    },
+  },
+}));
+
+export const useBlockDataStore = () =>
+  blockDataStore((state) => state.blockData);
+
+export const useBlockDataActionsStore = () =>
+  blockDataStore((state) => state.actions);

@@ -12,21 +12,24 @@ import DebouncedTextArea from "@/components/editors/debouncedTextArea";
 import { ForloopHelpPanel } from "../builtin/forloop";
 
 type Props = {
+  blockId: string;
   blockData: any;
   collapsed?: boolean;
+  blockType: BlockTypes;
 };
 
 const HelpPanel = (props: Props) => {
   if (props.collapsed) return <></>;
   const { updateBlockData } = useContext(BlockCanvasContext);
-  const data = props.blockData.data;
+  const data = props.blockData;
+  const blockType = props.blockType;
 
   function onBlockNameChange(value: string) {
-    updateBlockData(props.blockData.id, { blockName: value });
+    updateBlockData(props.blockId, { blockName: value });
   }
 
   function onBlockDescriptionChange(value: string) {
-    updateBlockData(props.blockData.id, { blockDescription: value });
+    updateBlockData(props.blockId, { blockDescription: value });
   }
 
   return (
@@ -38,14 +41,14 @@ const HelpPanel = (props: Props) => {
             label="Block ID"
             spellCheck={false}
             readOnly
-            value={props.blockData.id}
+            value={props.blockId}
           />
           <TextInput
             placeholder="Block Type"
             label="Block Type"
             spellCheck={false}
             readOnly
-            value={getHumanReadableBlockName(props.blockData.type)}
+            value={getHumanReadableBlockName(blockType)}
           />
         </Flex>
         <DebouncedTextInput
@@ -64,35 +67,20 @@ const HelpPanel = (props: Props) => {
           debounceDelay={250}
           onValueChange={(value) => onBlockDescriptionChange(value)}
         />
-        {props.blockData.type === BlockTypes.stickynote && (
-          <StickyNoteHelpPanel
-            blockId={props.blockData.id}
-            blockData={props.blockData.data}
-          />
+        {blockType === BlockTypes.stickynote && (
+          <StickyNoteHelpPanel blockId={props.blockId} blockData={data} />
         )}
-        {props.blockData.type === BlockTypes.response && (
-          <ResponseBlockHelpPanel
-            blockId={props.blockData.id}
-            blockData={props.blockData.data}
-          />
+        {blockType === BlockTypes.response && (
+          <ResponseBlockHelpPanel blockId={props.blockId} blockData={data} />
         )}
-        {props.blockData.type === BlockTypes.arrayops && (
-          <ArrayOperationsHelpPanel
-            blockId={props.blockData.id}
-            blockData={props.blockData.data}
-          />
+        {blockType === BlockTypes.arrayops && (
+          <ArrayOperationsHelpPanel blockId={props.blockId} blockData={data} />
         )}
-        {props.blockData.type === BlockTypes.foreachloop && (
-          <ForeachLoopHelpPanel
-            blockId={props.blockData.id}
-            blockData={props.blockData.data}
-          />
+        {blockType === BlockTypes.foreachloop && (
+          <ForeachLoopHelpPanel blockId={props.blockId} blockData={data} />
         )}
-        {props.blockData.type === BlockTypes.forloop && (
-          <ForloopHelpPanel
-            blockId={props.blockData.id}
-            blockData={props.blockData.data}
-          />
+        {blockType === BlockTypes.forloop && (
+          <ForloopHelpPanel blockId={props.blockId} blockData={data} />
         )}
       </Stack>
     </Box>

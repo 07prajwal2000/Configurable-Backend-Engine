@@ -1,5 +1,6 @@
 import { routesService } from "@/services/routes";
 import { useCanvasBlocksStore, useCanvasEdgesStore } from "@/store/canvas";
+import { useBlockDataStore } from "@/store/blockDataStore";
 import { useEditorChangeTrackerStore } from "@/store/editor";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -11,6 +12,7 @@ const SaveEditorButton = () => {
   const changeTracker = useEditorChangeTrackerStore();
   const blocks = useCanvasBlocksStore();
   const edges = useCanvasEdgesStore();
+  const blockDataStore = useBlockDataStore();
   const disableButton = changeTracker.tracker.size === 0;
   const { id: routeId } = useParams<{ id: string }>();
 
@@ -42,7 +44,10 @@ const SaveEditorButton = () => {
             action: exist ? "upsert" : "delete",
           });
           if (exist) {
-            blocksToSave.push(blocksMap.get(key)!);
+            const blockData = blockDataStore[key];
+            const block = blocksMap.get(key)!;
+            block.data = blockData;
+            blocksToSave.push(block);
           }
         } else if (value === "edge") {
           const exist = edgesMap.has(key);
