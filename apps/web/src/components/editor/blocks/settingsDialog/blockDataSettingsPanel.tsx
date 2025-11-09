@@ -4,6 +4,8 @@ import { BlockTypes } from "@/types/block";
 import { StickyNoteSettingsPanel } from "../builtin/stickyNote";
 import { ResponseBlockDataSettingsPanel } from "../response";
 import { ArrayOperationsSettingsPanel } from "../builtin/arrayOperations";
+import { ForeachLoopSettingsPanel } from "../builtin/foreachLoop";
+import { ForloopSettingsPanel } from "../builtin/forloop";
 
 type Props = {
   blockData: {
@@ -33,6 +35,20 @@ const BlockDataSettingsPanel = (props: Props) => {
     case BlockTypes.arrayops:
       return (
         <ArrayOperationsSettingsPanel
+          blockData={props.blockData.data}
+          blockId={props.blockData.id}
+        />
+      );
+    case BlockTypes.foreachloop:
+      return (
+        <ForeachLoopSettingsPanel
+          blockData={props.blockData.data}
+          blockId={props.blockData.id}
+        />
+      );
+    case BlockTypes.forloop:
+      return (
+        <ForloopSettingsPanel
           blockData={props.blockData.data}
           blockId={props.blockData.id}
         />

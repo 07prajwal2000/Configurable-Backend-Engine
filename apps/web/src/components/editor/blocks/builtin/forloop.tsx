@@ -4,6 +4,9 @@ import BlockHandle from "../handle";
 import { NodeProps, Position } from "@xyflow/react";
 import { TbInfinity } from "react-icons/tb";
 import { useMantineTheme } from "@mantine/core";
+import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
+import z from "zod";
+import { forLoopBlockSchema } from "@cbe/blocks";
 
 const Forloop = (props: NodeProps) => {
   const greenColor = useMantineTheme().colors.green[8];
@@ -37,6 +40,18 @@ const Forloop = (props: NodeProps) => {
       />
     </BaseBlock>
   );
+};
+
+export const ForloopHelpPanel = (
+  props: DataSettingsProps<z.infer<typeof forLoopBlockSchema>>
+) => {
+  return <></>;
+};
+
+export const ForloopSettingsPanel = (
+  props: DataSettingsProps<z.infer<typeof forLoopBlockSchema>>
+) => {
+  return <></>;
 };
 
 export default Forloop;

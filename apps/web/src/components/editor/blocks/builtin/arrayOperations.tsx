@@ -10,6 +10,7 @@ import { BlockTypes } from "@/types/block";
 import { Autocomplete, Checkbox, Group, Select, Stack } from "@mantine/core";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import JsTextInput from "@/components/editors/jsTextInput";
+import { useDebouncedCallback } from "@mantine/hooks";
 
 const ArrayOperations = (props: NodeProps) => {
   return (
@@ -48,6 +49,10 @@ export function ArrayOperationsSettingsPanel(
 ) {
   const data = props.blockData;
   const { updateBlockData } = useContext(BlockCanvasContext);
+  const [value, setValue] = React.useState(data.value);
+  const debouncedUpdate = useDebouncedCallback((value: string) => {
+    updateBlockData(props.blockId, { value });
+  }, 500);
 
   const availableVariables =
     (useNodes()
@@ -70,7 +75,8 @@ export function ArrayOperationsSettingsPanel(
     updateBlockData(props.blockId, { operation: value });
   }
   function onJsExpressionChange(value: string) {
-    updateBlockData(props.blockId, { value: value });
+    debouncedUpdate(value);
+    setValue(value);
   }
 
   return (
@@ -110,7 +116,7 @@ export function ArrayOperationsSettingsPanel(
           <JsTextInput
             label="Value"
             description="Operation is performed on the datasource with this value (can be Js expression !)"
-            value={data.value}
+            value={value}
             onValueChange={onJsExpressionChange}
           />
         )}

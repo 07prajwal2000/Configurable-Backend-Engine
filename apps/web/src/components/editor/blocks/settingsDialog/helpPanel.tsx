@@ -1,11 +1,15 @@
 import { BlockCanvasContext } from "@/context/blockCanvas";
-import { Box, Flex, Group, Stack, Textarea, TextInput } from "@mantine/core";
+import { Box, Flex, Stack, TextInput } from "@mantine/core";
 import React, { useContext } from "react";
 import { StickyNoteHelpPanel } from "../builtin/stickyNote";
 import { BlockTypes } from "@/types/block";
 import { getHumanReadableBlockName } from "@/lib/blockFactory";
 import { ResponseBlockHelpPanel } from "../response";
 import { ArrayOperationsHelpPanel } from "../builtin/arrayOperations";
+import { ForeachLoopHelpPanel } from "../builtin/foreachLoop";
+import DebouncedTextInput from "@/components/editors/debouncedTextInput";
+import DebouncedTextArea from "@/components/editors/debouncedTextArea";
+import { ForloopHelpPanel } from "../builtin/forloop";
 
 type Props = {
   blockData: any;
@@ -35,7 +39,6 @@ const HelpPanel = (props: Props) => {
             spellCheck={false}
             readOnly
             value={props.blockData.id}
-            onChange={(e) => onBlockNameChange(e.target.value)}
           />
           <TextInput
             placeholder="Block Type"
@@ -43,22 +46,23 @@ const HelpPanel = (props: Props) => {
             spellCheck={false}
             readOnly
             value={getHumanReadableBlockName(props.blockData.type)}
-            onChange={(e) => onBlockNameChange(e.target.value)}
           />
         </Flex>
-        <TextInput
+        <DebouncedTextInput
           placeholder="Block Name"
           label="Block Name"
           spellCheck={false}
           value={data.blockName || ""}
-          onChange={(e) => onBlockNameChange(e.target.value)}
+          debounceDelay={450}
+          onValueChange={(value) => onBlockNameChange(value)}
         />
-        <Textarea
+        <DebouncedTextArea
           placeholder="Block Description"
           label="Block Description"
           value={data.blockDescription || ""}
           rows={4}
-          onChange={(e) => onBlockDescriptionChange(e.target.value)}
+          debounceDelay={250}
+          onValueChange={(value) => onBlockDescriptionChange(value)}
         />
         {props.blockData.type === BlockTypes.stickynote && (
           <StickyNoteHelpPanel
@@ -74,6 +78,18 @@ const HelpPanel = (props: Props) => {
         )}
         {props.blockData.type === BlockTypes.arrayops && (
           <ArrayOperationsHelpPanel
+            blockId={props.blockData.id}
+            blockData={props.blockData.data}
+          />
+        )}
+        {props.blockData.type === BlockTypes.foreachloop && (
+          <ForeachLoopHelpPanel
+            blockId={props.blockData.id}
+            blockData={props.blockData.data}
+          />
+        )}
+        {props.blockData.type === BlockTypes.forloop && (
+          <ForloopHelpPanel
             blockId={props.blockData.id}
             blockData={props.blockData.data}
           />
