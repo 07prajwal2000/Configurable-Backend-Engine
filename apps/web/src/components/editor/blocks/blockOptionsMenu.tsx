@@ -13,6 +13,9 @@ const BlockOptionsMenu = (props: PropTypes) => {
   function onDeleteClick() {
     canvasContext.deleteBlock(props.blockId);
   }
+  function onOpenClick() {
+    canvasContext.openBlock(props.blockId);
+  }
   return (
     <Menu shadow="lg" width={200} withArrow position="bottom-end">
       <Menu.Target>
@@ -21,7 +24,12 @@ const BlockOptionsMenu = (props: PropTypes) => {
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Item leftSection={<TbExternalLink size={15} />}>Open</Menu.Item>
+        <Menu.Item
+          onClick={onOpenClick}
+          leftSection={<TbExternalLink size={15} />}
+        >
+          Open
+        </Menu.Item>
         <Menu.Item leftSection={<TbCopy size={15} />}>Duplicate</Menu.Item>
         {props.showDelete && (
           <Menu.Item

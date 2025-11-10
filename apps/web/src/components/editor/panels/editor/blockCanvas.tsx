@@ -112,6 +112,9 @@ const BlockCanvas = (props: Props) => {
   function onBlockDblClick(block: BaseBlockType) {
     blockSettings.open(block.id);
   }
+  function openBlock(id: string) {
+    blockSettings.open(id);
+  }
 
   return (
     <Box w={"100%"} h={"100%"}>
@@ -123,6 +126,7 @@ const BlockCanvas = (props: Props) => {
           deleteEdge: deleteEdgeWithHistory,
           addBlock: addBlockWithHistory,
           updateBlockData: updateBlockDataWithHistory,
+          openBlock,
         }}
       >
         <Box style={{ position: "absolute", zIndex: 10, right: 0 }} p={"lg"}>

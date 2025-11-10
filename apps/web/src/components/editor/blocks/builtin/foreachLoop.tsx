@@ -33,6 +33,7 @@ const ForeachLoop = (props: NodeProps) => {
         type="source"
         blockId={`${props.id}`}
         position={Position.Right}
+        color="green"
         handleVariant="executor"
       />
       <BlockHandle

@@ -11,6 +11,7 @@ import { Autocomplete, Checkbox, Group, Select, Stack } from "@mantine/core";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import JsTextInput from "@/components/editors/jsTextInput";
 import { useDebouncedCallback } from "@mantine/hooks";
+import VariableSelector from "@/components/editors/variableSelector";
 
 const ArrayOperations = (props: NodeProps) => {
   return (
@@ -54,16 +55,6 @@ export function ArrayOperationsSettingsPanel(
     updateBlockData(props.blockId, { value });
   }, 500);
 
-  const availableVariables =
-    (useNodes()
-      .filter((block) => block.type === BlockTypes.setvar)
-      .map((block) => block.data?.key) as string[]) ||
-    (useMemo(() => {
-      return useNodes()
-        .filter((block) => block.type === BlockTypes.setvar)
-        .map((block) => block.data?.key);
-    }, []) as string[]);
-
   function onUseParamChange(value: boolean) {
     updateBlockData(props.blockId, { useParamAsInput: value });
   }
@@ -81,12 +72,10 @@ export function ArrayOperationsSettingsPanel(
 
   return (
     <Stack>
-      <Autocomplete
+      <VariableSelector
         label="Datasource"
         placeholder="Type to search or enter variable name"
         description="Choose a variable which contains the target array on which operation will be performed"
-        data={availableVariables}
-        {...props}
         value={data.datasource}
         onChange={onDatasourceChange}
       />

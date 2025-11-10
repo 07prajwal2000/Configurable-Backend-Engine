@@ -6,6 +6,9 @@ import { ResponseBlockDataSettingsPanel } from "../response";
 import { ArrayOperationsSettingsPanel } from "../builtin/arrayOperations";
 import { ForeachLoopSettingsPanel } from "../builtin/foreachLoop";
 import { ForloopSettingsPanel } from "../builtin/forloop";
+import { GetVarSettingsPanel } from "../builtin/getVar";
+import { SetVarSettingsPanel } from "../builtin/setVar";
+import { IfConditionSettingsPanel } from "../builtin/if";
 
 type Props = {
   blockData: {
@@ -16,41 +19,37 @@ type Props = {
 };
 
 const BlockDataSettingsPanel = (props: Props) => {
+  const blockData = props.blockData.data;
+  const blockId = props.blockData.id;
   switch (props.blockData.type) {
     case BlockTypes.stickynote:
       return (
-        <StickyNoteSettingsPanel
-          blockId={props.blockData.id}
-          blockData={props.blockData.data}
-        />
+        <StickyNoteSettingsPanel blockId={blockId} blockData={blockData} />
       );
     case BlockTypes.response:
       return (
         <ResponseBlockDataSettingsPanel
-          blockData={props.blockData.data}
-          blockId={props.blockData.id}
+          blockData={blockData}
+          blockId={blockId}
         />
       );
     case BlockTypes.arrayops:
       return (
-        <ArrayOperationsSettingsPanel
-          blockData={props.blockData.data}
-          blockId={props.blockData.id}
-        />
+        <ArrayOperationsSettingsPanel blockData={blockData} blockId={blockId} />
       );
     case BlockTypes.foreachloop:
       return (
-        <ForeachLoopSettingsPanel
-          blockData={props.blockData.data}
-          blockId={props.blockData.id}
-        />
+        <ForeachLoopSettingsPanel blockData={blockData} blockId={blockId} />
       );
     case BlockTypes.forloop:
+      return <ForloopSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.getvar:
+      return <GetVarSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.setvar:
+      return <SetVarSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.if:
       return (
-        <ForloopSettingsPanel
-          blockData={props.blockData.data}
-          blockId={props.blockData.id}
-        />
+        <IfConditionSettingsPanel blockData={blockData} blockId={blockId} />
       );
     default:
       return (

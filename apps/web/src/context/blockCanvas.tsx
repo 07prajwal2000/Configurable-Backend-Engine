@@ -8,4 +8,5 @@ export const BlockCanvasContext = createContext<{
   deleteEdge: (id: string) => void;
   addBlock: (block: BlockTypes) => void;
   updateBlockData: (id: string, data: any) => void;
+  openBlock: (id: string) => void;
 }>({} as any);

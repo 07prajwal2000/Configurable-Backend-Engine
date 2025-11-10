@@ -21,6 +21,7 @@ import JsEditorDialog from "../dialog/jsEditorDialog";
 type Props = {
   jsEditBtnLabel?: string;
   onValueChange?: (value: string) => void;
+  onClear?: () => void;
 };
 
 const JsTextInput = (props: Props & TextInputProps) => {
@@ -29,6 +30,7 @@ const JsTextInput = (props: Props & TextInputProps) => {
     (typeof props.value === "string" && props.value.startsWith("js:")) || false;
 
   function onClearClicked() {
+    props.onClear && props.onClear();
     props.onValueChange && props.onValueChange("");
   }
 

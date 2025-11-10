@@ -10,6 +10,8 @@ import { ForeachLoopHelpPanel } from "../builtin/foreachLoop";
 import DebouncedTextInput from "@/components/editors/debouncedTextInput";
 import DebouncedTextArea from "@/components/editors/debouncedTextArea";
 import { ForloopHelpPanel } from "../builtin/forloop";
+import { GetVarHelpPanel } from "../builtin/getVar";
+import { IfConditionHelpPanel } from "../builtin/if";
 
 type Props = {
   blockId: string;
@@ -81,6 +83,12 @@ const HelpPanel = (props: Props) => {
         )}
         {blockType === BlockTypes.forloop && (
           <ForloopHelpPanel blockId={props.blockId} blockData={data} />
+        )}
+        {blockType === BlockTypes.getvar && (
+          <GetVarHelpPanel blockId={props.blockId} blockData={data} />
+        )}
+        {blockType === BlockTypes.if && (
+          <IfConditionHelpPanel blockId={props.blockId} blockData={data} />
         )}
       </Stack>
     </Box>
