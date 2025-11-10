@@ -18,11 +18,13 @@ import { BlockCanvasContext } from "@/context/blockCanvas";
 import { TbTrashFilled } from "react-icons/tb";
 import { useDebouncedCallback } from "@mantine/hooks";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
+import { useBlockDataStore } from "@/store/blockDataStore";
 
 const colors = ["red", "green", "blue", "yellow"];
 
 const StickyNote = (props: NodeProps) => {
-  const data = props.data as z.infer<typeof stickyNotesSchema>;
+  const blockDataStore = useBlockDataStore();
+  const data = blockDataStore[props.id] as z.infer<typeof stickyNotesSchema>;
   const { updateBlockData, deleteBlock } = useContext(BlockCanvasContext);
   const theme = useMantineTheme().colors;
   let borderColor = "",

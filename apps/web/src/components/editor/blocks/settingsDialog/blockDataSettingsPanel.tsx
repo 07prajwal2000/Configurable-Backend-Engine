@@ -9,6 +9,9 @@ import { ForloopSettingsPanel } from "../builtin/forloop";
 import { GetVarSettingsPanel } from "../builtin/getVar";
 import { SetVarSettingsPanel } from "../builtin/setVar";
 import { IfConditionSettingsPanel } from "../builtin/if";
+import { TransformerBlockDataSettingsPanel } from "../builtin/transformer";
+import { JsRunnerSettingsPanel } from "../builtin/jsRunner";
+import { ConsoleSettingsPanel } from "../builtin/logging/console";
 
 type Props = {
   blockData: {
@@ -51,6 +54,17 @@ const BlockDataSettingsPanel = (props: Props) => {
       return (
         <IfConditionSettingsPanel blockData={blockData} blockId={blockId} />
       );
+    case BlockTypes.transformer:
+      return (
+        <TransformerBlockDataSettingsPanel
+          blockData={blockData}
+          blockId={blockId}
+        />
+      );
+    case BlockTypes.jsrunner:
+      return <JsRunnerSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.consolelog:
+      return <ConsoleSettingsPanel blockData={blockData} blockId={blockId} />;
     default:
       return (
         <Center>No Data is available to edit for this type of block</Center>

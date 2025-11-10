@@ -12,6 +12,7 @@ import DebouncedTextArea from "@/components/editors/debouncedTextArea";
 import { ForloopHelpPanel } from "../builtin/forloop";
 import { GetVarHelpPanel } from "../builtin/getVar";
 import { IfConditionHelpPanel } from "../builtin/if";
+import { JsRunnerHelpPanel } from "../builtin/jsRunner";
 
 type Props = {
   blockId: string;
@@ -89,6 +90,9 @@ const HelpPanel = (props: Props) => {
         )}
         {blockType === BlockTypes.if && (
           <IfConditionHelpPanel blockId={props.blockId} blockData={data} />
+        )}
+        {blockType === BlockTypes.jsrunner && (
+          <JsRunnerHelpPanel blockId={props.blockId} blockData={data} />
         )}
       </Stack>
     </Box>

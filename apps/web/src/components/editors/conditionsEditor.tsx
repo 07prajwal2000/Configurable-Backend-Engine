@@ -3,6 +3,7 @@ import { ifBlockSchema } from "@cbe/blocks";
 import z from "zod";
 import {
   ActionIcon,
+  Box,
   Button,
   ButtonGroup,
   Center,
@@ -11,6 +12,7 @@ import {
   Group,
   Select,
   Stack,
+  Text,
 } from "@mantine/core";
 import JsEditor from "./jsEditor";
 import JsEditButton from "./jsEditButton";
@@ -69,8 +71,14 @@ const ConditionsEditor = (props: Props) => {
         const isJs = condition.operator === "js";
 
         return (
-          <>
-            {condition.chain === "or" && <Divider />}
+          <Box key={index}>
+            {condition.chain === "or" && (
+              <Group my={"xs"}>
+                <Divider flex={1} w={"100%"} />
+                <Text fw={"bold"}>OR</Text>
+                <Divider flex={1} w={"100%"} />
+              </Group>
+            )}
             {/* convert isJs block of group to grid */}
             {isJs && (
               <Grid columns={11}>
@@ -134,7 +142,7 @@ const ConditionsEditor = (props: Props) => {
                 </Grid.Col>
               </Grid>
             )}
-          </>
+          </Box>
         );
       })}
       <ButtonGroup>
