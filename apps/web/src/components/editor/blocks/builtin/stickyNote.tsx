@@ -30,6 +30,8 @@ const StickyNote = (props: NodeProps) => {
   let borderColor = "",
     backgroundColor = "",
     textColor = "";
+  if (!data) return <></>;
+
   switch (data.color) {
     case "red":
       borderColor = "red";

@@ -47,6 +47,7 @@ export class HttpRequestBlock extends BaseBlock {
       if (!useParam && body.startsWith("js:")) {
         body = await this.context.vm.runAsync(body.slice(3));
       }
+      body = this.parseIfJson(body);
       const newHeaders: Record<string, string> = {};
       for (let [key, value] of Object.entries(headers)) {
         key = key.startsWith("js:")
@@ -92,6 +93,14 @@ export class HttpRequestBlock extends BaseBlock {
           status: error?.response?.status,
         },
       };
+    }
+  }
+  private parseIfJson(body: any) {
+    if (typeof body !== "string") return body;
+    try {
+      return JSON.parse(body);
+    } catch (error) {
+      return body;
     }
   }
 }

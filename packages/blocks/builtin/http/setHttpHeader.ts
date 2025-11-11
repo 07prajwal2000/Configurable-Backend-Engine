@@ -14,6 +14,9 @@ export class SetHttpHeaderBlock extends BaseBlock {
     input.value = input.value.startsWith("js:")
       ? this.context.vm.run(input.value.slice(3))
       : input.value;
+    input.name = input.name.startsWith("js:")
+      ? this.context.vm.run(input.name.slice(3))
+      : input.name;
     this.context.vars.setHeader(input.name, input.value);
     return {
       continueIfFail: true,

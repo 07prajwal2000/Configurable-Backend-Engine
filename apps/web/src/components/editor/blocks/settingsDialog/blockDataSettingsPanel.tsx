@@ -12,6 +12,12 @@ import { IfConditionSettingsPanel } from "../builtin/if";
 import { TransformerBlockDataSettingsPanel } from "../builtin/transformer";
 import { JsRunnerSettingsPanel } from "../builtin/jsRunner";
 import { ConsoleSettingsPanel } from "../builtin/logging/console";
+import { GetCookieSettingsPanel } from "../builtin/http/getCookie";
+import { GetHeaderSettingsPanel } from "../builtin/http/getHeader";
+import { GetParamSettingsPanel } from "../builtin/http/getParam";
+import { SetHeaderSettingsPanel } from "../builtin/http/setHeader";
+import { HttpRequestSettingsPanel } from "../builtin/httpRequest";
+import { SetCookieSettingsPanel } from "../builtin/http/setCookie";
 
 type Props = {
   blockData: {
@@ -65,6 +71,20 @@ const BlockDataSettingsPanel = (props: Props) => {
       return <JsRunnerSettingsPanel blockData={blockData} blockId={blockId} />;
     case BlockTypes.consolelog:
       return <ConsoleSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.httpgetcookie:
+      return <GetCookieSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.httpgetheader:
+      return <GetHeaderSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.httpgetparam:
+      return <GetParamSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.httpsetheader:
+      return <SetHeaderSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.httprequest:
+      return (
+        <HttpRequestSettingsPanel blockData={blockData} blockId={blockId} />
+      );
+    case BlockTypes.httpsetcookie:
+      return <SetCookieSettingsPanel blockData={blockData} blockId={blockId} />;
     default:
       return (
         <Center>No Data is available to edit for this type of block</Center>

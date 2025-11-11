@@ -12,6 +12,9 @@ export const getHttpParamBlockSchema = z
 export class GetHttpParamBlock extends BaseBlock {
   override async executeAsync(params?: any): Promise<BlockOutput> {
     const input = this.input as z.infer<typeof getHttpParamBlockSchema>;
+    input.name = input.name.startsWith("js:")
+      ? this.context.vm.run(input.name.slice(3))
+      : input.name;
     let value = this.context.vars.getQueryParam(input.name);
     if (input.source === "path") {
       value = this.context.vars.getRouteParam(input.name);

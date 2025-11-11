@@ -11,6 +11,9 @@ export const getHttpCookieBlockSchema = z
 export class GetHttpCookieBlock extends BaseBlock {
   override async executeAsync(): Promise<BlockOutput> {
     const input = this.input as z.infer<typeof getHttpCookieBlockSchema>;
+    input.name = input.name.startsWith("js:")
+      ? this.context.vm.run(input.name.substring(3))
+      : input.name;
     const cookie = this.context.vars.getCookie(input.name);
     return {
       continueIfFail: true,
