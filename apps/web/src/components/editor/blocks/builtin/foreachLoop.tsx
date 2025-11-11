@@ -84,6 +84,7 @@ export function ForeachLoopSettingsPanel(
     <Stack>
       <Checkbox
         label="Use Param"
+        color="violet"
         description="Use input parameter as the datasource?"
         checked={props.blockData.useParam}
         onChange={onUseParamChange}

@@ -1,7 +1,7 @@
 import { db } from "../db";
 import { CHAN_ON_APPCONFIG_CHANGE, subscribeToChannel } from "../db/redis";
 import { appConfigEntity } from "../db/schema";
-import { EncryptionService } from "../modules/admin/appconfig/encryption";
+import { EncryptionService } from "../lib/encryption";
 
 export let appConfigCache: Record<string, string> = {};
 
@@ -20,18 +20,17 @@ async function loadConfigFromDB() {
       key: appConfigEntity.keyName,
       value: appConfigEntity.value,
       isEncrypted: appConfigEntity.isEncrypted,
-      encodingType: appConfigEntity.encoding_type,
+      encodingType: appConfigEntity.encodingType,
     })
     .from(appConfigEntity);
   const config: Record<string, string> = {};
   for (let cfg of configData) {
     let value = cfg.value;
+    value = EncryptionService.decodeData(value!, cfg.encodingType!);
     if (cfg.isEncrypted) {
       value = EncryptionService.decrypt(value!);
     }
-    value = EncryptionService.decodeData(value!, cfg.encodingType!);
     config[cfg.key!] = value;
   }
-
   return config;
 }

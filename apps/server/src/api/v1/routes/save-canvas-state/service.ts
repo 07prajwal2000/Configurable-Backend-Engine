@@ -10,11 +10,7 @@ import {
 import { NotFoundError } from "../../../../errors/notFoundError";
 import { db } from "../../../../db";
 import { ServerError } from "../../../../errors/serverError";
-import {
-  CHAN_ON_BLOCK_CHANGE,
-  CHAN_ON_EDGE_CHANGE,
-  publishMessage,
-} from "../../../../db/redis";
+import { CHAN_ON_ROUTE_CHANGE, publishMessage } from "../../../../db/redis";
 
 export default async function handleRequest(
   routeId: string,
@@ -48,6 +44,5 @@ export default async function handleRequest(
     return true;
   });
   if (!result) throw new ServerError("Something went wrong");
-  await publishMessage(CHAN_ON_BLOCK_CHANGE, "");
-  await publishMessage(CHAN_ON_EDGE_CHANGE, "");
+  await publishMessage(CHAN_ON_ROUTE_CHANGE, routeId);
 }

@@ -62,7 +62,7 @@ export const routesService = {
     id: string,
     data: z.infer<typeof updatePartialRequestSchema>
   ): Promise<z.infer<typeof updatePartialResponseSchema>> {
-    const result = await httpClient.put(`${baseUrl}/partial/${id}`, data);
+    const result = await httpClient.patch(`${baseUrl}/partial/${id}`, data);
     return result.data;
   },
   async delete(id: string) {

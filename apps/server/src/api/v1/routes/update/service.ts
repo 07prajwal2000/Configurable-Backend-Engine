@@ -33,7 +33,7 @@ export default async function handleRequest(
   if (!result) {
     throw new ServerError("Something went wrong while updating the route");
   }
-  await publishMessage(CHAN_ON_ROUTE_CHANGE, "");
+  await publishMessage(CHAN_ON_ROUTE_CHANGE, id);
   return {
     id: result.id,
     name: result.name!,

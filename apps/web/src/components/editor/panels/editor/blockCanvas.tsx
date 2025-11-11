@@ -59,6 +59,12 @@ const BlockCanvas = (props: Props) => {
   }
   function deleteBlockWithHistory(id: string) {
     changeTracker.add(id, "block");
+    // delete edges connected to this block
+    edges
+      .filter((edge) => edge.source === id || edge.target === id)
+      .forEach((edge) => {
+        deleteEdgeWithHistory(edge.id);
+      });
     deleteBlock(id);
     deleteBlockData(id);
   }

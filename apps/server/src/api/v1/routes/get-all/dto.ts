@@ -4,7 +4,6 @@ import {
   paginationResponseSchema,
 } from "../../../../lib/pagination";
 import { createSelectSchema } from "drizzle-zod";
-import { routesEntity } from "../../../../db/schema";
 
 export const fieldEnumSchema = z.enum([
   "",
@@ -38,10 +37,14 @@ export const requestQuerySchema = z
 
 export const responseSchema = z.object({
   data: z.array(
-    createSelectSchema(routesEntity).extend({
+    z.object({
+      id: z.string(),
+      name: z.string().nullable(),
+      path: z.string().nullable(),
+      active: z.boolean().nullable(),
+      method: z.string().nullable(),
       createdAt: z.string(),
       updatedAt: z.string(),
-      projectName: z.string(),
     })
   ),
   pagination: paginationResponseSchema,

@@ -14,7 +14,7 @@ import {
   UpdateAppConfigInput,
   AppConfigResponse,
 } from "./dto";
-import { EncryptionService } from "./encryption";
+import { EncryptionService } from "../../../lib/encryption";
 import { HttpError } from "../../../errors/httpError";
 import { CHAN_ON_APPCONFIG_CHANGE, publishMessage } from "../../../db/redis";
 
@@ -86,10 +86,10 @@ export async function getAppConfigByIdService(
 ): Promise<AppConfigResponse | null> {
   const result = await getAppConfigById(id);
   if (!result) return null;
-  if (result.encoding_type !== "plaintext" && !result.isEncrypted) {
+  if (result.encodingType !== "plaintext" && !result.isEncrypted) {
     result.value = EncryptionService.decodeData(
       result.value!,
-      result.encoding_type!
+      result.encodingType!
     );
   }
   const convertedResult = convertDbResultToAppConfigType(result);
@@ -110,10 +110,10 @@ export async function getAllAppConfigsService(pagination?: PaginationInput) {
     return {
       ...result,
       data: result.data.map((config) => {
-        if (config.encoding_type !== "plaintext" && !config.isEncrypted)
+        if (config.encodingType !== "plaintext" && !config.isEncrypted)
           config.value = EncryptionService.decodeData(
             config.value!,
-            config.encoding_type!
+            config.encodingType!
           );
         const converted = convertDbResultToAppConfigType(config);
         return formatAppConfigResponse(converted);
@@ -177,7 +177,7 @@ export async function updateAppConfigService(
   await publishMessage(CHAN_ON_APPCONFIG_CHANGE, "");
   return formatAppConfigResponse({
     id: result.id!,
-    encoding_type: result.encoding_type!,
+    encoding_type: result.encodingType!,
     isEncrypted: result.isEncrypted!,
     keyName: result.keyName!,
     value: result.value!,

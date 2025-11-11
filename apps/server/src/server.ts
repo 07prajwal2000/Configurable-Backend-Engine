@@ -39,12 +39,12 @@ async function main() {
   await initializeRedis();
   await loadAppConfig();
   await loadIntegrations();
-  const parser = await loadRoutes();
-  await mapRouter(app, parser);
   if (adminRoutesEnabled) {
     mapAdminRouter(app);
     mapVersionedAdminRoutes(app);
   }
+  const parser = await loadRoutes();
+  await mapRouter(app, parser);
 }
 main();
 

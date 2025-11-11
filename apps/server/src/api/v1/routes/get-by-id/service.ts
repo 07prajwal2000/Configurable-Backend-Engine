@@ -11,8 +11,14 @@ export default async function handleRequest(
     throw new NotFoundError("no route found with id: " + id);
   }
   return {
-    ...route,
+    id: route.id,
+    name: route.name!,
+    path: route.path!,
+    active: route.active!,
+    method: route.method!,
+    createdBy: route.createdBy!,
     createdAt: route.createdAt.toISOString(),
     updatedAt: route.updatedAt.toISOString(),
+    projectName: route.projectName!,
   };
 }

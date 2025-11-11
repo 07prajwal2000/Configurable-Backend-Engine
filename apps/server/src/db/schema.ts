@@ -117,7 +117,7 @@ export const appConfigEntity = pgTable("app_config", {
   description: text(),
   value: text(),
   isEncrypted: boolean("is_encrypted").default(false),
-  encoding_type: encodingTypeEnum(),
+  encodingType: encodingTypeEnum("encoding_type"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

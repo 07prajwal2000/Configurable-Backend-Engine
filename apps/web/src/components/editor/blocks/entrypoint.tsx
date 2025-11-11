@@ -19,7 +19,7 @@ const Entrypoint = (props: NodeProps) => {
     >
       <BlockHandle
         type="source"
-        blockId={`${props.id}`}
+        blockId={props.id}
         position={Position.Bottom}
       />
     </BaseBlock>

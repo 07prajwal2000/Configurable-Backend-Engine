@@ -44,7 +44,7 @@ const openapiRouteOptions: DescribeRouteOptions = {
 };
 
 export default function (app: Hono) {
-  app.put(
+  app.patch(
     "/partial/:id",
     describeRoute(openapiRouteOptions),
     validator("param", requestRouteSchema, zodErrorCallbackParser),

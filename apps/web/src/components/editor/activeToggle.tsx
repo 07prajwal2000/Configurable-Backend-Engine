@@ -73,6 +73,7 @@ const ActiveToggle = (props: Props) => {
       label={active ? "Active" : "Inactive"}
       onChange={toggleActive}
       checked={active}
+      color="violet"
     />
   );
 };

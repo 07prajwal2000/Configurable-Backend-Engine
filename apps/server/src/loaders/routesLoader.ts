@@ -1,7 +1,11 @@
 import { HttpRouteParser } from "@cbe/lib";
 import { db } from "../db";
 import { routesEntity } from "../db/schema";
-import { CHAN_ON_ROUTE_CHANGE, subscribeToChannel } from "../db/redis";
+import {
+  CHAN_ON_ROUTE_CHANGE,
+  deleteCacheKey,
+  subscribeToChannel,
+} from "../db/redis";
 import { eq } from "drizzle-orm";
 
 export async function loadRoutes() {
@@ -12,7 +16,8 @@ export async function loadRoutes() {
   if (canHotreload) {
     // register to chan:on-route-change signal from redis event
     console.log("routes hot reloading enabled");
-    subscribeToChannel(CHAN_ON_ROUTE_CHANGE, async () => {
+    subscribeToChannel(CHAN_ON_ROUTE_CHANGE, async (id) => {
+      if (id) await deleteCacheKey(`${id}_GRAPH`);
       const fetchedRoutes = await fetchRoutes();
       // @ts-ignore
       parser.rebuildRoutes(fetchedRoutes);

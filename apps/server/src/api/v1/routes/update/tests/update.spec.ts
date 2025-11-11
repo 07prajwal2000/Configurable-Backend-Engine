@@ -43,6 +43,7 @@ describe("update route", () => {
       name: "A",
       path: "/a",
       method: "GET" as HttpMethod,
+      active: true,
     });
     expect(result).toEqual({
       id: "123",
@@ -67,6 +68,7 @@ describe("update route", () => {
         name: "A",
         path: "/a",
         method: "GET" as HttpMethod,
+        active: true,
       })
     ).rejects.toThrowError(NotFoundError);
   });
@@ -76,6 +78,7 @@ describe("update route", () => {
       name: "A",
       path: "/a",
       method: "GET" as HttpMethod,
+      active: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

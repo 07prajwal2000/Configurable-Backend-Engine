@@ -47,6 +47,6 @@ export default async function handleRequest(
       id: newRouteId,
     };
   });
-  await publishMessage(CHAN_ON_ROUTE_CHANGE, "");
+  await publishMessage(CHAN_ON_ROUTE_CHANGE, result.id);
   return result;
 }

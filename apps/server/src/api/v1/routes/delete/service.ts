@@ -15,6 +15,6 @@ export default async function handleRequest(
     }
     await deleteRoute(id, tx);
   });
-  await publishMessage(CHAN_ON_ROUTE_CHANGE, "");
+  await publishMessage(CHAN_ON_ROUTE_CHANGE, id);
   return "";
 }

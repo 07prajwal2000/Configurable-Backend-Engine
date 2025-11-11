@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { handleRequest } from "./service";
 
 export async function mapRouter(app: Hono, parser: HttpRouteParser) {
-  app.all("/api/*", async (c) => {
+  app.all("*", async (c) => {
     try {
       const response = await handleRequest(c, parser);
       c.status(response.status);

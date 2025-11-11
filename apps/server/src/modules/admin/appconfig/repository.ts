@@ -191,5 +191,5 @@ export async function getAppConfigsByEncodingType(
   return await db
     .select()
     .from(appConfigEntity)
-    .where(eq(appConfigEntity.encoding_type, encodingType));
+    .where(eq(appConfigEntity.encodingType, encodingType));
 }

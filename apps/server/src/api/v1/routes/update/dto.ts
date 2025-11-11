@@ -1,12 +1,10 @@
 import { z } from "zod";
 import { HttpMethod } from "../../../../db/schema";
+import { ROUTE_REGEX } from "../constants";
 
 export const requestBodySchema = z.object({
   name: z.string().min(2).max(255),
-  path: z
-    .string()
-    .min(1)
-    .regex(/^\/(?!.*\/\/)[a-zA-Z0-9-\/]*$/),
+  path: z.string().min(1).regex(ROUTE_REGEX),
   method: z.enum(HttpMethod),
   active: z.boolean(),
 });
