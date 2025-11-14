@@ -1,24 +1,26 @@
 import { z } from "zod";
-import { responseSchema } from "./dto";
+import { requestQuerySchema, responseSchema } from "./dto";
 import { getAppConfigList } from "./repository";
-import { EncryptionService } from "../../../../lib/encryption";
 
 export default async function handleRequest(
-  page: number,
-  perPage: number
+  params: z.infer<typeof requestQuerySchema>
 ): Promise<z.infer<typeof responseSchema>> {
+  const { page, perPage, search, sort, sortBy } = params;
+
   const offset = perPage * (page - 1);
 
-  const { result, totalCount } = await getAppConfigList(offset, perPage);
+  const { result, totalCount } = await getAppConfigList(
+    offset,
+    perPage,
+    search,
+    sort,
+    sortBy
+  );
   const hasNext = offset + result.length < totalCount;
 
   const modifiedList = result.map((item) => ({
     id: item.id,
     keyName: item.keyName!,
-    description: item.description!,
-    value: item.isEncrypted
-      ? EncryptionService.maskValue(item.value!, "*")
-      : item.value!,
     isEncrypted: item.isEncrypted!,
     encodingType: item.encodingType!,
     createdAt: item.createdAt!.toISOString(),

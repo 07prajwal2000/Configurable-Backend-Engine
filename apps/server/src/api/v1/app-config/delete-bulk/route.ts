@@ -5,18 +5,18 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { requestQuerySchema, responseSchema } from "./dto";
+import { requestBodySchema, responseSchema } from "./dto";
 import handleRequest from "./service";
 import zodErrorCallbackParser from "../../../../middlewares/zodErrorCallbackParser";
 import { validationErrorSchema } from "../../../../errors/validationError";
 
 const openapiRouteOptions: DescribeRouteOptions = {
-  description: "Get all app configs",
-  operationId: "get-all-app-configs",
+  description: "Delete multiple app configs by ids",
+  operationId: "delete-app-configs-bulk",
   tags: ["App Config"],
   responses: {
     200: {
-      description: "Successful",
+      description: "Successful deletion",
       content: {
         "application/json": {
           schema: resolver(responseSchema),
@@ -24,7 +24,7 @@ const openapiRouteOptions: DescribeRouteOptions = {
       },
     },
     400: {
-      description: "Pagination parameters are invalid",
+      description: "Validation/Regular Error",
       content: {
         "application/json": {
           schema: resolver(validationErrorSchema),
@@ -35,14 +35,14 @@ const openapiRouteOptions: DescribeRouteOptions = {
 };
 
 export default function (app: Hono) {
-  app.get(
-    "/list",
+  app.post(
+    "/delete-bulk",
     describeRoute(openapiRouteOptions),
-    validator("query", requestQuerySchema, zodErrorCallbackParser),
+    validator("json", requestBodySchema, zodErrorCallbackParser),
     async (c) => {
-      const params = c.req.valid("query");
-      const response = await handleRequest(params);
-      return c.json(response);
+      const body = c.req.valid("json");
+      await handleRequest(body);
+      return c.body(null, 200);
     }
   );
 }

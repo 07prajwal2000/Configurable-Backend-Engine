@@ -4,6 +4,7 @@ import registerGetByIdRoute from "./get-by-id/route";
 import registerCreateRoute from "./create/route";
 import registerUpdateRoute from "./update/route";
 import registerDeleteRoute from "./delete/route";
+import registerDeleteBulkRoute from "./delete-bulk/route";
 
 export default {
   name: "app-config",
@@ -14,5 +15,6 @@ export default {
     registerCreateRoute(router);
     registerUpdateRoute(router);
     registerDeleteRoute(router);
+    registerDeleteBulkRoute(router);
   },
 };

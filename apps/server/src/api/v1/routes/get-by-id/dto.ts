@@ -6,10 +6,8 @@ export const requestRouteSchema = z.object({
   id: z.uuidv7(),
 });
 
-export const responseSchema = createSelectSchema(routesEntity)
-  .extend({
-    createdAt: z.string(),
-    updatedAt: z.string(),
-    projectName: z.string(),
-  })
-  .omit({ projectId: true });
+export const responseSchema = createSelectSchema(routesEntity).extend({
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  projectName: z.string(),
+});

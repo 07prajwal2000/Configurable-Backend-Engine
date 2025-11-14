@@ -1,9 +1,10 @@
+"use client";
 import CreateNewMenu from "@/components/createNewMenu";
 import OverviewTabs from "@/components/overviewTabs";
 import { Stack, Group, Text } from "@mantine/core";
 import React from "react";
 
-const Page = async (params: PageProps<"/[projectId]">) => {
+const Page = async (params: any) => {
   const { projectId } = await params.params;
   return (
     <Stack style={{ height: "100vh" }} p={"lg"}>

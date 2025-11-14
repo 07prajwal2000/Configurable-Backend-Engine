@@ -1,3 +1,4 @@
+"use client;";
 import CreateNewMenu from "@/components/createNewMenu";
 import OverviewTabs from "@/components/overviewTabs";
 import { Group, Stack, Text } from "@mantine/core";

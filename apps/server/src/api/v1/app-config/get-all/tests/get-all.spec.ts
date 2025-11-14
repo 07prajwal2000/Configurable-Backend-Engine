@@ -18,8 +18,6 @@ describe("getAllAppConfig service", () => {
     {
       id: 1,
       keyName: "test.key.1",
-      description: "Test config 1",
-      value: "test-value-1",
       isEncrypted: false,
       encodingType: "plaintext",
       createdAt: new Date("2023-01-01T00:00:00.000Z"),
@@ -28,8 +26,6 @@ describe("getAllAppConfig service", () => {
     {
       id: 2,
       keyName: "test.key.2",
-      description: "Test config 2",
-      value: "sensitive-data-1234",
       isEncrypted: true,
       encodingType: "plaintext",
       createdAt: new Date("2023-01-02T00:00:00.000Z"),
@@ -55,7 +51,10 @@ describe("getAllAppConfig service", () => {
       totalCount: 2,
     });
 
-    const result = await handleRequest(1, 10);
+    const result = await handleRequest({
+      page: 1,
+      perPage: 10,
+    });
 
     // Verify the response matches the schema
     expect(() => responseSchema.parse(result)).not.toThrow();
@@ -69,8 +68,6 @@ describe("getAllAppConfig service", () => {
     result.data.forEach((config) => {
       expect(config).toHaveProperty("id");
       expect(config).toHaveProperty("keyName");
-      expect(config).toHaveProperty("description");
-      expect(config).toHaveProperty("value");
       expect(config).toHaveProperty("isEncrypted");
       expect(config).toHaveProperty("encodingType");
       expect(config).toHaveProperty("createdAt");
@@ -80,23 +77,6 @@ describe("getAllAppConfig service", () => {
       expect(() => new Date(config.createdAt)).not.toThrow();
       expect(() => new Date(config.updatedAt)).not.toThrow();
     });
-  });
-
-  it("should mask encrypted values in the response", async () => {
-    // Mock the repository response with an encrypted config
-    getAppConfigListMock.mockResolvedValueOnce({
-      result: JSON.parse(JSON.stringify([mockConfigs[1]])).map((item: any) => ({
-        ...item,
-        createdAt: new Date(item.createdAt),
-        updatedAt: new Date(item.updatedAt),
-      })), // This one has isEncrypted: true
-      totalCount: 1,
-    });
-
-    const result = await handleRequest(1, 10);
-
-    // The encrypted value should be masked
-    expect(result.data[0].value.split("").every((x) => x === "*")).toBe(true);
   });
 
   it("should return correct pagination metadata", async () => {
@@ -115,7 +95,10 @@ describe("getAllAppConfig service", () => {
       totalCount,
     });
 
-    const result = await handleRequest(page, perPage);
+    const result = await handleRequest({
+      page,
+      perPage,
+    });
 
     expect(result.pagination).toEqual({
       hasNext: true,
@@ -130,7 +113,10 @@ describe("getAllAppConfig service", () => {
       totalCount: 0,
     });
 
-    const result = await handleRequest(1, 10);
+    const result = await handleRequest({
+      page: 1,
+      perPage: 10,
+    });
 
     expect(result.data).toEqual([]);
     expect(result.pagination).toEqual({

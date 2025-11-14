@@ -4,15 +4,28 @@ import {
   paginationResponseSchema,
 } from "../../../../lib/pagination";
 
-export const requestQuerySchema = paginationRequestQuerySchema;
+export const requestQuerySchema = paginationRequestQuerySchema.extend({
+  search: z.string().optional(),
+  sort: z.enum(["asc", "desc"]).optional(),
+  sortBy: z
+    .enum([
+      "id",
+      "keyName",
+      "createdAt",
+      "updatedAt",
+      "isEncrypted",
+      "encodingType",
+      "createdAt",
+      "updatedAt",
+    ])
+    .optional(),
+});
 
 export const responseSchema = z.object({
   data: z.array(
     z.object({
       id: z.number(),
       keyName: z.string(),
-      description: z.string(),
-      value: z.string(),
       isEncrypted: z.boolean(),
       encodingType: z.enum(["plaintext", "base64", "hex"]),
       createdAt: z.string(),

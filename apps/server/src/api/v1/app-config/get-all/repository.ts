@@ -1,37 +1,58 @@
 import { db, DbTransactionType } from "../../../../db";
 import { appConfigEntity } from "../../../../db/schema";
-import { count } from "drizzle-orm";
+import { count, ilike, asc, desc } from "drizzle-orm";
 
 export async function getAppConfigList(
   skip: number,
   take: number,
+  search?: string,
+  sort: "asc" | "desc" = "desc",
+  sortBy: keyof typeof appConfigEntity = "updatedAt",
   tx?: DbTransactionType
 ) {
-  const result = await (tx ?? db)
+  const query = (tx ?? db)
     .select({
       id: appConfigEntity.id,
       keyName: appConfigEntity.keyName,
-      description: appConfigEntity.description,
-      value: appConfigEntity.value,
       isEncrypted: appConfigEntity.isEncrypted,
       encodingType: appConfigEntity.encodingType,
       createdAt: appConfigEntity.createdAt,
       updatedAt: appConfigEntity.updatedAt,
     })
-    .from(appConfigEntity)
+    .from(appConfigEntity);
+
+  if (search) {
+    query.where(ilike(appConfigEntity.keyName, `%${search}%`));
+  }
+
+  const result = await query
+    .orderBy(
+      sort === "asc"
+        ? asc(appConfigEntity[sortBy] as any)
+        : desc(appConfigEntity[sortBy] as any)
+    )
     .offset(skip)
     .limit(take);
 
-  const totalCount = await getAppConfigCount(tx);
+  const totalCount = await getAppConfigCount(search, tx);
 
   return { result, totalCount };
 }
 
-export async function getAppConfigCount(tx?: DbTransactionType) {
-  const totalCount = await (tx ?? db)
+export async function getAppConfigCount(
+  search?: string,
+  tx?: DbTransactionType
+) {
+  const query = (tx ?? db)
     .select({
       count: count(appConfigEntity.id),
     })
     .from(appConfigEntity);
-  return totalCount[0].count;
+
+  if (search) {
+    query.where(ilike(appConfigEntity.keyName, `%${search}%`));
+  }
+
+  const result = await query;
+  return result[0].count;
 }
