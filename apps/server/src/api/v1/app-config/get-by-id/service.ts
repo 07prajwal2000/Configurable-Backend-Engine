@@ -16,7 +16,15 @@ export default async function handleRequest(
     throw new NotFoundError(`App config not found with id: ${id}`);
   }
   if (result.isEncrypted) {
-    result.value = EncryptionService.maskValue(result.value!, "*");
+    result.value = EncryptionService.maskValue(result.value!, "*").substring(
+      0,
+      20
+    );
+  } else {
+    result.value = EncryptionService.decodeData(
+      result.value!,
+      result.encodingType!
+    );
   }
   return {
     id: result.id,

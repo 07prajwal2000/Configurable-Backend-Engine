@@ -20,7 +20,7 @@ const FormDialog = ({
       withCloseButton
       onClose={onClose}
     >
-      <Modal.Body>{children}</Modal.Body>
+      <Modal.Body p={"xs"}>{children}</Modal.Body>
     </Modal>
   );
 };

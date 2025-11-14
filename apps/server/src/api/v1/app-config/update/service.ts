@@ -29,7 +29,7 @@ export default async function handleRequest(
       throw new BadRequestError("Cannot decrypt value once it is encrypted");
     }
     const keyNameExists = await getConfigByKeyName(body.keyName, tx);
-    if (keyNameExists?.id !== id) {
+    if (keyNameExists?.id && keyNameExists.id !== id) {
       throw new ConflictError("Key name already exists");
     }
     if ((config.isEncrypted || body.isEncrypted) && body.value !== undefined) {

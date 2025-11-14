@@ -47,7 +47,7 @@ const ConfirmDialog = (props: PropTypes) => {
           {props.confirmText ?? "Confirm"}
         </Button>
         <Button onClick={props.onClose} variant="subtle" color="dark">
-          {props.confirmText ?? "Cancel"}
+          {props.cancelText ?? "Cancel"}
         </Button>
       </Group>
     </Modal>

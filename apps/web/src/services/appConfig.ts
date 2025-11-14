@@ -75,6 +75,15 @@ export const appConfigService = {
     const result = await httpClient.post(`${baseUrl}/delete-bulk`, body);
     return result.data;
   },
+  async getKeysList(search: string): Promise<string[]> {
+    const queryParams = new URLSearchParams();
+    if (search) {
+      queryParams.set("search", search);
+    }
+    const url = `${baseUrl}/keys?${queryParams.toString()}`;
+    const result = await httpClient.get(url);
+    return result.data;
+  },
   deleteBulkRequestBodySchema,
   createRequestBodySchema,
   updateRequestBodySchema,

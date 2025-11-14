@@ -17,6 +17,7 @@ type AppConfigContextType = {
   selectedItems: Set<string>;
   selectItem: (id: string) => void;
   deselectItem: (id: string) => void;
+  clearSelection: () => void;
 };
 
 const AppConfigContext = createContext({} as AppConfigContextType);
@@ -50,6 +51,10 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
     });
   };
 
+  const clearSelection = () => {
+    setSelectedItems(new Set<string>());
+  };
+
   const value: AppConfigContextType = {
     sort,
     setSort,
@@ -66,6 +71,7 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
     selectedItems,
     selectItem,
     deselectItem,
+    clearSelection,
   };
 
   return (

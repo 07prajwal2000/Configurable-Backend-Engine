@@ -125,8 +125,8 @@ const AppConfigTable: React.FC<AppConfigTableProps> = ({
   return (
     <Box
       style={{
-        overflowX: "auto",
-        height: "100%",
+        overflowY: "auto",
+        maxHeight: "75vh",
         display: "flex",
         flexDirection: "column",
       }}
@@ -185,10 +185,11 @@ const AppConfigTable: React.FC<AppConfigTableProps> = ({
                 <Table.Td>{getTimeAgo(item.createdAt)}</Table.Td>
               </Tooltip>
               <Table.Td style={{ width: "50px", textAlign: "center" }}>
-                <AppConfigTableEditButton id={item.id} />
+                <AppConfigTableEditButton id={item.id.toString()} />
               </Table.Td>
             </Table.Tr>
           ))}
+
           {data.length === 0 && (
             <Table.Tr>
               <Table.Td colSpan={8}>

@@ -1,43 +1,59 @@
 import { useAppConfig } from "@/context/appConfigPage";
 import { ActionIcon } from "@mantine/core";
 import { useQueryClient } from "@tanstack/react-query";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { TbTrash } from "react-icons/tb";
+import ConfirmDialog from "../dialog/confirmDialog";
+import { appConfigQuery } from "@/query/appConfigQuery";
+import { showNotification } from "@mantine/notifications";
 
 const AppConfigDeleteButton = () => {
   const queryClient = useQueryClient();
-  const { selectedItems } = useAppConfig();
+  const { selectedItems, clearSelection } = useAppConfig();
+  const selectedIds = useMemo(
+    () => Array.from(selectedItems).map((item) => Number(item)),
+    [selectedItems]
+  );
+  const deleteBulkMutation = appConfigQuery.deleteBulk.useMutation(queryClient);
+
+  const [open, setOpen] = useState(false);
 
   const handleDelete = useCallback(async () => {
     if (selectedItems.size === 0) return;
-
-    const selectedIds = Array.from(selectedItems);
-    console.log("Deleting items:", selectedIds);
-
-    // Partial implementation - getting all selected IDs and handling loading states
     try {
-      // TODO: Implement actual delete mutation
-      // for (const id of selectedIds) {
-      //   await appConfigService.delete(id);
-      // }
-      // Invalidate queries after deletion
-      queryClient.invalidateQueries({
-        queryKey: ["app-config", "list"],
-      });
+      await deleteBulkMutation.mutateAsync({ ids: selectedIds });
+      clearSelection();
     } catch (error) {
-      console.error("Error deleting items:", error);
+      showNotification({
+        title: "Error",
+        message: "Failed to delete items",
+        color: "red",
+      });
+    } finally {
+      setOpen(false);
     }
-  }, [selectedItems, queryClient]);
+  }, [selectedIds]);
 
   return (
-    <ActionIcon
-      color="red"
-      variant="light"
-      disabled={selectedItems.size === 0}
-      onClick={handleDelete}
-    >
-      <TbTrash />
-    </ActionIcon>
+    <>
+      <ActionIcon
+        color="red"
+        variant="light"
+        disabled={selectedItems.size === 0}
+        onClick={() => setOpen(true)}
+      >
+        <TbTrash />
+      </ActionIcon>
+      <ConfirmDialog
+        title="Delete"
+        children="Are you sure you want to delete these items?"
+        onConfirm={handleDelete}
+        open={open}
+        onClose={() => setOpen(false)}
+        confirmText="Delete"
+        confirmColor="red"
+      />
+    </>
   );
 };
 

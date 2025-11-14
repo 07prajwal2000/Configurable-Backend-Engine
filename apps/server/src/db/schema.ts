@@ -34,7 +34,10 @@ export const projectsEntity = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  () => [index("name"), index("updated_at")]
+  (table) => [
+    index("idx_projects_name").on(table.name),
+    index("idx_projects_updated_at").on(table.updatedAt),
+  ]
 );
 
 export const routesEntity = pgTable(
@@ -57,7 +60,10 @@ export const routesEntity = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  () => [index("project_id"), index("path")]
+  (table) => [
+    index("idx_routes_project_id").on(table.projectId),
+    index("idx_routes_path").on(table.path),
+  ]
 );
 
 export const blocksEntity = pgTable(
@@ -76,7 +82,7 @@ export const blocksEntity = pgTable(
       }
     ),
   },
-  () => [index("route_id")]
+  (table) => [index("idx_blocks_route_id").on(table.routeId)]
 );
 
 export const edgesEntity = pgTable(
@@ -98,7 +104,11 @@ export const edgesEntity = pgTable(
       }
     ),
   },
-  () => [index("from"), index("to")]
+  (table) => [
+    index("idx_edges_from").on(table.from),
+    index("idx_edges_to").on(table.to),
+    index("idx_edges_route_id").on(table.routeId),
+  ]
 );
 
 export const encodingTypeEnum = pgEnum("encoding_types", [
@@ -111,21 +121,39 @@ const encodingTypeValues = z.enum(encodingTypeEnum.enumValues);
 
 export type AppConfigEncodingTypes = z.infer<typeof encodingTypeValues>;
 
-export const appConfigEntity = pgTable("app_config", {
-  id: serial().primaryKey(),
-  keyName: varchar("key_name", { length: 100 }),
-  description: text(),
-  value: text(),
-  isEncrypted: boolean("is_encrypted").default(false),
-  encodingType: encodingTypeEnum("encoding_type"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+export const appConfigEntity = pgTable(
+  "app_config",
+  {
+    id: serial().primaryKey(),
+    keyName: varchar("key_name", { length: 100 }),
+    description: text(),
+    value: text(),
+    isEncrypted: boolean("is_encrypted").default(false),
+    encodingType: encodingTypeEnum("encoding_type"),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index("idx_app_config_key_name").on(table.keyName),
+    index("idx_app_config_is_encrypted").on(table.isEncrypted),
+    index("idx_app_config_encoding_type").on(table.encodingType),
+  ]
+);
 
-export const integrationsEntity = pgTable("integrations", {
-  id: uuid().primaryKey(),
-  name: varchar({ length: 255 }),
-  group: varchar({ length: 255 }),
-  variant: varchar({ length: 255 }),
-  config: jsonb(),
-});
+export const integrationsEntity = pgTable(
+  "integrations",
+  {
+    id: uuid().primaryKey(),
+    name: varchar({ length: 255 }),
+    group: varchar({ length: 255 }),
+    variant: varchar({ length: 255 }),
+    config: jsonb(),
+  },
+  (table) => [
+    index("idx_integrations_name").on(table.name),
+    index("idx_integrations_group").on(table.group),
+    index("idx_integrations_variant").on(table.variant),
+  ]
+);

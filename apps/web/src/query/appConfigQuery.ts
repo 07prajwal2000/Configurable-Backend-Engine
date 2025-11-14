@@ -31,7 +31,12 @@ export const appConfigQuery = {
     useQuery(id: string) {
       return useQuery({
         queryKey: ["app-config", "getById", id],
-        queryFn: () => appConfigService.getById(id),
+        queryFn: () => {
+          if (!id) {
+            return null;
+          }
+          return appConfigService.getById(id);
+        },
         refetchOnWindowFocus: false,
       });
     },
@@ -41,10 +46,25 @@ export const appConfigQuery = {
       });
     },
   },
+  getKeysList: {
+    useQuery(search: string) {
+      return useQuery({
+        queryKey: ["app-config", "getKeysList", search],
+        queryFn: () => appConfigService.getKeysList(search),
+        refetchOnWindowFocus: false,
+      });
+    },
+    invalidate(search: string, queryClient: QueryClient) {
+      queryClient.invalidateQueries({
+        queryKey: ["app-config", "getKeysList", search],
+      });
+    },
+  },
   create: {
-    useMutation(body: CreateAppConfigBodyParams, queryClient: QueryClient) {
+    useMutation(queryClient: QueryClient) {
       return useMutation({
-        mutationFn: () => appConfigService.create(body),
+        mutationFn: (data: CreateAppConfigBodyParams) =>
+          appConfigService.create(data),
         onSuccess: () => {
           queryClient.invalidateQueries({
             queryKey: ["app-config", "list"],
@@ -54,13 +74,10 @@ export const appConfigQuery = {
     },
   },
   update: {
-    useMutation(
-      id: string,
-      body: UpdateAppConfigBodyParams,
-      queryClient: QueryClient
-    ) {
+    useMutation(id: string, queryClient: QueryClient) {
       return useMutation({
-        mutationFn: () => appConfigService.update(id, body),
+        mutationFn: (data: UpdateAppConfigBodyParams) =>
+          appConfigService.update(id, data),
         onSuccess: () => {
           queryClient.invalidateQueries({
             queryKey: ["app-config", "list"],
@@ -68,32 +85,31 @@ export const appConfigQuery = {
         },
       });
     },
-    delete: {
-      useMutation(id: string, queryClient: QueryClient) {
-        return useMutation({
-          mutationFn: () => appConfigService.delete(id),
-          onSuccess: () => {
-            queryClient.invalidateQueries({
-              queryKey: ["app-config", "list"],
-            });
-          },
-        });
-      },
+  },
+  delete: {
+    useMutation(queryClient: QueryClient) {
+      return useMutation({
+        mutationFn: (id: string) => appConfigService.delete(id),
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["app-config", "list"],
+          });
+        },
+      });
     },
-    deleteBulk: {
-      useMutation(
-        body: z.infer<typeof appConfigService.deleteBulkRequestBodySchema>,
-        queryClient: QueryClient
-      ) {
-        return useMutation({
-          mutationFn: () => appConfigService.deleteBulk(body),
-          onSuccess: () => {
-            queryClient.invalidateQueries({
-              queryKey: ["app-config", "list"],
-            });
-          },
-        });
-      },
+  },
+  deleteBulk: {
+    useMutation(queryClient: QueryClient) {
+      return useMutation({
+        mutationFn: (
+          data: z.infer<typeof appConfigService.deleteBulkRequestBodySchema>
+        ) => appConfigService.deleteBulk(data),
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["app-config", "list"],
+          });
+        },
+      });
     },
   },
 };
