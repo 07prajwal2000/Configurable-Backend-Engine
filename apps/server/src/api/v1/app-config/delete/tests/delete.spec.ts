@@ -11,10 +11,16 @@ vi.mock("../../../../../db", () => ({
     transaction: vi.fn(),
   },
 }));
+vi.mock("../../../../../db/redis", () => {
+  return {
+    publishMessage: vi.fn(),
+    CHAN_ON_APPCONFIG_CHANGE: "",
+  };
+});
 
 describe("Delete App Config Service", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   it("should successfully delete app config when it exists", async () => {
