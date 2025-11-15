@@ -4,6 +4,7 @@ import registerGetByIdRoute from "./get-by-id/route";
 import registerCreateRoute from "./create/route";
 import registerUpdateRoute from "./update/route";
 import registerDeleteRoute from "./delete/route";
+import registerTestConnectionRoute from "./test-connection/route";
 
 export default {
   name: "integrations",
@@ -14,5 +15,6 @@ export default {
     registerCreateRoute(router);
     registerUpdateRoute(router);
     registerDeleteRoute(router);
+    registerTestConnectionRoute(router);
   },
 };

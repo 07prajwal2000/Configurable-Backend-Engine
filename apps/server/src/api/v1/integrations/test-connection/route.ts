@@ -5,13 +5,14 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { responseSchema } from "./dto";
+import { requestBodySchema, responseSchema } from "./dto";
 import handleRequest from "./service";
+import zodErrorCallbackParser from "../../../../middlewares/zodErrorCallbackParser";
 
 const openapiRouteOptions: DescribeRouteOptions = {
-  description: "Description",
-  operationId: "identifier",
-  tags: ["TAG"],
+  description: "Test integration connection",
+  operationId: "test-connection",
+  tags: ["Integrations"],
   responses: {
     200: {
       description: "Successful",
@@ -25,10 +26,14 @@ const openapiRouteOptions: DescribeRouteOptions = {
 };
 
 export default function (app: Hono) {
-  app.get(
-    "/", 
+  app.post(
+    "/test-connection",
     describeRoute(openapiRouteOptions),
-    // validator("query", SCHEMA),
-    async (c) => {}
+    validator("json", requestBodySchema, zodErrorCallbackParser),
+    async (c) => {
+      const body = c.req.valid("json");
+      const result = await handleRequest(body);
+      return c.json(result, result.success ? 200 : 400);
+    }
   );
 }

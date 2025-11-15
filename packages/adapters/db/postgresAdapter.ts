@@ -1,5 +1,5 @@
-import { Knex } from "knex";
-import { DbAdapterMode, DBConditionType, IDbAdapter } from ".";
+import knex, { Knex } from "knex";
+import { Connection, DbAdapterMode, DBConditionType, IDbAdapter } from ".";
 import { JsVM } from "@cbe/lib/vm";
 
 export class PostgresAdapter implements IDbAdapter {
@@ -8,6 +8,27 @@ export class PostgresAdapter implements IDbAdapter {
   private readonly HARD_LIMIT = 1000;
 
   constructor(private readonly connection: Knex, private readonly vm: JsVM) {}
+  public static async testConnection(connection: Connection) {
+    const conn = knex({
+      client: "pg",
+      connection: {
+        host: connection.host,
+        port: Number(connection.port),
+        user: connection.username,
+        password: connection.password,
+        database: connection.database,
+        ssl: connection.ssl,
+      },
+    });
+    try {
+      const result = await conn.raw("SELECT 1 as test");
+      return { success: result.rows[0].test == 1 };
+    } catch (error: any) {
+      return { success: false, error };
+    } finally {
+      conn.destroy();
+    }
+  }
   async raw(query: string | unknown): Promise<any> {
     if (typeof query !== "string")
       throw new Error("raw function accepts only string queries.");
