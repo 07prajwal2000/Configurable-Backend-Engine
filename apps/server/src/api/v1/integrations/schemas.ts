@@ -1,4 +1,4 @@
-import z, { ZodType } from "zod";
+import z from "zod";
 import { parsePostgresUrl } from "../../../lib/parsers/postgres";
 
 // ALWAYS MAKE SURE THE SCHEMA IS FLAT
@@ -28,6 +28,7 @@ export const postgresVariantConfigSchema = z
   })
   .or(
     z.object({
+      source: z.literal("url"),
       url: z
         .string()
         .min(10)
@@ -40,33 +41,3 @@ export const postgresVariantConfigSchema = z
         }),
     })
   );
-
-export function getSchema(
-  group: z.infer<typeof integrationsGroupSchema>,
-  variant: string
-) {
-  let schema: ZodType = null!;
-  if (group === "database") {
-    const result = databaseVariantSchema.safeParse(variant);
-    if (!result.success) {
-      return null;
-    }
-    switch (variant as z.infer<typeof databaseVariantSchema>) {
-      case "PostgreSQL":
-        schema = postgresVariantConfigSchema;
-        break;
-      default:
-        return null;
-    }
-  } else if (group === "kv") {
-    const result = kvVariantSchema.safeParse(variant);
-    if (!result.success) {
-      return null;
-    }
-    switch (variant as z.infer<typeof kvVariantSchema>) {
-      default:
-        return null;
-    }
-  }
-  return schema;
-}

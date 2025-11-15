@@ -7,7 +7,7 @@ import {
   integrationExistByName,
 } from "./repository";
 import { NotFoundError } from "../../../../errors/notFoundError";
-import { getSchema } from "../schemas";
+import { getSchema } from "../helpers";
 import { ValidationError } from "../../../../errors/validationError";
 import { mapZodErrorToFieldErrors } from "../../../../lib/errors";
 import { ServerError } from "../../../../errors/serverError";

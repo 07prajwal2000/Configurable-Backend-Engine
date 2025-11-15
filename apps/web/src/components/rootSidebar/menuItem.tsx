@@ -5,7 +5,7 @@ import React from "react";
 
 type MenuItemProps = {
   isActive: boolean;
-  text: string;
+  text: string | React.ReactNode;
   onClick?: () => void;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;

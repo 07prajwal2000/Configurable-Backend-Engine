@@ -1,4 +1,4 @@
-import { Connection, DbType } from "@cbe/adapters/db";
+import type { Connection, DbType } from "@cbe/adapters/db";
 
 /**
  * Parses a PostgreSQL connection URL.
@@ -30,6 +30,6 @@ export function parsePostgresUrl(url: string): Connection | null {
     port,
     database,
     ssl,
-    dbType: DbType.POSTGRES,
+    dbType: "pg" as DbType,
   };
 }

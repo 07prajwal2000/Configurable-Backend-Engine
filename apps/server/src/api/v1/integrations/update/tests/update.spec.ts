@@ -1,11 +1,4 @@
-import {
-  describe,
-  it,
-  expect,
-  vi,
-  beforeEach,
-  beforeAll,
-} from "vitest";
+import { describe, it, expect, vi, beforeEach, beforeAll } from "vitest";
 import handleRequest from "../service";
 import {
   getIntegrationById,
@@ -29,7 +22,7 @@ vi.mock("../../../../../db", () => {
   };
 });
 vi.mock("../../../../../db/redis");
-vi.mock("../../schemas", () => ({
+vi.mock("../../helpers", () => ({
   getSchema: vi.fn(() => ({
     safeParse: vi.fn(() => ({ success: true, data: {} })),
   })),
@@ -99,9 +92,9 @@ describe("updateIntegration service", () => {
   it("should throw NotFoundError when integration does not exist", async () => {
     mockGetIntegrationById.mockResolvedValueOnce(null);
 
-    await expect(handleRequest(integrationId, updateData as any)).rejects.toThrow(
-      NotFoundError
-    );
+    await expect(
+      handleRequest(integrationId, updateData as any)
+    ).rejects.toThrow(NotFoundError);
     expect(mockUpdateIntegration).not.toHaveBeenCalled();
   });
 
@@ -117,9 +110,9 @@ describe("updateIntegration service", () => {
     mockGetIntegrationById.mockResolvedValueOnce(existingIntegration as any);
     mockIntegrationExistByName.mockResolvedValueOnce({ id: "different-id" });
 
-    await expect(handleRequest(integrationId, updateData as any)).rejects.toThrow(
-      ConflictError
-    );
+    await expect(
+      handleRequest(integrationId, updateData as any)
+    ).rejects.toThrow(ConflictError);
     expect(mockUpdateIntegration).not.toHaveBeenCalled();
   });
 
@@ -136,9 +129,9 @@ describe("updateIntegration service", () => {
     mockIntegrationExistByName.mockResolvedValueOnce({ id: integrationId });
     mockUpdateIntegration.mockResolvedValueOnce(null);
 
-    await expect(handleRequest(integrationId, updateData as any)).rejects.toThrow(
-      ServerError
-    );
+    await expect(
+      handleRequest(integrationId, updateData as any)
+    ).rejects.toThrow(ServerError);
   });
 
   it("should allow updating with same name", async () => {
@@ -164,7 +157,10 @@ describe("updateIntegration service", () => {
     mockIntegrationExistByName.mockResolvedValueOnce({ id: integrationId });
     mockUpdateIntegration.mockResolvedValueOnce([updatedIntegration] as any);
 
-    const result = await handleRequest(integrationId, updateDataSameName as any);
+    const result = await handleRequest(
+      integrationId,
+      updateDataSameName as any
+    );
 
     expect(result).toEqual([updatedIntegration]);
   });

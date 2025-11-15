@@ -7,6 +7,9 @@ type PropTypes = {
   refetcher?: () => void;
   overrideMessage?: string;
   fontSize?: "xl" | "lg" | "md" | "sm" | "xs" | undefined;
+  padding?: "xs" | "sm" | "md" | "lg" | "xl" | undefined;
+  margin?: "xs" | "sm" | "md" | "lg" | "xl" | undefined;
+  stackGap?: "xs" | "sm" | "md" | "lg" | "xl" | undefined;
 };
 
 const QueryError = (props: PropTypes) => {
@@ -16,8 +19,13 @@ const QueryError = (props: PropTypes) => {
   const isAxiosErr = isAxiosError(props.error);
 
   return (
-    <Center p={"xl"} bd={"2px solid red"} m={"xl"} bdrs={"sm"}>
-      <Stack ta={"center"}>
+    <Center
+      p={props.padding ?? "xl"}
+      bd={"2px solid red"}
+      m={props.margin ?? "xl"}
+      bdrs={"sm"}
+    >
+      <Stack ta={"center"} gap={props.stackGap}>
         <Text size={props.fontSize} fw={"500"} c={"red"}>
           Error Occured while loading
         </Text>

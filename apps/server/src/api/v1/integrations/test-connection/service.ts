@@ -1,15 +1,12 @@
 import { z } from "zod";
 import { requestBodySchema, responseSchema } from "./dto";
-import {
-  databaseVariantSchema,
-  getSchema,
-  integrationsGroupSchema,
-} from "../schemas";
+import { databaseVariantSchema, integrationsGroupSchema } from "../schemas";
 import { getAppConfigKeysFromData } from "../create/service";
 import { getAppConfigs } from "./repository";
 import { parsePostgresUrl } from "../../../../lib/parsers/postgres";
 import { PostgresAdapter } from "@cbe/adapters/db";
 import { EncryptionService } from "../../../../lib/encryption";
+import { getSchema } from "../helpers";
 
 export default async function handleRequest(
   body: z.infer<typeof requestBodySchema>
@@ -84,7 +81,8 @@ async function testDatabasesConnection(
 }
 
 function extractPgConnectionInfo(config: any, appConfigs: Map<string, string>) {
-  if ("url" in config) {
+  const source = config.source;
+  if (source === "url") {
     config.url = config.url.startsWith("cfg:")
       ? appConfigs.get(config.url.slice(4)) || ""
       : config.url;

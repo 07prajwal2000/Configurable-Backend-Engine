@@ -1,7 +1,7 @@
 import { Context, Next } from "hono";
 import { requestBodySchema } from "./dto";
 import z, { ZodType } from "zod";
-import { getSchema } from "../schemas";
+import { getSchema } from "../helpers";
 import { BadRequestError } from "../../../../errors/badRequestError";
 import { ValidationError } from "../../../../errors/validationError";
 import { mapZodErrorToFieldErrors } from "../../../../lib/errors";

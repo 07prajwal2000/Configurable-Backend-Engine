@@ -1,6 +1,9 @@
 import { db } from "../db";
 import { integrationsEntity } from "../db/schema";
-import { integrationsGroupSchema } from "../modules/admin/integrations/dto";
+import {
+  databaseVariantSchema,
+  integrationsGroupSchema,
+} from "../modules/admin/integrations/dto";
 import {
   CHAN_ON_APPCONFIG_CHANGE,
   CHAN_ON_INTEGRATION_CHANGE,
@@ -28,16 +31,19 @@ async function loadFromDB() {
   const integrations = await db.select().from(integrationsEntity);
   for (let integration of integrations) {
     if (integration.group === integrationsGroupSchema.enum.database) {
-      dbIntegrationsCache[integration.id] = mapIntegrationToPgConnectionData(
-        integration.config as any
-      );
+      if (integration.variant === databaseVariantSchema.enum.PostgreSQL) {
+        dbIntegrationsCache[integration.id] = mapIntegrationToPgConnectionData(
+          integration.config as any
+        );
+      }
     }
   }
 }
 
 function mapIntegrationToPgConnectionData(config: Record<string, string>) {
   let connectionDetails = {} as any;
-  if ("url" in config) {
+  const source = config.source;
+  if (source === "url") {
     config.url = config.url.toString().startsWith("cfg:")
       ? appConfigCache[config.url.slice(4)]
       : config.url;

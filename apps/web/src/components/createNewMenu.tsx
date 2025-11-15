@@ -15,11 +15,11 @@ import { useQueryClient } from "@tanstack/react-query";
 const menuItems = [
   {
     label: "Integration",
-    icon: <TbSquareKey size={20} />,
+    icon: <TbCloudCog size={20} />,
   },
   {
     label: "App Config",
-    icon: <TbCloudCog size={20} />,
+    icon: <TbSquareKey size={20} />,
   },
 ];
 

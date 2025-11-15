@@ -16,7 +16,11 @@ const FormDialog = ({
     <Modal
       opened={open}
       size={"xl"}
-      title={<Text size="xl">{title}</Text>}
+      title={
+        <Text fw={"500"} size="xl">
+          {title}
+        </Text>
+      }
       withCloseButton
       onClose={onClose}
     >
