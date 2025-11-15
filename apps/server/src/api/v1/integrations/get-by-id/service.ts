@@ -1,7 +1,20 @@
 import { z } from "zod";
 import { responseSchema } from "./dto";
+import { getIntegrationByID } from "./repository";
+import { NotFoundError } from "../../../../errors/notFoundError";
 
-export default function handleRequest(): Promise<z.infer<typeof responseSchema>> {
-  return {} as any;
+export default async function handleRequest(
+  id: string
+): Promise<z.infer<typeof responseSchema>> {
+  const integration = await getIntegrationByID(id);
+  if (!integration) {
+    throw new NotFoundError("Integration not found");
+  }
+  return {
+    id: integration.id,
+    name: integration.name!,
+    group: integration.group!,
+    variant: integration.variant!,
+    config: integration.config as any,
+  };
 }
-      

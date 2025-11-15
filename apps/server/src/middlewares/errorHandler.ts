@@ -9,7 +9,7 @@ export function errorHandler(error: any, c: Context) {
     const errorType = error.getError().type;
     if (error instanceof ValidationError) {
       return c.json(
-        { error, type: errorType },
+        { error: error.errors, type: errorType },
         error.httpCode as ContentfulStatusCode
       );
     }

@@ -6,10 +6,10 @@ export default function (error: any, ctx: Context) {
   if (!error.success) {
     const errorsList: z.infer<typeof validationErrorSchema> = {
       type: "validation",
-      errors: [],
+      error: [],
     };
     for (let err of error.error) {
-      errorsList.errors.push({
+      errorsList.error.push({
         field: err.path[0],
         message: err.message,
       });

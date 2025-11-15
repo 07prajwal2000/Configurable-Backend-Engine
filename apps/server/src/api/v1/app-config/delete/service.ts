@@ -2,6 +2,7 @@ import { db } from "../../../../db";
 import { BadRequestError } from "../../../../errors/badRequestError";
 import { NotFoundError } from "../../../../errors/notFoundError";
 import { checkAppConfigExist, deleteAppConfig } from "./repository";
+import { CHAN_ON_APPCONFIG_CHANGE, publishMessage } from "../../../../db/redis";
 
 export default async function handleRequest(id: number) {
   if (!id || isNaN(id)) {
@@ -17,4 +18,5 @@ export default async function handleRequest(id: number) {
       throw new BadRequestError("Failed to delete app config");
     }
   });
+  await publishMessage(CHAN_ON_APPCONFIG_CHANGE, "");
 }

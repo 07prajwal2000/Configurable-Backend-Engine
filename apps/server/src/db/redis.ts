@@ -5,10 +5,7 @@ let publisherClient: Redis = null!;
 let subscriberClient: Redis = null!;
 
 export const CHAN_ON_ROUTE_CHANGE = "chan:on-route-change";
-export const CHAN_ON_EDGE_CHANGE = "chan:on-edge-change";
-export const CHAN_ON_BLOCK_CHANGE = "chan:on-block-change";
 export const CHAN_ON_APPCONFIG_CHANGE = "chan:on-appconfig-change";
-
 export const CHAN_ON_INTEGRATION_CHANGE = "chan:on-integration-change";
 
 export function initializeRedis() {
@@ -20,7 +17,11 @@ export function initializeRedis() {
   });
   if (canHotreload) {
     subscriberClient = createRedisClient();
-    subscriberClient.subscribe(CHAN_ON_ROUTE_CHANGE, CHAN_ON_APPCONFIG_CHANGE);
+    subscriberClient.subscribe(
+      CHAN_ON_ROUTE_CHANGE,
+      CHAN_ON_APPCONFIG_CHANGE,
+      CHAN_ON_INTEGRATION_CHANGE
+    );
   }
 }
 

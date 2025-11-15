@@ -5,13 +5,17 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { responseSchema } from "./dto";
+import { requestBodySchema, responseSchema } from "./dto";
 import handleRequest from "./service";
+import { errorSchema } from "../../../../errors/customError";
+import { requestBodyValidator } from "./middleware";
+import zodErrorCallbackParser from "../../../../middlewares/zodErrorCallbackParser";
+import { validationErrorSchema } from "../../../../errors/validationError";
 
 const openapiRouteOptions: DescribeRouteOptions = {
-  description: "Description",
-  operationId: "identifier",
-  tags: ["TAG"],
+  description: "Create integration",
+  operationId: "create-integration",
+  tags: ["Integrations"],
   responses: {
     200: {
       description: "Successful",
@@ -21,14 +25,45 @@ const openapiRouteOptions: DescribeRouteOptions = {
         },
       },
     },
+    404: {
+      description: "Invalid request / App config key not found",
+      content: {
+        "application/json": {
+          schema: resolver(validationErrorSchema),
+        },
+      },
+    },
+    409: {
+      description: "Integration already exists",
+      content: {
+        "application/json": {
+          schema: resolver(errorSchema),
+        },
+      },
+    },
+    500: {
+      description: "Internal Server Error",
+      content: {
+        "application/json": {
+          schema: resolver(errorSchema),
+        },
+      },
+    },
   },
 };
 
 export default function (app: Hono) {
-  app.get(
-    "/", 
+  app.post(
+    "/",
     describeRoute(openapiRouteOptions),
-    // validator("query", SCHEMA),
-    async (c) => {}
+    validator("json", requestBodySchema, zodErrorCallbackParser),
+    requestBodyValidator,
+    async (c) => {
+      const data = c.req.valid("json");
+      const config = c.get("config" as never) as any;
+      data.config = config;
+      const result = await handleRequest(data);
+      return c.json(result, 201);
+    }
   );
 }

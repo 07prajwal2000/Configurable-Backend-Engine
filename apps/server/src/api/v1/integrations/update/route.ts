@@ -5,13 +5,15 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { responseSchema } from "./dto";
+import { requestBodySchema, requestRouteSchema, responseSchema } from "./dto";
 import handleRequest from "./service";
+import { validationErrorSchema } from "../../../../errors/validationError";
+import { errorSchema } from "../../../../errors/customError";
 
 const openapiRouteOptions: DescribeRouteOptions = {
-  description: "Description",
-  operationId: "identifier",
-  tags: ["TAG"],
+  description: "Update an integration",
+  operationId: "update-integration",
+  tags: ["Integrations"],
   responses: {
     200: {
       description: "Successful",
@@ -21,14 +23,52 @@ const openapiRouteOptions: DescribeRouteOptions = {
         },
       },
     },
+    400: {
+      description: "Validation error",
+      content: {
+        "application/json": {
+          schema: resolver(validationErrorSchema),
+        },
+      },
+    },
+    404: {
+      description: "Integration not found",
+      content: {
+        "application/json": {
+          schema: resolver(errorSchema),
+        },
+      },
+    },
+    409: {
+      description: "Integration name already exists",
+      content: {
+        "application/json": {
+          schema: resolver(errorSchema),
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: resolver(errorSchema),
+        },
+      },
+    },
   },
 };
 
 export default function (app: Hono) {
-  app.get(
-    "/", 
+  app.put(
+    "/:id",
     describeRoute(openapiRouteOptions),
-    // validator("query", SCHEMA),
-    async (c) => {}
+    validator("param", requestRouteSchema),
+    validator("json", requestBodySchema),
+    async (c) => {
+      const { id } = c.req.valid("param");
+      const body = c.req.valid("json");
+      const result = await handleRequest(id, body);
+      return c.json(result);
+    }
   );
 }

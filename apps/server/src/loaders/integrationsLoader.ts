@@ -7,6 +7,7 @@ import {
   subscribeToChannel,
 } from "../db/redis";
 import { appConfigCache } from "./appconfigLoader";
+import { parsePostgresUrl } from "../lib/parsers/postgres";
 
 export let dbIntegrationsCache: Record<string, any> = {};
 export let kvIntegrationsCache: Record<string, any> = {};
@@ -27,22 +28,30 @@ async function loadFromDB() {
   const integrations = await db.select().from(integrationsEntity);
   for (let integration of integrations) {
     if (integration.group === integrationsGroupSchema.enum.database) {
-      dbIntegrationsCache[integration.id] = mapIntegrationToConnectionData(
-        integration.config as any
-      );
-    } else if (integration.group === integrationsGroupSchema.enum.kv) {
-      kvIntegrationsCache[integration.id] = mapIntegrationToConnectionData(
+      dbIntegrationsCache[integration.id] = mapIntegrationToPgConnectionData(
         integration.config as any
       );
     }
   }
 }
 
-function mapIntegrationToConnectionData(config: Record<string, string>) {
-  const connectionDetails: typeof config = {} as any;
+function mapIntegrationToPgConnectionData(config: Record<string, string>) {
+  let connectionDetails = {} as any;
+  if ("url" in config) {
+    config.url = config.url.toString().startsWith("cfg:")
+      ? appConfigCache[config.url.slice(4)]
+      : config.url;
+    const parsed = parsePostgresUrl(config.url);
+    if (parsed) {
+      connectionDetails = parsed;
+    } else {
+      console.log("Failed to load integration");
+    }
+  }
+
   for (let key in config) {
     const value = config[key];
-    connectionDetails[key] = value.startsWith("cfg:")
+    connectionDetails[key] = value.toString().startsWith("cfg:")
       ? appConfigCache[value.slice(4)]
       : value;
   }

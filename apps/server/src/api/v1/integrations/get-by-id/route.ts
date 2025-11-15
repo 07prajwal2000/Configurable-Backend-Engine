@@ -5,13 +5,15 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { responseSchema } from "./dto";
+import { requestRouteSchema, responseSchema } from "./dto";
 import handleRequest from "./service";
+import { errorSchema } from "../../../../errors/customError";
+import zodErrorCallbackParser from "../../../../middlewares/zodErrorCallbackParser";
 
 const openapiRouteOptions: DescribeRouteOptions = {
-  description: "Description",
-  operationId: "identifier",
-  tags: ["TAG"],
+  description: "Get integration by id",
+  operationId: "get-integration-by-id",
+  tags: ["Integrations"],
   responses: {
     200: {
       description: "Successful",
@@ -21,14 +23,26 @@ const openapiRouteOptions: DescribeRouteOptions = {
         },
       },
     },
+    404: {
+      description: "Integration not found",
+      content: {
+        "application/json": {
+          schema: resolver(errorSchema),
+        },
+      },
+    },
   },
 };
 
 export default function (app: Hono) {
   app.get(
-    "/", 
+    "/:id",
     describeRoute(openapiRouteOptions),
-    // validator("query", SCHEMA),
-    async (c) => {}
+    validator("param", requestRouteSchema, zodErrorCallbackParser),
+    async (c) => {
+      const id = c.req.param("id");
+      const result = await handleRequest(id);
+      return c.json(result);
+    }
   );
 }

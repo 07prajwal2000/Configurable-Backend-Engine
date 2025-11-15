@@ -10,4 +10,5 @@ export interface Connection {
   host: string;
   port: string | number;
   database: string;
+  ssl?: boolean;
 }

@@ -1,3 +1,5 @@
 import { z } from "zod";
 
-export const responseSchema = z.object({});
+export const requestRouteSchema = z.object({
+  id: z.uuidv7(),
+});

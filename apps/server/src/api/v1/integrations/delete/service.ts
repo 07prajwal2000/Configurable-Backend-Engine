@@ -1,7 +1,14 @@
-import { z } from "zod";
-import { responseSchema } from "./dto";
+import {
+  CHAN_ON_INTEGRATION_CHANGE,
+  publishMessage,
+} from "../../../../db/redis";
+import { NotFoundError } from "../../../../errors/notFoundError";
+import { deleteIntegration } from "./repository";
 
-export default function handleRequest(): Promise<z.infer<typeof responseSchema>> {
-  return {} as any;
+export default async function handleRequest(id: string) {
+  const deletedCount = await deleteIntegration(id);
+  if (deletedCount === 0) {
+    throw new NotFoundError("Integration not found");
+  }
+  await publishMessage(CHAN_ON_INTEGRATION_CHANGE, "");
 }
-      

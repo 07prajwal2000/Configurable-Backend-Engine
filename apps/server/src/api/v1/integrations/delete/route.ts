@@ -5,19 +5,23 @@ import {
   resolver,
   validator,
 } from "hono-openapi";
-import { responseSchema } from "./dto";
 import handleRequest from "./service";
+import { requestRouteSchema } from "./dto";
+import { errorSchema } from "../../../../errors/customError";
 
 const openapiRouteOptions: DescribeRouteOptions = {
-  description: "Description",
-  operationId: "identifier",
-  tags: ["TAG"],
+  description: "Delete an integration",
+  operationId: "delete-integration",
+  tags: ["Integrations"],
   responses: {
-    200: {
-      description: "Successful",
+    204: {
+      description: "No Content",
+    },
+    404: {
+      description: "Integration not found",
       content: {
         "application/json": {
-          schema: resolver(responseSchema),
+          schema: resolver(errorSchema),
         },
       },
     },
@@ -25,10 +29,14 @@ const openapiRouteOptions: DescribeRouteOptions = {
 };
 
 export default function (app: Hono) {
-  app.get(
-    "/", 
+  app.delete(
+    "/:id",
     describeRoute(openapiRouteOptions),
-    // validator("query", SCHEMA),
-    async (c) => {}
+    validator("param", requestRouteSchema),
+    async (c) => {
+      const id = c.req.param("id");
+      await handleRequest(id);
+      return c.body(null, 204);
+    }
   );
 }
