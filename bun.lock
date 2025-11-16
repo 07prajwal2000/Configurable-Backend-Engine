@@ -27,6 +27,7 @@
       "name": "@fluxify/backend-engine",
       "version": "1.0.0",
       "dependencies": {
+        "@fluxify/adapters": "../../packages/adapters/",
         "@electric-sql/pglite": "^0.3.11",
         "@fluxify/blocks": "file:../../packages/blocks",
         "@fluxify/lib": "file:../../packages/lib",
@@ -1486,6 +1487,18 @@
 
     "@eslint/eslintrc/globals": ["globals@14.0.0", "", {}, "sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ=="],
 
+    "@fluxify/adapters/@fluxify/lib": ["@fluxify/lib@file:packages/lib", { "dependencies": { "axios": "^1.13.1", "uuidv7": "^1.0.2", "zod": "^4.0.17" } }],
+
+    "@fluxify/backend-engine/@fluxify/adapters": ["@fluxify/adapters@file:packages/adapters", { "dependencies": { "@fluxify/lib": "file:../lib", "knex": "^3.1.0", "pg": "^8.16.3", "zod": "^4.1.11" }, "devDependencies": { "vitest": "^3.2.4" } }],
+
+    "@fluxify/backend-engine/@fluxify/lib": ["@fluxify/lib@file:packages/lib", { "dependencies": { "axios": "^1.13.1", "uuidv7": "^1.0.2", "zod": "^4.0.17" } }],
+
+    "@fluxify/blocks/@fluxify/adapters": ["@fluxify/adapters@file:packages/adapters", { "dependencies": { "@fluxify/lib": "file:../lib", "knex": "^3.1.0", "pg": "^8.16.3", "zod": "^4.1.11" }, "devDependencies": { "vitest": "^3.2.4" } }],
+
+    "@fluxify/blocks/@fluxify/lib": ["@fluxify/lib@file:packages/lib", { "dependencies": { "axios": "^1.13.1", "uuidv7": "^1.0.2", "zod": "^4.0.17" } }],
+
+    "@fluxify/demos/@fluxify/adapters": ["@fluxify/adapters@file:packages/adapters", { "dependencies": { "@fluxify/lib": "file:../lib", "knex": "^3.1.0", "pg": "^8.16.3", "zod": "^4.1.11" }, "devDependencies": { "vitest": "^3.2.4" } }],
+
     "@fluxify/ui/typescript": ["typescript@5.8.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
 
     "@next/eslint-plugin-next/fast-glob": ["fast-glob@3.3.1", "", { "dependencies": { "@nodelib/fs.stat": "^2.0.2", "@nodelib/fs.walk": "^1.2.3", "glob-parent": "^5.1.2", "merge2": "^1.3.0", "micromatch": "^4.0.4" } }, "sha512-kNFPyjhh5cKjrUltxs+wFx+ZkbRaxxmZ+X0ZU31SOsxCEtP9VPgtq2teZw1DebupL5GmDaNQ6yKMMVcM41iqDg=="],
@@ -1581,6 +1594,12 @@
     "@esbuild-kit/core-utils/esbuild/@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.18.20", "", { "os": "win32", "cpu": "ia32" }, "sha512-Wv7QBi3ID/rROT08SABTS7eV4hX26sVduqDOTe1MvGMjNd3EjOz4b7zeexIR62GTIEKrfJXKL9LFxTYgkyeu7g=="],
 
     "@esbuild-kit/core-utils/esbuild/@esbuild/win32-x64": ["@esbuild/win32-x64@0.18.20", "", { "os": "win32", "cpu": "x64" }, "sha512-kTdfRcSiDfQca/y9QIkng02avJ+NCaQvrMejlsB3RRv5sE9rRoeBPISaZpKxHELzRxZyLvNts1P27W3wV+8geQ=="],
+
+    "@fluxify/backend-engine/@fluxify/adapters/@fluxify/lib": ["@fluxify/lib@file:packages\\lib", {}],
+
+    "@fluxify/blocks/@fluxify/adapters/@fluxify/lib": ["@fluxify/lib@file:packages\\lib", {}],
+
+    "@fluxify/demos/@fluxify/adapters/@fluxify/lib": ["@fluxify/lib@file:packages\\lib", {}],
 
     "@next/eslint-plugin-next/fast-glob/glob-parent": ["glob-parent@5.1.2", "", { "dependencies": { "is-glob": "^4.0.1" } }, "sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow=="],
 
