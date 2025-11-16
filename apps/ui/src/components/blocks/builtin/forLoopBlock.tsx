@@ -8,7 +8,7 @@ import BaseBlock from "../baseBlock";
 import CustomHandle, { connectionExist } from "../../handle";
 import { Grid, Stack, Typography, useTheme } from "@mui/material";
 import { z } from "zod";
-import type { forLoopBlockSchema } from "@cbe/blocks";
+import type { forLoopBlockSchema } from "@fluxify/blocks";
 import BaseBlockSidebar from "../../editor/baseBlockSidebar";
 import { useBlocksContext } from "../../editor/blockEditor";
 import InputWithJs from "../../inputWithJs";

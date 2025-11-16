@@ -1,15 +1,15 @@
 import { httpClient } from "@/lib/http";
-import { responseSchema as getByIdResponseSchema } from "@cbe/backend-engine/src/api/v1/integrations/get-by-id/dto";
-import { responseSchema as getAllResponseSchema } from "@cbe/backend-engine/src/api/v1/integrations/get-all/dto";
+import { responseSchema as getByIdResponseSchema } from "@fluxify/backend-engine/src/api/v1/integrations/get-by-id/dto";
+import { responseSchema as getAllResponseSchema } from "@fluxify/backend-engine/src/api/v1/integrations/get-all/dto";
 import {
   requestBodySchema as createRequestSchema,
   responseSchema as createResponseSchema,
-} from "@cbe/backend-engine/src/api/v1/integrations/create/dto";
+} from "@fluxify/backend-engine/src/api/v1/integrations/create/dto";
 import {
   requestBodySchema as updateRequestSchema,
   responseSchema as updateResponseSchema,
-} from "@cbe/backend-engine/src/api/v1/integrations/update/dto";
-import { responseSchema as testConnectionResponseSchema } from "@cbe/backend-engine/src/api/v1/integrations/test-connection/dto";
+} from "@fluxify/backend-engine/src/api/v1/integrations/update/dto";
+import { responseSchema as testConnectionResponseSchema } from "@fluxify/backend-engine/src/api/v1/integrations/test-connection/dto";
 import z from "zod";
 
 const baseUrl = "/v1/integrations";

@@ -21,7 +21,7 @@ import { blockTypeMap } from "../../constants/blockType";
 import { blocksList } from "../../constants/blocksList";
 import EditorSidebar from "./editorSidebar";
 import Topbar from "./topbar";
-import type { BlockTypes } from "@cbe/blocks";
+import type { BlockTypes } from "@fluxify/blocks";
 
 type BlockEditorProps = {
   blocks: Node[];

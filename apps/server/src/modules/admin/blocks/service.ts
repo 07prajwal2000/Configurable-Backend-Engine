@@ -9,7 +9,7 @@ import {
 } from "./repository";
 import { getRouteById } from "../routes/repository";
 import { BlockType } from "./dto";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 import { db } from "../../../db";
 import { blocksEntity } from "../../../db/schema";
 import { eq, and } from "drizzle-orm";

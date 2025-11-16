@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import BaseBlockSidebar from "../editor/baseBlockSidebar";
 import { useBlocksContext } from "../editor/blockEditor";
-import { httpcodes } from "@cbe/lib";
+import { httpcodes } from "@fluxify/lib";
 
 interface ResponseProps extends NodeProps {}
 

@@ -1,4 +1,4 @@
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 import { sql } from "drizzle-orm";
 import {
   boolean,

@@ -1,4 +1,4 @@
-import { HttpRouteParser } from "@cbe/lib";
+import { HttpRouteParser } from "@fluxify/lib";
 import { db } from "../db";
 import { routesEntity } from "../db/schema";
 import {

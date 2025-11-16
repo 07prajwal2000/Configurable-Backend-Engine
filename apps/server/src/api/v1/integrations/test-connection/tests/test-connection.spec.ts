@@ -3,8 +3,8 @@ import handleRequest from "../service";
 import { getAppConfigs } from "../repository";
 
 vi.mock("../repository");
-vi.mock("@cbe/adapters/db", async () => {
-  const actual = await vi.importActual("@cbe/adapters/db");
+vi.mock("@fluxify/adapters/db", async () => {
+  const actual = await vi.importActual("@fluxify/adapters/db");
   return {
     ...actual,
     PostgresAdapter: {
@@ -95,7 +95,7 @@ describe("testConnection service", () => {
       },
     ]);
 
-    const { PostgresAdapter } = await import("@cbe/adapters/db");
+    const { PostgresAdapter } = await import("@fluxify/adapters/db");
     (PostgresAdapter.testConnection as any).mockResolvedValueOnce({
       success: true,
     });
@@ -119,7 +119,7 @@ describe("testConnection service", () => {
       },
     ]);
 
-    const { PostgresAdapter } = await import("@cbe/adapters/db");
+    const { PostgresAdapter } = await import("@fluxify/adapters/db");
     (PostgresAdapter.testConnection as any).mockResolvedValueOnce({
       success: true,
     });

@@ -6,7 +6,7 @@ import {
   deleteRoute,
 } from "./repository";
 import { RouteType, BulkOperation } from "./dto";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 import { createBlockService } from "../blocks/service";
 import {
   getBlockById,

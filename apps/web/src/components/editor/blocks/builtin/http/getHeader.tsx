@@ -5,7 +5,7 @@ import { Stack, useMantineTheme } from "@mantine/core";
 import { FaHeading } from "react-icons/fa";
 import BlockHandle from "../../handle";
 import { Position } from "@xyflow/react";
-import { getHttpHeaderBlockSchema } from "@cbe/blocks";
+import { getHttpHeaderBlockSchema } from "@fluxify/blocks";
 import JsTextInput from "@/components/editors/jsTextInput";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import z from "zod";

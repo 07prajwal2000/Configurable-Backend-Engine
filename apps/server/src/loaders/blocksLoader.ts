@@ -1,4 +1,4 @@
-import { BlockBuilder, BlockTypes, Context, Engine } from "@cbe/blocks";
+import { BlockBuilder, BlockTypes, Context, Engine } from "@fluxify/blocks";
 import { db } from "../db";
 import { blocksEntity, edgesEntity } from "../db/schema";
 import { and, eq, ne } from "drizzle-orm";

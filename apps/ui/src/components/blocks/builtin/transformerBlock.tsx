@@ -15,7 +15,7 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import type z from "zod";
-import type { transformerBlockSchema } from "@cbe/blocks";
+import type { transformerBlockSchema } from "@fluxify/blocks";
 import { useState } from "react";
 import { JsEditorButton } from "../../editor/jsDialogEditor";
 import FieldMapEditor from "../../editor/fieldMapEditor";

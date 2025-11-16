@@ -1,4 +1,4 @@
-import { conditionSchema, evaluateOperator, operatorSchema } from "@cbe/lib";
+import { conditionSchema, evaluateOperator, operatorSchema } from "@fluxify/lib";
 import {
   BaseBlock,
   baseBlockDataSchema,

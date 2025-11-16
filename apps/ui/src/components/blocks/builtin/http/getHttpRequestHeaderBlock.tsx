@@ -7,7 +7,7 @@ import {
   type NodeProps,
 } from "@xyflow/react";
 import type z from "zod";
-import type { getHttpHeaderBlockSchema } from "@cbe/blocks";
+import type { getHttpHeaderBlockSchema } from "@fluxify/blocks";
 import BaseBlockSidebar from "../../../editor/baseBlockSidebar";
 import { useBlocksContext } from "../../../editor/blockEditor";
 import CustomHandle, { connectionExist } from "../../../handle";

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import BlockCategories from "../blocks/blockCategories";
 import BlocksList from "../blocks/blocksList";
 import { FaArrowRotateLeft } from "react-icons/fa6";
-import type { BlockTypes } from "@cbe/blocks";
+import type { BlockTypes } from "@fluxify/blocks";
 
 type AddBlockMenuProps = {
   onAddNewBlock: (type: BlockTypes, position: { x: number; y: number }) => void;

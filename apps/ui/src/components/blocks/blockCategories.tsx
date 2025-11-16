@@ -1,5 +1,5 @@
 import { Button, Stack } from "@mui/material";
-import { BlockCategories as CategoriesEnum } from "@cbe/blocks";
+import { BlockCategories as CategoriesEnum } from "@fluxify/blocks";
 
 type BlockCategoriesType = {
   onClick?: (value: string) => void;

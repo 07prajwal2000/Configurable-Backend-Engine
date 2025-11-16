@@ -7,7 +7,7 @@ import JsEditor from "@/components/editors/jsEditor";
 import { Stack, Divider, Text, Select } from "@mantine/core";
 import z from "zod";
 import { DataSettingsProps } from "../../settingsDialog/blockSettingsDialog";
-import { logBlockSchema } from "@cbe/blocks/builtin/log";
+import { logBlockSchema } from "@fluxify/blocks/builtin/log";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import JsTextInput from "@/components/editors/jsTextInput";
 

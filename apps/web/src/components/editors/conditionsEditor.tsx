@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ifBlockSchema } from "@cbe/blocks";
+import { ifBlockSchema } from "@fluxify/blocks";
 import z from "zod";
 import {
   ActionIcon,

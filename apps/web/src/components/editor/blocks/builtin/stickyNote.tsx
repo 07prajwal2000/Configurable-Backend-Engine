@@ -12,7 +12,7 @@ import {
 import React, { useEffect } from "react";
 import { NodeProps, NodeResizer } from "@xyflow/react";
 import z from "zod";
-import { stickyNotesSchema } from "@cbe/blocks";
+import { stickyNotesSchema } from "@fluxify/blocks";
 import { useContext } from "react";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import { TbTrashFilled } from "react-icons/tb";

@@ -1,5 +1,5 @@
 {
-  "name": "@cbe/ui",
+  "name": "@fluxify/ui",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cbe/backend-engine": "file:../server",
-    "@cbe/blocks": "file:../../packages/blocks",
+    "@fluxify/backend-engine": "file:../server",
+    "@fluxify/blocks": "file:../../packages/blocks",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.2.6",

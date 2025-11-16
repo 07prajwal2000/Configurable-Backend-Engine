@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@cbe/backend-engine": "file:../server",
+    "@fluxify/backend-engine": "file:../server",
     "@dagrejs/dagre": "^1.1.5",
     "@mantine/core": "^8.3.5",
     "@mantine/form": "^8.3.5",

@@ -11,7 +11,7 @@ import type z from "zod";
 import {
   arrayOperationsBlockSchema,
   arrayOperationsEnumSchema,
-} from "@cbe/blocks";
+} from "@fluxify/blocks";
 import {
   Checkbox,
   FormControl,

@@ -1,4 +1,4 @@
-import { HttpRouteParser } from "@cbe/lib";
+import { HttpRouteParser } from "@fluxify/lib";
 import { Hono } from "hono";
 import { handleRequest } from "./service";
 

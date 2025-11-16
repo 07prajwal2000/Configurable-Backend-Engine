@@ -1,4 +1,4 @@
-import type { getHttpCookieBlockSchema } from "@cbe/blocks";
+import type { getHttpCookieBlockSchema } from "@fluxify/blocks";
 import { Stack, Grid, Typography, useTheme, TextField } from "@mui/material";
 import {
   Position,

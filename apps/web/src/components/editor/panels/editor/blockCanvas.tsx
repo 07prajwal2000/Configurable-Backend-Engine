@@ -21,7 +21,7 @@ import {
   useCanvasEdgesStore,
 } from "@/store/canvas";
 import CanvasToolboxPanel from "./toolbox/canvasToolboxPanel";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 import { edgeTypes } from "../../blocks/customEdge";
 import { showNotification } from "@mantine/notifications";
 import { BlockCanvasContext } from "@/context/blockCanvas";

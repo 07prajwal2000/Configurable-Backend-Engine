@@ -1,5 +1,5 @@
 {
-  "name": "@cbe/blocks",
+  "name": "@fluxify/blocks",
   "version": "1.0.0",
   "keywords": [],
   "author": "",
@@ -14,8 +14,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@cbe/adapters": "file:../adapters",
-    "@cbe/lib": "file:../lib",
+    "@fluxify/adapters": "file:../adapters",
+    "@fluxify/lib": "file:../lib",
     "zod": "^4.0.17"
   }
 }

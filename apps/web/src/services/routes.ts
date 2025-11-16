@@ -2,22 +2,22 @@ import z from "zod";
 import {
   requestQuerySchema as getAllRequestQuerySchema,
   responseSchema as getAllResponseSchema,
-} from "@cbe/backend-engine/src/api/v1/routes/get-all/dto";
+} from "@fluxify/backend-engine/src/api/v1/routes/get-all/dto";
 import {
   requestBodySchema as createRequestSchema,
   responseSchema as createResponseSchema,
-} from "@cbe/backend-engine/src/api/v1/routes/create/dto";
+} from "@fluxify/backend-engine/src/api/v1/routes/create/dto";
 import {
   requestBodySchema as updateRequestSchema,
   responseSchema as updateResponseSchema,
-} from "@cbe/backend-engine/src/api/v1/routes/update/dto";
+} from "@fluxify/backend-engine/src/api/v1/routes/update/dto";
 import {
   requestBodySchema as updatePartialRequestSchema,
   responseSchema as updatePartialResponseSchema,
-} from "@cbe/backend-engine/src/api/v1/routes/update-partial/dto";
-import { responseSchema as getByIdResponseSchema } from "@cbe/backend-engine/src/api/v1/routes/get-by-id/dto";
-import { responseSchema as getCanvasItemsResponseSchema } from "@cbe/backend-engine/src/api/v1/routes/get-canvas-items/dto";
-import { requestBodySchema as saveCanvasItemsRequestSchema } from "@cbe/backend-engine/src/api/v1/routes/save-canvas-state/dto";
+} from "@fluxify/backend-engine/src/api/v1/routes/update-partial/dto";
+import { responseSchema as getByIdResponseSchema } from "@fluxify/backend-engine/src/api/v1/routes/get-by-id/dto";
+import { responseSchema as getCanvasItemsResponseSchema } from "@fluxify/backend-engine/src/api/v1/routes/get-canvas-items/dto";
+import { requestBodySchema as saveCanvasItemsRequestSchema } from "@fluxify/backend-engine/src/api/v1/routes/save-canvas-state/dto";
 import { httpClient } from "@/lib/http";
 
 const baseUrl = `/v1/routes`;

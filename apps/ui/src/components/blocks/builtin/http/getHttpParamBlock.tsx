@@ -1,4 +1,4 @@
-import type { getHttpParamBlockSchema } from "@cbe/blocks";
+import type { getHttpParamBlockSchema } from "@fluxify/blocks";
 import {
   Stack,
   Grid,

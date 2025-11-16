@@ -1,5 +1,5 @@
 import { BlockTypes } from "@/types/block";
-import { stickyNotesSchema } from "@cbe/blocks";
+import { stickyNotesSchema } from "@fluxify/blocks";
 import z from "zod";
 
 export function createBlockData(block: BlockTypes) {

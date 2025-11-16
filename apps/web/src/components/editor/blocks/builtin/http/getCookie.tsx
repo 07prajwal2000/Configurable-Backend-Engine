@@ -8,7 +8,7 @@ import JsTextInput from "@/components/editors/jsTextInput";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import z from "zod";
 import { DataSettingsProps } from "../../settingsDialog/blockSettingsDialog";
-import { getHttpCookieBlockSchema } from "@cbe/blocks";
+import { getHttpCookieBlockSchema } from "@fluxify/blocks";
 
 const GetCookie = (props: NodeProps) => {
   const greenColor = useMantineTheme().colors.green[8];

@@ -9,7 +9,7 @@ import IfBlock from "../components/blocks/builtin/ifBlock";
 import ForLoopBlock from "../components/blocks/builtin/forLoopBlock";
 import TransformerBlock from "../components/blocks/builtin/transformerBlock";
 import SetVarBlock from "../components/blocks/builtin/setVarBlock";
-import { BlockTypes } from "@cbe/blocks";
+import { BlockTypes } from "@fluxify/blocks";
 import ArrayOperationsBlock from "../components/blocks/builtin/arrayOperationsBlock";
 import GetHttpRequestHeaderBlock from "../components/blocks/builtin/http/getHttpRequestHeaderBlock";
 import SetHttpHeaderBlock from "../components/blocks/builtin/http/setHttpHeaderBlock";

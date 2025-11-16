@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
 import z from "zod";
-import { forLoopBlockSchema } from "@cbe/blocks";
+import { forLoopBlockSchema } from "@fluxify/blocks";
 import DebouncedTextInput from "@/components/editors/debouncedTextInput";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import JsTextInput from "@/components/editors/jsTextInput";

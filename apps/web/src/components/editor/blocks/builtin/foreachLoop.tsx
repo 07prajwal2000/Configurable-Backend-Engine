@@ -4,7 +4,7 @@ import { TbInfinity } from "react-icons/tb";
 import { Checkbox, Stack, useMantineTheme } from "@mantine/core";
 import BaseBlock from "../base";
 import BlockHandle from "../handle";
-import { forEachLoopBlockSchema } from "@cbe/blocks";
+import { forEachLoopBlockSchema } from "@fluxify/blocks";
 import { z } from "zod";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
 import { BlockCanvasContext } from "@/context/blockCanvas";

@@ -4,7 +4,7 @@ import BlockHandle from "../handle";
 import { NodeProps, Position, useNodes } from "@xyflow/react";
 import { TbMatrix } from "react-icons/tb";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
-import { arrayOperationsBlockSchema } from "@cbe/blocks";
+import { arrayOperationsBlockSchema } from "@fluxify/blocks";
 import z from "zod";
 import { BlockTypes } from "@/types/block";
 import { Autocomplete, Checkbox, Group, Select, Stack } from "@mantine/core";

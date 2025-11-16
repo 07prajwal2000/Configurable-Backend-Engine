@@ -1,5 +1,5 @@
-import { DbType, PostgresAdapter } from "@cbe/adapters/db";
-import { JsVM } from "@cbe/lib/vm";
+import { DbType, PostgresAdapter } from "@fluxify/adapters/db";
+import { JsVM } from "@fluxify/lib/vm";
 
 async function main() {
   const pgAdapter = new PostgresAdapter({

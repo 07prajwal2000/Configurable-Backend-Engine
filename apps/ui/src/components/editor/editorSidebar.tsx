@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useBlockStore } from "../../store/blockStore";
 import { useNodes } from "@xyflow/react";
-import { BlockTypes } from "@cbe/blocks";
+import { BlockTypes } from "@fluxify/blocks";
 import { ResponseBlockSidebar } from "../blocks/responseBlock";
 import { IfBlockSidebar } from "../blocks/builtin/ifBlock";
 import { EntrypointBlockSidebar } from "../blocks/entrypoint";

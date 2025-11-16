@@ -8,10 +8,10 @@ import {
   getHttpParamBlockSchema,
   setHttpCookieBlockSchema,
   setHttpHeaderBlockSchema,
-} from "@cbe/blocks";
-import type { logBlockSchema } from "@cbe/blocks/builtin/log";
+} from "@fluxify/blocks";
+import type { logBlockSchema } from "@fluxify/blocks/builtin/log";
 import type z from "zod";
-import { HttpCookieSameSite } from "@cbe/blocks/baseBlock";
+import { HttpCookieSameSite } from "@fluxify/blocks/baseBlock";
 
 export const blocksList: Record<
   string,

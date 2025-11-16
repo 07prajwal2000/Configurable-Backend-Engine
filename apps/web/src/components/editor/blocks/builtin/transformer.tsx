@@ -5,7 +5,7 @@ import { NodeProps, Position } from "@xyflow/react";
 import { TbTransform } from "react-icons/tb";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
 import z from "zod";
-import { transformerBlockSchema } from "@cbe/blocks";
+import { transformerBlockSchema } from "@fluxify/blocks";
 import { Checkbox, Divider, Stack, Text } from "@mantine/core";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import FieldMapEditor from "@/components/editors/fieldMapEditor";

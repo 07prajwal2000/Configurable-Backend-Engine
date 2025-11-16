@@ -8,7 +8,7 @@ import {
 } from "../../../../db/schema";
 import { db, DbTransactionType } from "../../../../db";
 import { and, eq, or } from "drizzle-orm";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 
 const insertSchema = createInsertSchema(routesEntity);
 

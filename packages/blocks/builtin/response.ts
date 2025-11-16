@@ -1,6 +1,6 @@
 import z from "zod";
 import { BaseBlock, baseBlockDataSchema, BlockOutput } from "../baseBlock";
-import { httpcodes } from "@cbe/lib";
+import { httpcodes } from "@fluxify/lib";
 
 export const responseBlockSchema = z
   .object({
