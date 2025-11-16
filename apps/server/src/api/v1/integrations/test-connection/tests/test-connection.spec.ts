@@ -86,6 +86,11 @@ describe("testConnection service", () => {
   });
 
   it("should accept cfg: prefixed config keys", async () => {
+    const { PostgresAdapter } = await import("@fluxify/adapters/db");
+    (PostgresAdapter.testConnection as any).mockResolvedValueOnce({
+      success: true,
+    });
+
     mockGetAppConfigs.mockResolvedValueOnce([
       {
         key: "db_url",
@@ -95,21 +100,21 @@ describe("testConnection service", () => {
       },
     ]);
 
-    const { PostgresAdapter } = await import("@fluxify/adapters/db");
-    (PostgresAdapter.testConnection as any).mockResolvedValueOnce({
-      success: true,
-    });
-
     const result = await handleRequest({
       group: "database",
       variant: "PostgreSQL",
-      config: { url: "cfg:db_url" },
+      config: { source: "url", url: "cfg:db_url" },
     });
 
     expect(mockGetAppConfigs).toHaveBeenCalled();
   });
 
   it("should handle encrypted app configs", async () => {
+    const { PostgresAdapter } = await import("@fluxify/adapters/db");
+    (PostgresAdapter.testConnection as any).mockResolvedValueOnce({
+      success: true,
+    });
+
     mockGetAppConfigs.mockResolvedValueOnce([
       {
         key: "db_password",
@@ -119,15 +124,11 @@ describe("testConnection service", () => {
       },
     ]);
 
-    const { PostgresAdapter } = await import("@fluxify/adapters/db");
-    (PostgresAdapter.testConnection as any).mockResolvedValueOnce({
-      success: true,
-    });
-
     const result = await handleRequest({
       group: "database",
       variant: "PostgreSQL",
       config: {
+        source: "url",
         url: "cfg:db_password",
       },
     });
