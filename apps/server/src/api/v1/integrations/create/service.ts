@@ -6,7 +6,7 @@ import {
   integrationExistByName,
 } from "./repository";
 import { db } from "../../../../db";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 import { ConflictError } from "../../../../errors/conflictError";
 import { ServerError } from "../../../../errors/serverError";
 import { NotFoundError } from "../../../../errors/notFoundError";

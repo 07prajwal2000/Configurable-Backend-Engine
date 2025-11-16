@@ -7,7 +7,7 @@ import {
   getBlockById,
 } from "./repository";
 import { EdgeType } from "./dto";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 import { HttpError } from "../../../errors/httpError";
 
 // Validation function for edge data

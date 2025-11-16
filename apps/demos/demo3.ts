@@ -1,6 +1,6 @@
-import { BlockBuilder, BlocksListDTOSchemaType, Engine } from "@cbe/blocks";
-import { Context, ContextVarsType } from "@cbe/blocks/baseBlock";
-import { JsVM } from "@cbe/lib/vm";
+import { BlockBuilder, BlocksListDTOSchemaType, Engine } from "@fluxify/blocks";
+import { Context, ContextVarsType } from "@fluxify/blocks/baseBlock";
+import { JsVM } from "@fluxify/lib/vm";
 import fs from "fs";
 
 const { blocks, edges } = JSON.parse(

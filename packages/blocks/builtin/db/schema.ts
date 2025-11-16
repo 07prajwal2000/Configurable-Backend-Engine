@@ -1,4 +1,4 @@
-import { operatorSchema } from "@cbe/lib";
+import { operatorSchema } from "@fluxify/lib";
 import z from "zod";
 
 export const whereConditionSchema = z.object({

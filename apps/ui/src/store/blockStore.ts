@@ -1,4 +1,4 @@
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 import type { Node } from "@xyflow/react";
 import { create } from "zustand";
 

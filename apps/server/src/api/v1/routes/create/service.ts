@@ -10,7 +10,7 @@ import {
 import { ConflictError } from "../../../../errors/conflictError";
 import { db } from "../../../../db";
 import { CHAN_ON_ROUTE_CHANGE, publishMessage } from "../../../../db/redis";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 import { NotFoundError } from "../../../../errors/notFoundError";
 
 export default async function handleRequest(

@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import CustomHandle, { connectionExist } from "../../../handle";
 import type z from "zod";
-import { logBlockSchema } from "@cbe/blocks/builtin/log";
+import { logBlockSchema } from "@fluxify/blocks/builtin/log";
 import BaseBlockSidebar from "../../../editor/baseBlockSidebar";
 import InputWithJs from "../../../inputWithJs";
 import { useBlocksContext } from "../../../editor/blockEditor";

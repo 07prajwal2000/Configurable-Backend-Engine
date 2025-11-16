@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { ForEachLoopBlock } from "../loops/foreach";
-import { JsVM } from "@cbe/lib/vm";
+import { JsVM } from "@fluxify/lib/vm";
 import { Engine } from "../../engine";
 import { SetVarBlock } from "../setVar";
 import { Context } from "../../baseBlock";

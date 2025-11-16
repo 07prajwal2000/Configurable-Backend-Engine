@@ -5,7 +5,7 @@ import { checkProjectExist } from "../../routes/create/repository";
 import { ConflictError } from "../../../../errors/conflictError";
 import { createProject } from "./repository";
 import { ServerError } from "../../../../errors/serverError";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 
 export default async function handleRequest(
   data: z.infer<typeof requestBodySchema>

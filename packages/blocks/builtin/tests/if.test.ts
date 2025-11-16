@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { IfBlock, OperatorResult } from "../if";
-import { JsVM } from "@cbe/lib/vm";
+import { JsVM } from "@fluxify/lib/vm";
 
 describe("Testing IfBlock", () => {
   describe("Testing evaluateResult()", () => {

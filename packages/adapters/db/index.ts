@@ -1,9 +1,9 @@
-import { operatorSchema } from "@cbe/lib";
+import { operatorSchema } from "@fluxify/lib";
 import z from "zod";
 import { Connection, DbType } from "./connection";
 import { PostgresAdapter } from "./postgresAdapter";
 import knex, { Knex } from "knex";
-import { JsVM } from "@cbe/lib/vm";
+import { JsVM } from "@fluxify/lib/vm";
 
 export const whereConditionSchema = z.object({
   attribute: z.string(),

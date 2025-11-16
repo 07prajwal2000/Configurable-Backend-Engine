@@ -6,7 +6,7 @@ import {
   type Node,
   type NodeProps,
 } from "@xyflow/react";
-import type { forEachLoopBlockSchema } from "@cbe/blocks";
+import type { forEachLoopBlockSchema } from "@fluxify/blocks";
 import CustomHandle, { connectionExist } from "../../handle";
 import {
   Box,

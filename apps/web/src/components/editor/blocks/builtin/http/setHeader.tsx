@@ -7,7 +7,7 @@ import BlockHandle from "../../handle";
 import { Position } from "@xyflow/react";
 import { DataSettingsProps } from "../../settingsDialog/blockSettingsDialog";
 import z from "zod";
-import { setHttpHeaderBlockSchema } from "@cbe/blocks";
+import { setHttpHeaderBlockSchema } from "@fluxify/blocks";
 import { Stack } from "@mantine/core";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import JsTextInput from "@/components/editors/jsTextInput";

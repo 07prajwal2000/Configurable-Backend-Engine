@@ -1,5 +1,5 @@
 {
-  "name": "@cbe/adapters",
+  "name": "@fluxify/adapters",
   "version": "1.0.0",
   "keywords": [],
   "author": "",
@@ -9,7 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@cbe/lib": "file:../lib",
+    "@fluxify/lib": "file:../lib",
     "knex": "^3.1.0",
     "pg": "^8.16.3",
     "zod": "^4.1.11"

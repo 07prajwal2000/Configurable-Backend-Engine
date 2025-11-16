@@ -1,7 +1,7 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { blocksList } from "../../constants/blocksList";
-import type { BlockTypes } from "@cbe/blocks";
+import type { BlockTypes } from "@fluxify/blocks";
 
 type BlocksListType = {
   onSelect?: (blockName: BlockTypes) => void;

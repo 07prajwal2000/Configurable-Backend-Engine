@@ -1,7 +1,7 @@
 import { db } from "../../../db";
 import { integrationsEntity, appConfigEntity } from "../../../db/schema";
 import { eq, and, sql, inArray } from "drizzle-orm";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 
 export interface IntegrationType {
   id: string;

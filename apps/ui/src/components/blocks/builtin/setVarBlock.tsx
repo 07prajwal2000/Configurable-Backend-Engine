@@ -6,7 +6,7 @@ import {
 } from "@xyflow/react";
 import BaseBlock from "../baseBlock";
 import type z from "zod";
-import type { setVarSchema } from "@cbe/blocks";
+import type { setVarSchema } from "@fluxify/blocks";
 import {
   Box,
   Grid,

@@ -7,7 +7,7 @@ import { IoLogoJavascript } from "react-icons/io";
 import JsEditor from "@/components/editors/jsEditor";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
 import z from "zod";
-import { jsRunnerBlockSchema } from "@cbe/blocks";
+import { jsRunnerBlockSchema } from "@fluxify/blocks";
 import { Divider, Stack, Text } from "@mantine/core";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 

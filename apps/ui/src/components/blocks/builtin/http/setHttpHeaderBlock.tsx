@@ -1,4 +1,4 @@
-import type { setHttpHeaderBlockSchema } from "@cbe/blocks";
+import type { setHttpHeaderBlockSchema } from "@fluxify/blocks";
 import {
   Position,
   useNodeConnections,

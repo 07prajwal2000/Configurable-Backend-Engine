@@ -6,8 +6,8 @@ import { TbDoorExit } from "react-icons/tb";
 import { DataSettingsProps } from "./settingsDialog/blockSettingsDialog";
 import { Select, Stack } from "@mantine/core";
 import z from "zod";
-import { responseBlockSchema } from "@cbe/blocks";
-import { httpcodes } from "@cbe/lib";
+import { responseBlockSchema } from "@fluxify/blocks";
+import { httpcodes } from "@fluxify/lib";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 
 const Response = (props: NodeProps) => {

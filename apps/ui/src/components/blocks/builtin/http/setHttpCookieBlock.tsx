@@ -1,4 +1,4 @@
-import type { setHttpCookieBlockSchema } from "@cbe/blocks";
+import type { setHttpCookieBlockSchema } from "@fluxify/blocks";
 import {
   Checkbox,
   FormControl,
@@ -24,7 +24,7 @@ import BaseBlock from "../../baseBlock";
 import { useBlocksContext } from "../../../editor/blockEditor";
 import BaseBlockSidebar from "../../../editor/baseBlockSidebar";
 import InputWithJs from "../../../inputWithJs";
-import { HttpCookieSameSite } from "@cbe/blocks/baseBlock";
+import { HttpCookieSameSite } from "@fluxify/blocks/baseBlock";
 
 export function SetHttpCookieBlockSidebar({ block }: { block: Node }) {
   const data = block.data as z.infer<typeof setHttpCookieBlockSchema>;

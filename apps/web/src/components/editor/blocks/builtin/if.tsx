@@ -5,7 +5,7 @@ import BlockHandle from "../handle";
 import { FaMapSigns } from "react-icons/fa";
 import { Divider, Stack, useMantineTheme } from "@mantine/core";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
-import { ifBlockSchema } from "@cbe/blocks";
+import { ifBlockSchema } from "@fluxify/blocks";
 import z from "zod";
 import ConditionsEditor from "@/components/editors/conditionsEditor";
 import { Text } from "@mantine/core";

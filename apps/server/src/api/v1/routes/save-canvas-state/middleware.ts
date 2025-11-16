@@ -18,21 +18,21 @@ import {
   setVarSchema,
   stickyNotesSchema,
   transformerBlockSchema,
-} from "@cbe/blocks";
+} from "@fluxify/blocks";
 import { Context, Next } from "hono";
 import { ValidationError } from "../../../../errors/validationError";
-import { entrypointBlockSchema } from "@cbe/blocks/builtin/entrypoint";
-import { httpRequestBlockSchema } from "@cbe/blocks/builtin/httpRequest";
-import { logBlockSchema } from "@cbe/blocks/builtin/log";
-import { responseBlockSchema } from "@cbe/blocks/builtin/response";
-import { getSingleDbBlockSchema } from "@cbe/blocks/builtin/db/getSingle";
-import { getAllDbBlockSchema } from "@cbe/blocks/builtin/db/getAll";
-import { deleteDbBlockSchema } from "@cbe/blocks/builtin/db/delete";
-import { insertDbBlockSchema } from "@cbe/blocks/builtin/db/insert";
-import { insertBulkDbBlockSchema } from "@cbe/blocks/builtin/db/insertBulk";
+import { entrypointBlockSchema } from "@fluxify/blocks/builtin/entrypoint";
+import { httpRequestBlockSchema } from "@fluxify/blocks/builtin/httpRequest";
+import { logBlockSchema } from "@fluxify/blocks/builtin/log";
+import { responseBlockSchema } from "@fluxify/blocks/builtin/response";
+import { getSingleDbBlockSchema } from "@fluxify/blocks/builtin/db/getSingle";
+import { getAllDbBlockSchema } from "@fluxify/blocks/builtin/db/getAll";
+import { deleteDbBlockSchema } from "@fluxify/blocks/builtin/db/delete";
+import { insertDbBlockSchema } from "@fluxify/blocks/builtin/db/insert";
+import { insertBulkDbBlockSchema } from "@fluxify/blocks/builtin/db/insertBulk";
 import { updateBlockSchema } from "../../../../modules/admin/blocks/dto";
-import { nativeDbBlockSchema } from "@cbe/blocks/builtin/db/native";
-import { transactionDbBlockSchema } from "@cbe/blocks/builtin/db/transaction";
+import { nativeDbBlockSchema } from "@fluxify/blocks/builtin/db/native";
+import { transactionDbBlockSchema } from "@fluxify/blocks/builtin/db/transaction";
 import { BadRequestError } from "../../../../errors/badRequestError";
 
 export async function requestBodyValidator(ctx: Context, next: Next) {

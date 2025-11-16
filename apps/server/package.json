@@ -1,5 +1,5 @@
 {
-  "name": "@cbe/backend-engine",
+  "name": "@fluxify/backend-engine",
   "version": "1.0.0",
   "scripts": {
     "dev": "tsx watch deployments/standalone.ts",
@@ -19,9 +19,10 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@cbe/blocks": "file:../../packages/blocks",
-    "@cbe/lib": "file:../../packages/lib",
     "@electric-sql/pglite": "^0.3.11",
+    "@fluxify/adapters": "../../packages/adapters/",
+    "@fluxify/blocks": "file:../../packages/blocks",
+    "@fluxify/lib": "file:../../packages/lib",
     "@hono/node-server": "^1.19.0",
     "@hono/standard-validator": "^0.1.5",
     "@hono/zod-validator": "^0.7.2",

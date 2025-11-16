@@ -5,7 +5,7 @@ import { NodeProps, Position } from "@xyflow/react";
 import { TbCodeVariablePlus } from "react-icons/tb";
 import { Stack, useMantineTheme } from "@mantine/core";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
-import { getVarBlockSchema } from "@cbe/blocks";
+import { getVarBlockSchema } from "@fluxify/blocks";
 import z from "zod";
 import VariableSelector from "@/components/editors/variableSelector";
 import { BlockCanvasContext } from "@/context/blockCanvas";

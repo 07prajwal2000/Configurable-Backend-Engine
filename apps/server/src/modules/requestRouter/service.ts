@@ -1,12 +1,12 @@
 import { getCookie, setCookie } from "hono/cookie";
-import { HttpClient, HttpRoute, HttpRouteParser } from "@cbe/lib";
-import { Context as BlockContext, ContextVarsType } from "@cbe/blocks";
+import { HttpClient, HttpRoute, HttpRouteParser } from "@fluxify/lib";
+import { Context as BlockContext, ContextVarsType } from "@fluxify/blocks";
 import { Context } from "hono";
 import { ContentfulStatusCode } from "hono/utils/http-status";
-import { JsVM } from "@cbe/lib/vm";
+import { JsVM } from "@fluxify/lib/vm";
 import { startBlocksExecution } from "../../loaders/blocksLoader";
 import { appConfigCache } from "../../loaders/appconfigLoader";
-import { DbFactory } from "@cbe/adapters/db";
+import { DbFactory } from "@fluxify/adapters/db";
 import { dbIntegrationsCache } from "../../loaders/integrationsLoader";
 
 export type HandleRequestType = {

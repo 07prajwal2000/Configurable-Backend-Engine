@@ -4,9 +4,9 @@ import {
 	TransformerBlock,
 	ConsoleLoggerBlock,
 	ForEachLoopBlock,
-} from "@cbe/blocks";
-import { Context } from "@cbe/blocks/baseBlock";
-import { JsVM } from "@cbe/blocks/vm";
+} from "@fluxify/blocks";
+import { Context } from "@fluxify/blocks/baseBlock";
+import { JsVM } from "@fluxify/blocks/vm";
 
 const vars = {};
 const vm = new JsVM(vars);

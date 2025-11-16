@@ -10,7 +10,7 @@ import { requestBodySchema, responseSchema } from "./dto";
 import { errorSchema } from "../../../../errors/customError";
 import handleRequest from "./service";
 import { validationErrorSchema } from "../../../../errors/validationError";
-import { generateID } from "@cbe/lib";
+import { generateID } from "@fluxify/lib";
 
 const openapiRouteOptions: DescribeRouteOptions = {
   description:

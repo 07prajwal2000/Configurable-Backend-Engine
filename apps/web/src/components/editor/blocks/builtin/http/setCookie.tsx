@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { DataSettingsProps } from "../../settingsDialog/blockSettingsDialog";
 import z from "zod";
-import { setHttpCookieBlockSchema } from "@cbe/blocks";
+import { setHttpCookieBlockSchema } from "@fluxify/blocks";
 import JsTextInput from "@/components/editors/jsTextInput";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 

@@ -5,7 +5,7 @@ import {
   BlockOutput,
   Context,
 } from "../../baseBlock";
-import { DbAdapterMode, IDbAdapter } from "@cbe/adapters/db";
+import { DbAdapterMode, IDbAdapter } from "@fluxify/adapters/db";
 import { Engine } from "../../engine";
 
 export const transactionDbBlockSchema = z

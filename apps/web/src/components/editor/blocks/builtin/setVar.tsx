@@ -10,7 +10,7 @@ import { Stack } from "@mantine/core";
 import VariableSelector from "@/components/editors/variableSelector";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
 import z from "zod";
-import { setVarSchema } from "@cbe/blocks";
+import { setVarSchema } from "@fluxify/blocks";
 import DebouncedTextInput from "@/components/editors/debouncedTextInput";
 import JsTextInput from "@/components/editors/jsTextInput";
 

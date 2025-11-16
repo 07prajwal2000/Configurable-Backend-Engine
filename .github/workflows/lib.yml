@@ -1,4 +1,4 @@
-name: CI for @cbe/lib package
+name: CI for @fluxify/lib package
 on:
   push:
     branches:

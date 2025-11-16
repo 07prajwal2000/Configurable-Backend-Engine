@@ -5,7 +5,7 @@ import { Select, Stack, useMantineTheme } from "@mantine/core";
 import { VscSymbolParameter } from "react-icons/vsc";
 import BlockHandle from "../../handle";
 import { Position } from "@xyflow/react";
-import { getHttpParamBlockSchema } from "@cbe/blocks";
+import { getHttpParamBlockSchema } from "@fluxify/blocks";
 import JsTextInput from "@/components/editors/jsTextInput";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import z from "zod";

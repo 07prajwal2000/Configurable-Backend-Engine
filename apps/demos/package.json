@@ -1,5 +1,5 @@
 {
-	"name": "@cbe/demos",
+	"name": "@fluxify/demos",
 	"version": "1.0.0",
 	"keywords": [
 		"configurable-backend-engine"
@@ -12,7 +12,7 @@
 		"tsx": "^4.20.4"
 	},
 	"dependencies": {
-		"@cbe/adapters": "file:../../packages/adapters",
-		"@cbe/blocks": "file:../../packages/blocks"
+		"@fluxify/adapters": "file:../../packages/adapters",
+		"@fluxify/blocks": "file:../../packages/blocks"
 	}
 }

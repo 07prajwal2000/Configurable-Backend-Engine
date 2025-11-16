@@ -4,9 +4,9 @@ import {
   IfBlock,
   JsRunnerBlock,
   SetVarBlock,
-} from "@cbe/blocks";
-import { Context } from "@cbe/blocks/baseBlock";
-import { JsVM } from "@cbe/lib/vm";
+} from "@fluxify/blocks";
+import { Context } from "@fluxify/blocks/baseBlock";
+import { JsVM } from "@fluxify/lib/vm";
 
 const apiId = "123";
 const route = "/users/123";
