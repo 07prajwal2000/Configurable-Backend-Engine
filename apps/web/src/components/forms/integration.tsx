@@ -1,11 +1,18 @@
 import { integrationsQuery } from "@/query/integrationsQuery";
-import React from "react";
+import React, { useEffect } from "react";
 import QueryLoader from "../query/queryLoader";
 import QueryError from "../query/queryError";
 import { useQueryClient } from "@tanstack/react-query";
 import { ZodType } from "zod";
 import { useForm } from "@mantine/form";
-import { Button, Group, Select, Stack } from "@mantine/core";
+import {
+  ActionIcon,
+  ActionIconProps,
+  Button,
+  Group,
+  Select,
+  Stack,
+} from "@mantine/core";
 import {
   getSchema,
   getIntegrationsGroups,
@@ -16,21 +23,37 @@ import { getZodValidatedErrors } from "@/lib/forms";
 import PostgresForm from "./databases/postgres";
 import TestIntegrationConnectionButton from "../buttons/testIntegrationConnectionButton";
 import SaveIntegrationButton from "../buttons/saveIntegrationButton";
+import { TbTrash } from "react-icons/tb";
+import ConfirmDialog from "../dialog/confirmDialog";
+import { useDisclosure } from "@mantine/hooks";
 
 type PropTypes = {
   onSubmit?: (data: any) => void;
   data?: { name: string; group: string; variant: string; config: any };
   id?: string;
-  zodSchema?: ZodType;
   showTestConnection?: boolean;
   isLoading?: boolean;
   showSaveButton?: boolean;
   saveButtonLabel?: string;
+  disableButtons?: string[];
+  showDeleteButton?: boolean;
+  onDelete?: () => void;
+  deleteButtonProps?: ActionIconProps;
 };
 
 const IntegrationForm = (props: PropTypes) => {
   const useQuery = integrationsQuery.getById.query;
-  const { data, isLoading, isError, error } = useQuery(props.id || "");
+  const {
+    data: loadedData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(props.id || "");
+  const data = props.data || loadedData;
+  const [
+    deleteModalOpened,
+    { open: openDeleteModal, close: closeDeleteModal },
+  ] = useDisclosure();
   const form = useForm({
     initialValues: {
       name: data?.name || "",
@@ -59,6 +82,12 @@ const IntegrationForm = (props: PropTypes) => {
   });
   const client = useQueryClient();
 
+  useEffect(() => {
+    if (loadedData) {
+      form.setValues(loadedData);
+    }
+  }, [loadedData]);
+
   if (isLoading) {
     return <QueryLoader skeletonsCols={1} skeletonsRows={3} />;
   }
@@ -76,14 +105,18 @@ const IntegrationForm = (props: PropTypes) => {
     <form onSubmit={form.onSubmit((values) => props.onSubmit?.(values))}>
       <Stack>
         <Select
+          readOnly={props.disableButtons?.includes("group")}
           label="Choose a Connector"
           description="Choose from a range of connectors to get started"
           {...form.getInputProps("group")}
+          value={form.values.group}
           data={getIntegrationsGroups()}
         />
         {form.values.group && (
           <Select
             label="Select Variant"
+            readOnly={props.disableButtons?.includes("variant")}
+            value={form.values.variant}
             description="Select the service you want to configure & connect to"
             {...form.getInputProps("variant")}
             data={getIntegrationsVariants(form.values.group as any)}
@@ -101,12 +134,40 @@ const IntegrationForm = (props: PropTypes) => {
                 variant={form.values.variant}
               />
             )}
-          {props.showSaveButton && form.values.group && form.values.variant && (
-            <SaveIntegrationButton
-              loading={props.isLoading}
-              label={props.saveButtonLabel}
-            />
-          )}
+          <Group>
+            {props.showDeleteButton && (
+              <>
+                <ConfirmDialog
+                  onClose={closeDeleteModal}
+                  open={deleteModalOpened}
+                  title="Are you sure want to delete the Integration"
+                  onConfirm={() => {
+                    props.onDelete?.();
+                    closeDeleteModal();
+                  }}
+                >
+                  You are about to delete the integration. This action is
+                  irreversible.
+                </ConfirmDialog>
+                <ActionIcon
+                  size={"lg"}
+                  color="red.7"
+                  onClick={openDeleteModal}
+                  {...props.deleteButtonProps}
+                >
+                  <TbTrash />
+                </ActionIcon>
+              </>
+            )}
+            {props.showSaveButton &&
+              form.values.group &&
+              form.values.variant && (
+                <SaveIntegrationButton
+                  loading={props.isLoading}
+                  label={props.saveButtonLabel}
+                />
+              )}
+          </Group>
         </Group>
       </Stack>
     </form>

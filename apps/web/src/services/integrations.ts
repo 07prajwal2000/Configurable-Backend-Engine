@@ -16,7 +16,7 @@ const baseUrl = "/v1/integrations";
 
 export const integrationService = {
   async getAll(group: string): Promise<z.infer<typeof getAllResponseSchema>> {
-    const res = await httpClient.get(`${baseUrl}/${group}`);
+    const res = await httpClient.get(`${baseUrl}/list/${group}`);
     return res.data;
   },
   async getById(id: string): Promise<z.infer<typeof getByIdResponseSchema>> {

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 type PropTypes = {
   title: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onConfirm?: () => void;
   confirmText?: string;
   cancelText?: string;
@@ -33,7 +33,7 @@ const ConfirmDialog = (props: PropTypes) => {
       withCloseButton={false}
       onClose={props.onClose}
     >
-      <Text size="xl" fw={"bold"}>
+      <Text size="xl" fw={"500"}>
         {props.title}
       </Text>
       <Divider mt={4} mb={"xs"} />

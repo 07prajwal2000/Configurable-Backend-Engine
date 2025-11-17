@@ -17,13 +17,17 @@ type PropTypes = {
 
 const PostgresForm = (props: PropTypes) => {
   const form = props.form;
-  const selectedWindow = props.form.values.config?.source ?? "url";
-  const isUrlSelected = selectedWindow === "url";
+  const [tabSelected, setTabSelected] = useState(
+    "url" in form.values.config ? "url" : "credentials"
+  );
+  const isUrlSelected = "url" === tabSelected;
   function selectUrl() {
     form.setFieldValue("config.source", "url");
+    setTabSelected("url");
   }
   function selectCredentials() {
     form.setFieldValue("config.source", "credentials");
+    setTabSelected("credentials");
   }
 
   return (
@@ -31,7 +35,8 @@ const PostgresForm = (props: PropTypes) => {
       <TextInput
         label="Name"
         required
-        description="Name for the integration"
+        value={form.values.name ?? ""}
+        description="Unique Name for the integration"
         placeholder="My Postgres Database"
         {...form.getInputProps("name")}
       />

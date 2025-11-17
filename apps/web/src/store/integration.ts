@@ -1,28 +1,61 @@
+import { integrationsGroupSchema } from "@fluxify/backend-engine/src/api/v1/integrations/schemas";
+import z from "zod";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
+export type IntegrationGroup = z.infer<typeof integrationsGroupSchema>;
+
 type State = {
   state: {
-    selectedMenu: string;
+    selectedMenu: IntegrationGroup;
+    searchQuery: string;
+    filterVariant: string;
+    filterHidden: boolean;
   };
 };
 
 type Actions = {
   actions: {
-    setSelectedMenu: (selectedMenu: string) => void;
+    setSelectedMenu: (selectedMenu: IntegrationGroup) => void;
+    setSearchQuery: (searchQuery: string) => void;
+    setFilterVariant: (filterVariant: string) => void;
+    setFilterHidden: (filterHidden: boolean) => void;
+    toggleFilterVisibility: () => void;
   };
 };
 
 const store = create<State & Actions>()(
   immer((set) => ({
     state: {
-      selectedMenu: "Databases",
+      selectedMenu: "database",
+      searchQuery: "",
+      filterVariant: "",
+      filterHidden: false,
     },
     actions: {
-      setSelectedMenu: (selectedMenu: string) =>
+      setSelectedMenu: (selectedMenu: IntegrationGroup) =>
         set((state) => {
           state.state.selectedMenu = selectedMenu;
         }),
+      setSearchQuery: (searchQuery: string) =>
+        set((state) => {
+          state.state.searchQuery = searchQuery;
+        }),
+      setFilterVariant(filterVariant) {
+        set((state) => {
+          state.state.filterVariant = filterVariant;
+        });
+      },
+      setFilterHidden(filterHidden) {
+        set((state) => {
+          state.state.filterHidden = filterHidden;
+        });
+      },
+      toggleFilterVisibility() {
+        set((state) => {
+          state.state.filterHidden = !state.state.filterHidden;
+        });
+      },
     },
   }))
 );

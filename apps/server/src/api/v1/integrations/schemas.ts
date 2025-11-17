@@ -28,7 +28,6 @@ export const postgresVariantConfigSchema = z
   })
   .or(
     z.object({
-      source: z.literal("url"),
       url: z
         .string()
         .min(10)

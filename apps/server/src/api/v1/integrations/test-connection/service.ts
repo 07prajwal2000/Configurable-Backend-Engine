@@ -81,8 +81,7 @@ async function testDatabasesConnection(
 }
 
 function extractPgConnectionInfo(config: any, appConfigs: Map<string, string>) {
-  const source = config.source;
-  if (source === "url") {
+  if ("url" in config) {
     config.url = config.url.startsWith("cfg:")
       ? appConfigs.get(config.url.slice(4)) || ""
       : config.url;

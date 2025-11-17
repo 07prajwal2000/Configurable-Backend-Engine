@@ -1,31 +1,66 @@
 "use client";
 
 import AddIntegrationButton from "@/components/buttons/addIntegrationButton";
+import IntegrationFilter from "@/components/filters/integrationFilter";
 import AvailableConnectors from "@/components/panels/availableConnectors";
-import { Grid, Group, Stack, Text } from "@mantine/core";
-import React from "react";
+import IntegrationsList from "@/components/panels/integrationsList";
+import { Group, Stack, Text } from "@mantine/core";
 
 const Page = () => {
   return (
-    <Stack h={"100vh"} py={"xs"} px={"md"}>
-      <Group align="center" justify="space-between">
-        <Stack gap={"xs"}>
-          <Text size="2rem" fw={"500"}>
+    <Stack h="100vh" py="xs" px="md" gap="lg">
+      {/* Fixed Header */}
+      <Group justify="space-between" align="center">
+        <Stack gap="xs">
+          <Text size="2rem" fw={500}>
             Integrations
           </Text>
-          <Text size="sm" c={"gray"}>
+          <Text size="sm" c="gray">
             Connect & Configure 3rd Party Services
           </Text>
         </Stack>
         <AddIntegrationButton />
       </Group>
-      <Grid flex={1} overflow="hidden" maw={"100%"}>
-        <Grid.Col h={"100%"} span={3}>
+
+      {/* Full-height 3-column layout */}
+      <Group
+        wrap="nowrap"
+        align="stretch"
+        flex={1}
+        style={{ overflow: "hidden" }}
+      >
+        {/* Left Panel - Available Connectors (scrolls independently if tall) */}
+        <Stack w="20%" h="100%" style={{ minWidth: 0, overflowY: "auto" }}>
           <AvailableConnectors />
-        </Grid.Col>
-        <Grid.Col span={7}></Grid.Col>
-        <Grid.Col span={2}></Grid.Col>
-      </Grid>
+        </Stack>
+
+        {/* Center - Main Content: ONLY this scrolls */}
+        <Stack
+          flex={1}
+          h="100%"
+          style={{
+            minWidth: 0,
+            overflow: "hidden", // Important: prevent double scrollbars
+            display: "flex",
+            flexDirection: "column",
+          }}
+          bg="white"
+        >
+          {/* This inner container takes all available height and scrolls */}
+          <Stack
+            flex={1}
+            style={{
+              overflowY: "auto",
+              overflowX: "hidden",
+            }}
+          >
+            <IntegrationsList />
+          </Stack>
+        </Stack>
+
+        {/* Right Panel - Filter (scrolls independently if needed) */}
+        <IntegrationFilter />
+      </Group>
     </Stack>
   );
 };
