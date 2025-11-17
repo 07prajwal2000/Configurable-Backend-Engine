@@ -1,16 +1,16 @@
 import { db } from "../db";
 import { integrationsEntity } from "../db/schema";
 import {
-  databaseVariantSchema,
-  integrationsGroupSchema,
-} from "../modules/admin/integrations/dto";
-import {
   CHAN_ON_APPCONFIG_CHANGE,
   CHAN_ON_INTEGRATION_CHANGE,
   subscribeToChannel,
 } from "../db/redis";
 import { appConfigCache } from "./appconfigLoader";
 import { parsePostgresUrl } from "../lib/parsers/postgres";
+import {
+  integrationsGroupSchema,
+  databaseVariantSchema,
+} from "../api/v1/integrations/schemas";
 
 export let dbIntegrationsCache: Record<string, any> = {};
 export let kvIntegrationsCache: Record<string, any> = {};

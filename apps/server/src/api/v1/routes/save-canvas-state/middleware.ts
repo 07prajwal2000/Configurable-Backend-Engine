@@ -30,10 +30,10 @@ import { getAllDbBlockSchema } from "@fluxify/blocks/builtin/db/getAll";
 import { deleteDbBlockSchema } from "@fluxify/blocks/builtin/db/delete";
 import { insertDbBlockSchema } from "@fluxify/blocks/builtin/db/insert";
 import { insertBulkDbBlockSchema } from "@fluxify/blocks/builtin/db/insertBulk";
-import { updateBlockSchema } from "../../../../modules/admin/blocks/dto";
 import { nativeDbBlockSchema } from "@fluxify/blocks/builtin/db/native";
 import { transactionDbBlockSchema } from "@fluxify/blocks/builtin/db/transaction";
 import { BadRequestError } from "../../../../errors/badRequestError";
+import { updateDbBlockSchema } from "@fluxify/blocks/builtin/db/update";
 
 export async function requestBodyValidator(ctx: Context, next: Next) {
   const jsonData = await ctx.req.json();
@@ -130,7 +130,7 @@ function blockDataValidator(data: z.infer<typeof requestBodySchema>) {
         schema = insertBulkDbBlockSchema;
         break;
       case BlockTypes.db_update:
-        schema = updateBlockSchema;
+        schema = updateDbBlockSchema;
         break;
       case BlockTypes.db_native:
         schema = nativeDbBlockSchema;
