@@ -15,6 +15,7 @@ export default async function handleRequest(
     name: route.name!,
     path: route.path!,
     active: route.active!,
+    projectId: route.projectId!,
     method: route.method!,
     createdBy: route.createdBy!,
     createdAt: route.createdAt.toISOString(),

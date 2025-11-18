@@ -22,7 +22,12 @@ export default async function handleRequest(
       totalPages: Math.ceil(totalCount / query.perPage),
     },
     data: result.map((value) => ({
-      ...value,
+      id: value.id!,
+      active: value.active!,
+      name: value.name!,
+      method: value.method!,
+      path: value.path!,
+      projectName: value.projectName!,
       createdAt: value.createdAt.toISOString(),
       updatedAt: value.updatedAt.toISOString(),
     })),

@@ -5,6 +5,9 @@
   "author": "",
   "license": "MIT",
   "description": "",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "vitest run"
   },

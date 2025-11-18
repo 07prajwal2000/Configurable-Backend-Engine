@@ -2,6 +2,9 @@
   "name": "@fluxify/blocks",
   "version": "1.0.0",
   "keywords": [],
+  "files": [
+    "dist"
+  ],
   "author": "",
   "license": "ISC",
   "description": "",
