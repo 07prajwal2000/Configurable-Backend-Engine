@@ -3,7 +3,7 @@ import z from "zod";
 import { Connection, DbType } from "./connection";
 import { PostgresAdapter } from "./postgresAdapter";
 import knex, { Knex } from "knex";
-import { JsVM } from "@fluxify/lib/vm";
+import { JsVM } from "@fluxify/lib";
 
 export const whereConditionSchema = z.object({
   attribute: z.string(),
@@ -85,13 +85,3 @@ export class DbFactory {
 
 export * from "./postgresAdapter";
 export * from "./connection";
-// this.connection = knex({
-//   client: "pg",
-//   connection: {
-//     host: connection.host,
-//     port: Number(connection.port),
-//     user: connection.username,
-//     password: connection.password,
-//     database: connection.database,
-//   },
-// });

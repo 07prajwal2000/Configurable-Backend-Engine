@@ -4,7 +4,7 @@ import { databaseVariantSchema, integrationsGroupSchema } from "../schemas";
 import { getAppConfigKeysFromData } from "../create/service";
 import { getAppConfigs } from "./repository";
 import { parsePostgresUrl } from "../../../../lib/parsers/postgres";
-import { PostgresAdapter } from "@fluxify/adapters/db";
+import { PostgresAdapter } from "@fluxify/adapters";
 import { EncryptionService } from "../../../../lib/encryption";
 import { getSchema } from "../helpers";
 

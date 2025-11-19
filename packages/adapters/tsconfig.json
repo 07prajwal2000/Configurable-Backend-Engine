@@ -1,21 +1,23 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es5",
+    "target": "es2024",
     "outDir": "dist",
+    "sourceRoot": "index.ts",
     "sourceMap": true,
     "strict": true,
-    "declaration": true,
-    "declarationMap": true,
     "noEmitOnError": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "types": [],
+    "isolatedModules": true,
+    "types": ["node"],
     "jsx": "react",
     "noEmit": false
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts"
   ]
 }

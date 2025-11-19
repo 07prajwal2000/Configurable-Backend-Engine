@@ -5,7 +5,7 @@ import { NodeProps, Position } from "@xyflow/react";
 import { MdHttp } from "react-icons/md";
 import { DataSettingsProps } from "../settingsDialog/blockSettingsDialog";
 import z from "zod";
-import { httpRequestBlockSchema } from "@fluxify/blocks/builtin/httpRequest";
+import { httpRequestBlockSchema } from "@fluxify/blocks";
 import { Checkbox, Divider, Grid, Select, Stack, Text } from "@mantine/core";
 import KVPEditor from "@/components/editors/kvpEditor";
 import { BlockCanvasContext } from "@/context/blockCanvas";

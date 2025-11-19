@@ -1,5 +1,5 @@
 {
-  "name": "@fluxify/backend-engine",
+  "name": "@fluxify/server",
   "version": "1.0.0",
   "files": [
     "dist"
@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsx watch deployments/standalone.ts",
     "test": "vitest run",
-    "build:standalone": "tsc deployments/standalone.ts"
+    "build:standalone": "tsc -p tsconfig.json"
   },
   "keywords": [
     "configurable-backend-engine"

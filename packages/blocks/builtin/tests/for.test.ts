@@ -3,7 +3,7 @@ import { ForLoopBlock } from "../loops/for";
 import { Engine } from "../../engine";
 import { SetVarBlock } from "../setVar";
 import { Context } from "../../baseBlock";
-import { JsVM } from "@fluxify/lib/vm";
+import { JsVM } from "@fluxify/lib";
 import { InterceptorBlock } from "../interceptor";
 
 describe("testing for loop block", () => {

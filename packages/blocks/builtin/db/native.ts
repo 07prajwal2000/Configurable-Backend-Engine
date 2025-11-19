@@ -5,7 +5,7 @@ import {
   BlockOutput,
   Context,
 } from "../../baseBlock";
-import { IDbAdapter } from "@fluxify/adapters/db";
+import { IDbAdapter } from "@fluxify/adapters";
 
 export const nativeDbBlockSchema = z
   .object({

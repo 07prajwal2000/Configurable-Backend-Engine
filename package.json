@@ -1,14 +1,17 @@
 {
-  "name": "cbe",
+  "name": "fluxify",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "server:dev": "npm run dev -w apps/server",
     "dev": "turbo run dev",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "build:standalone": "turbo run build:standalone --filter=@fluxify/server --filter=@fluxify/lib --filter=@fluxify/blocks --filter=@fluxify/adapters",
+    "build:web": "turbo run build:ui --filter=@fluxify/web --filter=@fluxify/lib --filter=@fluxify/blocks --filter=@fluxify/adapters"
   },
   "keywords": [
-    "configurable-backend-engine"
+    "fluxify",
+    "@fluxify"
   ],
   "workspaces": [
     "packages/*",
@@ -19,7 +22,7 @@
     "npm": ">=10.0.0"
   },
   "packageManager": "npm@10.9.2",
-  "author": "",
+  "author": "07prajwal2000",
   "license": "ISC",
   "description": "",
   "devDependencies": {

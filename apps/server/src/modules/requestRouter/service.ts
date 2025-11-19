@@ -3,10 +3,10 @@ import { HttpClient, HttpRoute, HttpRouteParser } from "@fluxify/lib";
 import { Context as BlockContext, ContextVarsType } from "@fluxify/blocks";
 import { Context } from "hono";
 import { ContentfulStatusCode } from "hono/utils/http-status";
-import { JsVM } from "@fluxify/lib/vm";
+import { JsVM } from "@fluxify/lib";
 import { startBlocksExecution } from "../../loaders/blocksLoader";
 import { appConfigCache } from "../../loaders/appconfigLoader";
-import { DbFactory } from "@fluxify/adapters/db";
+import { DbFactory } from "@fluxify/adapters";
 import { dbIntegrationsCache } from "../../loaders/integrationsLoader";
 
 export type HandleRequestType = {

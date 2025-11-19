@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
+    "target": "es2024",
     "outDir": "dist",
+    "sourceRoot": "deployments/standalone.ts",
     "sourceMap": true,
     "strict": true,
-    "declaration": true,
-    "declarationMap": true,
     "noEmitOnError": true,
     "skipLibCheck": true,
     "isolatedModules": true,

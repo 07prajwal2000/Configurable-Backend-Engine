@@ -5,7 +5,7 @@ import {
   BlockOutput,
   Context,
 } from "../../baseBlock";
-import type { IDbAdapter } from "@fluxify/adapters/db";
+import type { IDbAdapter } from "@fluxify/adapters";
 import { whereConditionSchema } from "./schema";
 
 export const updateDbBlockSchema = z

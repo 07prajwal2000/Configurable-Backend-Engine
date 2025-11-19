@@ -5,6 +5,7 @@
   "files": [
     "dist"
   ],
+  "main": "dist/index.js",
   "author": "",
   "license": "ISC",
   "description": "",
@@ -14,7 +15,8 @@
     "vitest": "^3.2.4"
   },
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@fluxify/adapters": "file:../adapters",
