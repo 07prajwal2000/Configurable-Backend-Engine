@@ -91,6 +91,7 @@ export function InsertBulkSettingsPanel(props: {
     updateBlockData(props.blockId, {
       data: {
         source: value,
+        value: props.blockData.data.value,
       },
     });
   }

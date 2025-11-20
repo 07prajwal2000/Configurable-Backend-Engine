@@ -110,7 +110,10 @@ export function createBlockData(block: BlockTypes) {
       return {
         connection: "",
         tableName: "",
-        data: {},
+        data: {
+          source: "raw",
+          value: {},
+        },
         useParam: false,
       };
     case BlockTypes.db_insertbulk:
