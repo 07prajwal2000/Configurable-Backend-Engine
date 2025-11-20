@@ -1,4 +1,4 @@
-import { Box, Center } from "@mantine/core";
+import { Center } from "@mantine/core";
 import React from "react";
 import { BlockTypes } from "@/types/block";
 import { StickyNoteSettingsPanel } from "../builtin/stickyNote";
@@ -18,6 +18,8 @@ import { GetParamSettingsPanel } from "../builtin/http/getParam";
 import { SetHeaderSettingsPanel } from "../builtin/http/setHeader";
 import { HttpRequestSettingsPanel } from "../builtin/httpRequest";
 import { SetCookieSettingsPanel } from "../builtin/http/setCookie";
+import { GetSingleFromDBSettingsPanel } from "../builtin/database/getSingle";
+import { InsertBulkSettingsPanel } from "../builtin/database/insertBulk";
 
 type Props = {
   blockData: {
@@ -85,6 +87,14 @@ const BlockDataSettingsPanel = (props: Props) => {
       );
     case BlockTypes.httpsetcookie:
       return <SetCookieSettingsPanel blockData={blockData} blockId={blockId} />;
+    case BlockTypes.db_getsingle:
+      return (
+        <GetSingleFromDBSettingsPanel blockData={blockData} blockId={blockId} />
+      );
+    case BlockTypes.db_insertbulk:
+      return (
+        <InsertBulkSettingsPanel blockData={blockData} blockId={blockId} />
+      );
     default:
       return (
         <Center>No Data is available to edit for this type of block</Center>

@@ -14,7 +14,6 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import JsEditor from "./jsEditor";
 import JsEditButton from "./jsEditButton";
 import JsTextInput from "./jsTextInput";
 import { TbTrashFilled } from "react-icons/tb";
@@ -22,10 +21,12 @@ import { TbTrashFilled } from "react-icons/tb";
 interface Props {
   conditions: z.infer<typeof ifBlockSchema>["conditions"];
   onChange?: (conditions: z.infer<typeof ifBlockSchema>["conditions"]) => void;
+  disableJsConditions?: boolean;
 }
 
 const ConditionsEditor = (props: Props) => {
   const [conditions, setConditions] = useState(props.conditions);
+
   const onAddCondition = (chain: "and" | "or" = "and") => {
     const newConditions = [...conditions];
     newConditions.push({ lhs: "", rhs: "", operator: "eq", chain });
@@ -65,6 +66,7 @@ const ConditionsEditor = (props: Props) => {
     setConditions(newConditions);
     if (props.onChange) props.onChange(newConditions);
   };
+
   return (
     <Stack gap={"xs"}>
       {conditions.map((condition, index) => {
@@ -91,7 +93,11 @@ const ConditionsEditor = (props: Props) => {
                 <Grid.Col span={2}>
                   <Select
                     value={condition.operator}
-                    data={operators}
+                    data={
+                      props.disableJsConditions
+                        ? operators.filter((x) => x.value !== "js")
+                        : operators
+                    }
                     onChange={(value) => onOperatorChange(index, value)}
                   />
                 </Grid.Col>
@@ -119,7 +125,11 @@ const ConditionsEditor = (props: Props) => {
                 <Grid.Col span={2}>
                   <Select
                     value={condition.operator}
-                    data={operators}
+                    data={
+                      props.disableJsConditions
+                        ? operators.filter((x) => x.value !== "js")
+                        : operators
+                    }
                     onChange={(value) => onOperatorChange(index, value)}
                   />
                 </Grid.Col>

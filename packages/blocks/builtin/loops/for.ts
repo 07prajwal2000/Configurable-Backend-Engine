@@ -43,21 +43,21 @@ export class ForLoopBlock extends BaseBlock {
     }
     const step =
       typeof input.step == "string"
-        ? this.context.vm.run(
+        ? ((await this.context.vm.runAsync(
             input.step.startsWith("js:") ? input.step.slice(3) : input.step
-          )
+          )) as number)
         : input.step;
     const start =
       typeof input.start == "string"
-        ? this.context.vm.run(
+        ? ((await this.context.vm.runAsync(
             input.start.startsWith("js:") ? input.start.slice(3) : input.start
-          )
+          )) as number)
         : input.start;
     const end =
       typeof input.end == "string"
-        ? this.context.vm.run(
+        ? ((await this.context.vm.runAsync(
             input.end.startsWith("js:") ? input.end.slice(3) : input.end
-          )
+          )) as number)
         : input.end;
     for (let i = start; i < end; i += step) {
       if (input.block && useEngine) {

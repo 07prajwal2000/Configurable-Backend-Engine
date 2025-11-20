@@ -47,7 +47,7 @@ export class ArrayOperationsBlock extends BaseBlock {
       value =
         typeof value == "string"
           ? value.startsWith("js:")
-            ? this.context.vm.run(value.slice(3))
+            ? await this.context.vm.runAsync(value.slice(3))
             : value
           : value;
     }

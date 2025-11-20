@@ -5,11 +5,11 @@ import {
   BlockOutput,
   Context,
 } from "../../baseBlock";
-import { IDbAdapter } from "@fluxify/adapters/db";
+import { IDbAdapter } from "@fluxify/adapters";
 
 export const nativeDbBlockSchema = z
   .object({
-    js: z.string().refine((val) => val.startsWith("js:")),
+    js: z.string(),
     connection: z.string(),
   })
   .extend(baseBlockDataSchema.shape);
@@ -24,12 +24,13 @@ export class NativeDbBlock extends BaseBlock {
     super(context, input, next);
   }
 
-  public async executeAsync(): Promise<BlockOutput> {
+  public async executeAsync(params: any): Promise<BlockOutput> {
     try {
       this.context.vars.dbQuery = this.dbAdapter.raw;
-      const value = await this.context.vm.runAsync(`
-        (async () => {${this.input.js}})();
-      `);
+      this.input.js = this.input.js.startsWith("js:")
+        ? this.input.js.slice(3)
+        : this.input.js;
+      const value = await this.context.vm.runAsync(this.input.js, params);
       return {
         continueIfFail: false,
         successful: true,
@@ -40,7 +41,7 @@ export class NativeDbBlock extends BaseBlock {
       return {
         continueIfFail: false,
         successful: false,
-        error: "failed to execute get single db block",
+        error: "failed to execute native db block",
       };
     } finally {
       this.context.vars.dbQuery = undefined;

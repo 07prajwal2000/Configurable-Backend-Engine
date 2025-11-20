@@ -1,39 +1,28 @@
+import DebouncedTextInput from "@/components/editors/debouncedTextInput";
 import { useEditorSearchbarStore } from "@/store/editor";
-import { ActionIcon, TextInput } from "@mantine/core";
-import { useDebouncedCallback } from "@mantine/hooks";
-import React, { forwardRef, useState } from "react";
+import { ActionIcon } from "@mantine/core";
+import React, { forwardRef } from "react";
 import { TbSearch, TbX } from "react-icons/tb";
 
 const SearchInput = forwardRef<HTMLInputElement>((props, ref) => {
   const { searchQuery, setSearchQuery } = useEditorSearchbarStore();
-  const [searchQueryState, setSearchQueryState] = useState(searchQuery);
-  const onSearchDebounced = useDebouncedCallback(setSearchQuery, 300);
-
-  React.useEffect(() => {
-    onSearchDebounced(searchQueryState);
-  }, [searchQueryState]);
-
-  React.useEffect(() => {
-    if (searchQuery !== searchQueryState) {
-      setSearchQueryState(searchQuery);
-    }
-  }, [searchQuery]);
 
   function resetSearch() {
-    setSearchQueryState("");
+    setSearchQuery("");
   }
 
   return (
-    <TextInput
-      ref={ref}
-      value={searchQueryState}
-      onChange={(e) => setSearchQueryState(e.target.value)}
+    <DebouncedTextInput
+      value={searchQuery}
       placeholder="Search blocks..."
       size="md"
+      ref={ref}
+      onValueChange={setSearchQuery}
+      debounceDelay={300}
       leftSection={<TbSearch size={16} />}
       rightSection={
         <ActionIcon
-          display={searchQueryState ? "block" : "none"}
+          display={searchQuery ? "block" : "none"}
           variant="transparent"
           color="dark"
           onClick={resetSearch}

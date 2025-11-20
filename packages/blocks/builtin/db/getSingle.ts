@@ -5,7 +5,7 @@ import {
   BlockOutput,
   Context,
 } from "../../baseBlock";
-import type { IDbAdapter } from "@fluxify/adapters/db";
+import type { IDbAdapter } from "@fluxify/adapters";
 import { whereConditionSchema } from "./schema";
 
 export const getSingleDbBlockSchema = z
@@ -28,6 +28,11 @@ export class GetSingleDbBlock extends BaseBlock {
 
   public async executeAsync(): Promise<BlockOutput> {
     try {
+      this.input.tableName = this.input.tableName.startsWith("js:")
+        ? ((await this.context.vm.runAsync(
+            this.input.tableName.slice(3)
+          )) as string)
+        : this.input.tableName;
       const result = await this.dbAdapter.getSingle(
         this.input.tableName,
         this.input.conditions
@@ -38,7 +43,7 @@ export class GetSingleDbBlock extends BaseBlock {
         output: result,
         next: this.next,
       };
-    } catch {
+    } catch (e) {
       return {
         continueIfFail: false,
         successful: false,

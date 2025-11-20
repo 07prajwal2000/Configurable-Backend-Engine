@@ -29,7 +29,7 @@ export class SetVarBlock extends BaseBlock {
   }
   public override async executeAsync(params?: any): Promise<BlockOutput> {
     const input = this.input as z.infer<typeof setVarSchema>;
-    const value = this.evaluateValue(
+    const value = await this.evaluateValue(
       this.useParam ? params : input.value,
       params
     );
@@ -42,10 +42,10 @@ export class SetVarBlock extends BaseBlock {
     };
   }
 
-  private evaluateValue(value: any, params?: any) {
+  private evaluateValue(value: any, params?: any): Promise<any> {
     if (typeof value == "string" && value.startsWith("js:")) {
-      return this.context.vm.run(value.slice(3), params);
+      return this.context.vm.runAsync(value.slice(3), params);
     }
-    return value;
+    return Promise.resolve(value);
   }
 }

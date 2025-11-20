@@ -29,7 +29,7 @@ export default async function handleRequest(
       throw new NotFoundError("Integration not found");
     }
     const integrationExist = await integrationExistByName(body.name, tx);
-    if (integrationExist.id !== id) {
+    if (integrationExist && integrationExist.id !== id) {
       throw new ConflictError("Integration name already exists");
     }
     await validateAppConfig(

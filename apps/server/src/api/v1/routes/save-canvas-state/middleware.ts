@@ -18,21 +18,21 @@ import {
   setVarSchema,
   stickyNotesSchema,
   transformerBlockSchema,
+  entrypointBlockSchema,
+  httpRequestBlockSchema,
+  logBlockSchema,
+  responseBlockSchema,
+  getSingleDbBlockSchema,
+  getAllDbBlockSchema,
+  deleteDbBlockSchema,
+  insertDbBlockSchema,
+  insertBulkDbBlockSchema,
+  nativeDbBlockSchema,
+  transactionDbBlockSchema,
+  updateDbBlockSchema,
 } from "@fluxify/blocks";
 import { Context, Next } from "hono";
 import { ValidationError } from "../../../../errors/validationError";
-import { entrypointBlockSchema } from "@fluxify/blocks/builtin/entrypoint";
-import { httpRequestBlockSchema } from "@fluxify/blocks/builtin/httpRequest";
-import { logBlockSchema } from "@fluxify/blocks/builtin/log";
-import { responseBlockSchema } from "@fluxify/blocks/builtin/response";
-import { getSingleDbBlockSchema } from "@fluxify/blocks/builtin/db/getSingle";
-import { getAllDbBlockSchema } from "@fluxify/blocks/builtin/db/getAll";
-import { deleteDbBlockSchema } from "@fluxify/blocks/builtin/db/delete";
-import { insertDbBlockSchema } from "@fluxify/blocks/builtin/db/insert";
-import { insertBulkDbBlockSchema } from "@fluxify/blocks/builtin/db/insertBulk";
-import { updateBlockSchema } from "../../../../modules/admin/blocks/dto";
-import { nativeDbBlockSchema } from "@fluxify/blocks/builtin/db/native";
-import { transactionDbBlockSchema } from "@fluxify/blocks/builtin/db/transaction";
 import { BadRequestError } from "../../../../errors/badRequestError";
 
 export async function requestBodyValidator(ctx: Context, next: Next) {
@@ -130,7 +130,7 @@ function blockDataValidator(data: z.infer<typeof requestBodySchema>) {
         schema = insertBulkDbBlockSchema;
         break;
       case BlockTypes.db_update:
-        schema = updateBlockSchema;
+        schema = updateDbBlockSchema;
         break;
       case BlockTypes.db_native:
         schema = nativeDbBlockSchema;

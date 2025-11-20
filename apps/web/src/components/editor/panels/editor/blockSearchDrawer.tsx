@@ -27,8 +27,13 @@ const BlockSearchDrawer = () => {
       }, 300);
     } else {
       document.removeEventListener("click", handleClickEvent);
+      ref.current?.blur();
       setSearchQuery("");
     }
+    return () => {
+      ref.current?.blur();
+      document.removeEventListener("click", handleClickEvent);
+    };
   }, [opened]);
 
   function handleClickEvent(ev: MouseEvent) {

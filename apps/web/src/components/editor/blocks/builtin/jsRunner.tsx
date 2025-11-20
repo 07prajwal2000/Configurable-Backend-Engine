@@ -47,7 +47,7 @@ export const JsRunnerSettingsPanel = (
   }
 
   return (
-    <Stack>
+    <Stack px={"xs"} onKeyDown={(e) => e.stopPropagation()}>
       <Text>Edit JS Code</Text>
       <Divider />
       <JsEditor

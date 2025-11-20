@@ -91,4 +91,14 @@ export const integrationsQuery = {
       });
     },
   },
+  testExistingConnection: {
+    mutation: () => {
+      return useMutation({
+        mutationFn: (id: string) => {
+          if (!id) return Promise.resolve(null);
+          return integrationService.testExistingConnection(id);
+        },
+      });
+    },
+  },
 };

@@ -142,6 +142,8 @@ export const useEditorStore = create<State & Actions>()(
       close() {
         set((state) => {
           state.searchbar.opened = false;
+          state.searchbar.searchQuery = "";
+          state.searchbar.currentIndex = 0;
         });
       },
       setCurrentIndex(index) {

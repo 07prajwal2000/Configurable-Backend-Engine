@@ -23,13 +23,19 @@ import {
 import CanvasToolboxPanel from "./toolbox/canvasToolboxPanel";
 import { generateID } from "@fluxify/lib";
 import { edgeTypes } from "../../blocks/customEdge";
-import { showNotification } from "@mantine/notifications";
+import { notifications, showNotification } from "@mantine/notifications";
 import { BlockCanvasContext } from "@/context/blockCanvas";
 import BlockSearchDrawer from "./blockSearchDrawer";
 import { createBlockData } from "@/lib/blockFactory";
 import EditorToolbox from "./editorToolbox";
 import BlockSettingsDialog from "../../blocks/settingsDialog/blockSettingsDialog";
-import { useBlockDataActionsStore } from "@/store/blockDataStore";
+import {
+  useBlockDataActionsStore,
+  useBlockDataStore,
+} from "@/store/blockDataStore";
+import CanvasKeyboardAccessibility from "./canvasKeyboardAccessibility";
+import { useParams } from "next/navigation";
+import { routesService } from "@/services/routes";
 
 type Props = {
   readonly?: boolean;
@@ -37,8 +43,13 @@ type Props = {
 
 const BlockCanvas = (props: Props) => {
   const {
-    blocks: { onBlockChange, deleteBlock, addBlock },
-    edges: { onEdgeChange, addEdge, deleteEdge },
+    blocks: {
+      onBlockChange,
+      deleteBlock,
+      addBlock,
+      deleteBulk: deleteBulkBlocks,
+    },
+    edges: { onEdgeChange, addEdge, deleteEdge, deleteBulk: deleteBulkEdges },
   } = useCanvasActionsStore();
   const { updateBlockData, deleteBlockData } = useBlockDataActionsStore();
   const actions = useEditorActionsStore();
@@ -47,12 +58,23 @@ const BlockCanvas = (props: Props) => {
   const changeTracker = useEditorChangeTrackerStore();
   const { screenToFlowPosition } = useReactFlow();
   const blockSettings = useEditorBlockSettingsStore();
-
+  const blockDataStore = useBlockDataStore();
+  const { id: routeId } = useParams<{ id: string }>();
   // TODO: Need to implement Undo/Redo
   function doAction(type: "undo" | "redo") {
     // NOT IMPLEMENTED YET
   }
-
+  function deleteBulkWithHistory(ids: string[], type: "block" | "edge") {
+    if (type === "block") {
+      deleteBulkBlocks(new Set(ids));
+    } else {
+      deleteBulkEdges(new Set(ids));
+    }
+    // TODO: Add to change tracker
+    ids.forEach((id) => {
+      changeTracker.add(id, type);
+    });
+  }
   function deleteEdgeWithHistory(id: string) {
     changeTracker.add(id, "edge");
     deleteEdge(id);
@@ -75,11 +97,20 @@ const BlockCanvas = (props: Props) => {
     });
     const data = createBlockData(block);
     const id = generateID();
+    createNewBlock(id, position, block, data);
+  }
+  function createNewBlock(
+    id: string,
+    position: { x: number; y: number },
+    block: BlockTypes,
+    data?: any
+  ) {
+    data = data || createBlockData(block);
     addBlock({
       id,
       position,
       type: block,
-      data: {},
+      data,
     });
     updateBlockData(id, data);
     changeTracker.add(id, "block");
@@ -121,6 +152,103 @@ const BlockCanvas = (props: Props) => {
   function openBlock(id: string) {
     blockSettings.open(id);
   }
+  function duplicateBlock(id: string) {
+    const block = blocks.find((block) => block.id === id);
+    if (!block) {
+      return;
+    }
+    const position = { x: block.position.x + 50, y: block.position.y + 50 };
+    const newId = generateID();
+    createNewBlock(newId, position, block.type, block.data);
+  }
+  async function onSave() {
+    const notificationId = "canvas-save-success";
+    try {
+      const blocksMap = new Map<string, (typeof blocks)[0]>();
+      const edgesMap = new Map<string, (typeof edges)[0]>();
+      const blockActionsToPerform: {
+        id: string;
+        action: "upsert" | "delete";
+      }[] = [];
+      const edgeActionsToPerform: {
+        id: string;
+        action: "upsert" | "delete";
+      }[] = [];
+
+      blocks.forEach((block) => blocksMap.set(block.id, block));
+      edges.forEach((edge) => edgesMap.set(edge.id, edge));
+
+      const blocksToSave: typeof blocks = [];
+      const edgesToSave: typeof edges = [];
+
+      changeTracker.tracker.forEach((value, key) => {
+        if (value === "block") {
+          const exist = blocksMap.has(key);
+          blockActionsToPerform.push({
+            id: key,
+            action: exist ? "upsert" : "delete",
+          });
+          if (exist) {
+            const blockData = blockDataStore[key];
+            const block = blocksMap.get(key)!;
+            block.data = blockData;
+            blocksToSave.push(block);
+          }
+        } else if (value === "edge") {
+          const exist = edgesMap.has(key);
+          edgeActionsToPerform.push({
+            id: key,
+            action: exist ? "upsert" : "delete",
+          });
+          if (exist) {
+            edgesToSave.push(edgesMap.get(key)!);
+          }
+        }
+      });
+
+      notifications.show({
+        id: notificationId,
+        loading: true,
+        message: "Saving...",
+        color: "violet",
+        withCloseButton: true,
+      });
+
+      await routesService.saveCanvasItems(routeId, {
+        actionsToPerform: {
+          blocks: blockActionsToPerform,
+          edges: edgeActionsToPerform,
+        },
+        changes: {
+          blocks: blocksToSave,
+          edges: edgesToSave.map((edge) => ({
+            id: edge.id,
+            fromHandle: edge.sourceHandle,
+            toHandle: edge.targetHandle,
+            from: edge.source,
+            to: edge.target,
+          })),
+        },
+      });
+
+      changeTracker.reset();
+      notifications.update({
+        id: notificationId,
+        loading: false,
+        message: "Successfully saved",
+        color: "green",
+        withCloseButton: true,
+      });
+    } catch (error: any) {
+      notifications.update({
+        id: notificationId,
+        loading: false,
+        withCloseButton: true,
+        color: "red",
+        message: "Failed to save",
+      });
+    }
+  }
 
   return (
     <Box w={"100%"} h={"100%"}>
@@ -133,12 +261,16 @@ const BlockCanvas = (props: Props) => {
           addBlock: addBlockWithHistory,
           updateBlockData: updateBlockDataWithHistory,
           openBlock,
+          duplicateBlock,
+          deleteBulk: deleteBulkWithHistory,
+          onSave,
         }}
       >
         <Box style={{ position: "absolute", zIndex: 10, right: 0 }} p={"lg"}>
           <EditorToolbox />
         </Box>
         <ReactFlow
+          deleteKeyCode={""}
           onEdgesChange={onEdgeChange}
           onNodesChange={onBlockChange}
           onConnect={(e) => onEdgeConnect(e as any)}
@@ -162,6 +294,7 @@ const BlockCanvas = (props: Props) => {
           <Panel position="bottom-left">
             <CanvasToolboxPanel />
           </Panel>
+          <CanvasKeyboardAccessibility />
         </ReactFlow>
         <BlockSettingsDialog />
         <BlockSearchDrawer />

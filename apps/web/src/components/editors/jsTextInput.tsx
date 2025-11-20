@@ -2,15 +2,12 @@ import {
   ActionIcon,
   Box,
   Button,
-  Grid,
   Group,
-  Modal,
   Paper,
   Text,
   TextInput,
   TextInputProps,
   Tooltip,
-  useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React from "react";
@@ -22,9 +19,10 @@ type Props = {
   jsEditBtnLabel?: string;
   onValueChange?: (value: string) => void;
   onClear?: () => void;
+  enableJs?: boolean;
 };
 
-const JsTextInput = (props: Props & TextInputProps) => {
+const JsTextInput = ({ enableJs = true, ...props }: Props & TextInputProps) => {
   const [opened, { open, close }] = useDisclosure();
   const isJsValue =
     (typeof props.value === "string" && props.value.startsWith("js:")) || false;
@@ -78,16 +76,29 @@ const JsTextInput = (props: Props & TextInputProps) => {
       </Box>
     );
   }
-
+  let iconSize = 15;
+  if (props.size === "xs") {
+    iconSize = 12;
+  } else if (props.size === "sm") {
+    iconSize = 15;
+  } else if (props.size === "md") {
+    iconSize = 18;
+  } else if (props.size === "lg") {
+    iconSize = 21;
+  } else if (props.size === "xl") {
+    iconSize = 24;
+  }
   return (
     <>
       <TextInput
         {...props}
         onChange={(e) => onChange(e.target.value, false)}
         rightSection={
-          <ActionIcon color="violet" onClick={open}>
-            <IoLogoJavascript />
-          </ActionIcon>
+          enableJs && (
+            <ActionIcon color="violet" onClick={open} size={props.size}>
+              <IoLogoJavascript size={iconSize} />
+            </ActionIcon>
+          )
         }
       />
       <JsEditorDialog

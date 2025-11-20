@@ -1,9 +1,13 @@
 {
-  "name": "@fluxify/backend-engine",
+  "name": "@fluxify/server",
   "version": "1.0.0",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "tsx watch deployments/standalone.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:standalone": "tsc -p tsconfig.json"
   },
   "keywords": [
     "configurable-backend-engine"
@@ -16,6 +20,7 @@
     "@types/pg": "^8.15.5",
     "drizzle-kit": "^0.31.4",
     "tsx": "^4.20.4",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
   "dependencies": {

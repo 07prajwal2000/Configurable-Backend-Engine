@@ -1,6 +1,6 @@
-import { DbFactory } from "@fluxify/adapters/db";
+import { DbFactory } from "@fluxify/adapters";
 import { HttpClient } from "@fluxify/lib";
-import { JsVM } from "@fluxify/lib/vm";
+import { JsVM } from "@fluxify/lib";
 import z from "zod";
 
 export interface Context {

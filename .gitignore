@@ -4,3 +4,4 @@ node_modules
 .env
 pglite/
 settings.json
+dist

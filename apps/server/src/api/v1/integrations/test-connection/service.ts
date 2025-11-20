@@ -4,15 +4,15 @@ import { databaseVariantSchema, integrationsGroupSchema } from "../schemas";
 import { getAppConfigKeysFromData } from "../create/service";
 import { getAppConfigs } from "./repository";
 import { parsePostgresUrl } from "../../../../lib/parsers/postgres";
-import { PostgresAdapter } from "@fluxify/adapters/db";
+import { PostgresAdapter } from "@fluxify/adapters";
 import { EncryptionService } from "../../../../lib/encryption";
 import { getSchema } from "../helpers";
 
-export default async function handleRequest(
-  body: z.infer<typeof requestBodySchema>
+export async function testIntegrationConnection(
+  group: z.infer<typeof integrationsGroupSchema>,
+  variant: string,
+  config: any
 ): Promise<z.infer<typeof responseSchema>> {
-  const { group, variant, config: data } = body;
-
   const schema = getSchema(group, variant);
   if (!schema) {
     return {
@@ -20,7 +20,7 @@ export default async function handleRequest(
       error: "Invalid group or variant",
     };
   }
-  const result = schema.safeParse(data);
+  const result = schema.safeParse(config);
   if (!result.success) {
     return {
       success: false,
@@ -30,9 +30,10 @@ export default async function handleRequest(
   const integrationData = result.data;
   const keys = getAppConfigKeysFromData(integrationData);
   const appConfigs = await decodeAppConfig(keys);
-  switch (group as z.infer<typeof integrationsGroupSchema>) {
+
+  switch (group) {
     case "database":
-      return testDatabasesConnection(variant, data, appConfigs);
+      return testDatabasesConnection(variant, config, appConfigs);
     case "kv":
       break;
     case "ai":
@@ -50,6 +51,14 @@ export default async function handleRequest(
     error: "Unsupported group",
   };
 }
+
+export default async function handleRequest(
+  body: z.infer<typeof requestBodySchema>
+): Promise<z.infer<typeof responseSchema>> {
+  const { group, variant, config: data } = body;
+  return testIntegrationConnection(group, variant, data);
+}
+
 async function testDatabasesConnection(
   variant: string,
   config: any,
@@ -81,8 +90,7 @@ async function testDatabasesConnection(
 }
 
 function extractPgConnectionInfo(config: any, appConfigs: Map<string, string>) {
-  const source = config.source;
-  if (source === "url") {
+  if (config.source === "url") {
     config.url = config.url.startsWith("cfg:")
       ? appConfigs.get(config.url.slice(4)) || ""
       : config.url;

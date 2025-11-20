@@ -54,7 +54,7 @@ const EditorWindow = () => {
   }
 
   if (activeTab === EditorTab.EDITOR) return <EditorPanel />;
-  else if (activeTab === EditorTab.EXECUTIONS) <ExecutionPanel />;
+  else if (activeTab === EditorTab.EXECUTIONS) return <ExecutionPanel />;
   return <TestingPanel />;
 };
 

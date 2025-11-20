@@ -10,13 +10,14 @@ import {
   responseSchema as updateResponseSchema,
 } from "@fluxify/backend-engine/src/api/v1/integrations/update/dto";
 import { responseSchema as testConnectionResponseSchema } from "@fluxify/backend-engine/src/api/v1/integrations/test-connection/dto";
+import { responseSchema as testExistingConnectionResponseSchema } from "@fluxify/backend-engine/src/api/v1/integrations/test-existing-connection/dto";
 import z from "zod";
 
 const baseUrl = "/v1/integrations";
 
 export const integrationService = {
   async getAll(group: string): Promise<z.infer<typeof getAllResponseSchema>> {
-    const res = await httpClient.get(`${baseUrl}/${group}`);
+    const res = await httpClient.get(`${baseUrl}/list/${group}`);
     return res.data;
   },
   async getById(id: string): Promise<z.infer<typeof getByIdResponseSchema>> {
@@ -38,6 +39,11 @@ export const integrationService = {
   },
   async delete(id: string): Promise<void> {
     await httpClient.delete(`${baseUrl}/${id}`);
+  },
+  async testExistingConnection(
+    id: string
+  ): Promise<z.infer<typeof testExistingConnectionResponseSchema>> {
+    return await httpClient.get(`${baseUrl}/test-existing-connection/${id}`);
   },
   async testConnection(
     group: string,

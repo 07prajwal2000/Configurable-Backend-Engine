@@ -20,11 +20,13 @@ type Actions = {
       deleteBlock: (id: string) => void;
       onBlockChange: (changes: NodeChange[]) => void;
       formatBlocks(): string[];
+      deleteBulk(ids: Set<string>): void;
     };
     edges: {
       addEdge: (edge: EdgeType) => void;
       deleteEdge: (id: string) => void;
       onEdgeChange: (changes: Partial<EdgeChange>[]) => void;
+      deleteBulk(ids: Set<string>): void;
     };
     bulkInsert(blocks: BaseBlockType[], edges: EdgeType[]): void;
   };
@@ -67,6 +69,9 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
       deleteBlock(id) {
         set({ blocks: get().blocks.filter((b) => b.id !== id) });
       },
+      deleteBulk(ids: Set<string>) {
+        set({ blocks: get().blocks.filter((b) => !ids.has(b.id)) });
+      },
       onBlockChange(changes) {
         set({
           blocks: applyNodeChanges(
@@ -79,6 +84,9 @@ const useCanvasStore = create<State & Actions>((set, get) => ({
     edges: {
       addEdge(edge) {
         set({ edges: [...get().edges, edge] });
+      },
+      deleteBulk(ids: Set<string>) {
+        set({ edges: get().edges.filter((e) => !ids.has(e.id)) });
       },
       deleteEdge(id) {
         set({ edges: get().edges.filter((e) => e.id !== id) });

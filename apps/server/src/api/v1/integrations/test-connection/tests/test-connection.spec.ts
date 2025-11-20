@@ -3,8 +3,8 @@ import handleRequest from "../service";
 import { getAppConfigs } from "../repository";
 
 vi.mock("../repository");
-vi.mock("@fluxify/adapters/db", async () => {
-  const actual = await vi.importActual("@fluxify/adapters/db");
+vi.mock("@fluxify/adapters", async () => {
+  const actual = await vi.importActual("@fluxify/adapters");
   return {
     ...actual,
     PostgresAdapter: {
@@ -86,7 +86,7 @@ describe("testConnection service", () => {
   });
 
   it("should accept cfg: prefixed config keys", async () => {
-    const { PostgresAdapter } = await import("@fluxify/adapters/db");
+    const { PostgresAdapter } = await import("@fluxify/adapters");
     (PostgresAdapter.testConnection as any).mockResolvedValueOnce({
       success: true,
     });
@@ -110,7 +110,7 @@ describe("testConnection service", () => {
   });
 
   it("should handle encrypted app configs", async () => {
-    const { PostgresAdapter } = await import("@fluxify/adapters/db");
+    const { PostgresAdapter } = await import("@fluxify/adapters");
     (PostgresAdapter.testConnection as any).mockResolvedValueOnce({
       success: true,
     });

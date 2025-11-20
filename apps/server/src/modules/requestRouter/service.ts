@@ -3,10 +3,10 @@ import { HttpClient, HttpRoute, HttpRouteParser } from "@fluxify/lib";
 import { Context as BlockContext, ContextVarsType } from "@fluxify/blocks";
 import { Context } from "hono";
 import { ContentfulStatusCode } from "hono/utils/http-status";
-import { JsVM } from "@fluxify/lib/vm";
+import { JsVM } from "@fluxify/lib";
 import { startBlocksExecution } from "../../loaders/blocksLoader";
 import { appConfigCache } from "../../loaders/appconfigLoader";
-import { DbFactory } from "@fluxify/adapters/db";
+import { DbFactory } from "@fluxify/adapters";
 import { dbIntegrationsCache } from "../../loaders/integrationsLoader";
 
 export type HandleRequestType = {
@@ -22,7 +22,6 @@ export async function handleRequest(
     ctx.req.path,
     ctx.req.method as HttpRoute["method"]
   );
-
   if (!pathId) {
     return {
       status: 404,
@@ -38,7 +37,7 @@ export async function handleRequest(
   const dbFactory = createDbFactory(vm);
   const context = createContext(pathId, ctx, requestBody, vm, vars, dbFactory);
   const executionResult = await startBlocksExecution(pathId.id, context);
-  if (executionResult && executionResult.successful) {
+  if (executionResult) {
     return {
       status: executionResult.output?.httpCode || 200,
       data:
@@ -48,7 +47,7 @@ export async function handleRequest(
   return {
     status: 500,
     data: {
-      message: executionResult?.error || "Internal server error",
+      message: "Internal server error",
     },
   };
 }

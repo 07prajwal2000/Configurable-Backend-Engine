@@ -4,7 +4,6 @@ import { cors } from "hono/cors";
 import { mapRouter } from "./modules/requestRouter/router";
 import { loadRoutes } from "./loaders/routesLoader";
 import { drizzleInit } from "./db";
-import { mapAdminRouter } from "./modules/admin/router";
 import { initializeRedis } from "./db/redis";
 import { loadAppConfig } from "./loaders/appconfigLoader";
 import { loadIntegrations } from "./loaders/integrationsLoader";
@@ -40,7 +39,6 @@ async function main() {
   await loadAppConfig();
   await loadIntegrations();
   if (adminRoutesEnabled) {
-    mapAdminRouter(app);
     mapVersionedAdminRoutes(app);
   }
   const parser = await loadRoutes();

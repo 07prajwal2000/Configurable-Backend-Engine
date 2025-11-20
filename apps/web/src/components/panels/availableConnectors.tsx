@@ -6,6 +6,7 @@ import { LuServerCrash } from "react-icons/lu";
 import { TbDatabase } from "react-icons/tb";
 import MenuItem from "../rootSidebar/menuItem";
 import {
+  IntegrationGroup,
   useIntegrationActions,
   useIntegrationState,
 } from "@/store/integration";
@@ -14,17 +15,21 @@ const connectors = [
   {
     name: "Databases",
     icon: <TbDatabase size={20} />,
+    type: "database" as IntegrationGroup,
   },
   {
     name: "KV",
+    type: "kv" as IntegrationGroup,
     icon: <FaTableList size={20} />,
   },
   {
     name: "AI",
+    type: "ai" as IntegrationGroup,
     icon: <FaRobot size={20} />,
   },
   {
     name: "BaaS",
+    type: "baas" as IntegrationGroup,
     icon: <LuServerCrash size={20} />,
   },
 ];
@@ -33,7 +38,7 @@ const AvailableConnectors = () => {
   const { selectedMenu } = useIntegrationState();
   const { setSelectedMenu } = useIntegrationActions();
 
-  function handleClick(connector: string) {
+  function handleClick(connector: IntegrationGroup) {
     setSelectedMenu(connector);
   }
 
@@ -42,9 +47,9 @@ const AvailableConnectors = () => {
       {connectors.map((connector, index) => {
         return (
           <MenuItem
-            isActive={selectedMenu === connector.name}
+            isActive={selectedMenu === connector.type}
             color="dark"
-            onClick={() => handleClick(connector.name)}
+            onClick={() => handleClick(connector.type)}
             text={<Text fw={"500"}>{connector.name}</Text>}
             leftIcon={connector.icon}
             key={index}

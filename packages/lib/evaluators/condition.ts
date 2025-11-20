@@ -19,17 +19,18 @@ export function evaluateOperator(
   lhs: any,
   rhs: any,
   operator: z.infer<typeof operatorSchema>,
-  js?: string
+  js?: string,
+  extras?: any
 ): boolean {
   const isLhsScript = typeof lhs == "string" && lhs.startsWith("js:");
   const isRhsScript = typeof rhs == "string" && rhs.startsWith("js:");
 
   if (operator == "js" && !!js) {
-    const result = vm.run(js.startsWith("js:") ? js.slice(3) : js);
+    const result = vm.run(js.startsWith("js:") ? js.slice(3) : js, extras);
     return vm.truthy(result);
   } else if (isLhsScript || isRhsScript) {
-    lhs = isLhsScript ? vm.run(lhs.slice(3)) : lhs;
-    rhs = isRhsScript ? vm.run(rhs.slice(3)) : rhs;
+    lhs = isLhsScript ? vm.run(lhs.slice(3), extras) : lhs;
+    rhs = isRhsScript ? vm.run(rhs.slice(3), extras) : rhs;
     return evaluateOperator(vm, lhs, rhs, operator);
   } else {
     switch (operator) {

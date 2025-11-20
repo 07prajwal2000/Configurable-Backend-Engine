@@ -1,6 +1,6 @@
 import knex, { Knex } from "knex";
 import { Connection, DbAdapterMode, DBConditionType, IDbAdapter } from ".";
-import { JsVM } from "@fluxify/lib/vm";
+import { JsVM } from "@fluxify/lib";
 
 export class PostgresAdapter implements IDbAdapter {
   private mode: DbAdapterMode = DbAdapterMode.NORMAL;
