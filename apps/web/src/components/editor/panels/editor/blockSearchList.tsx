@@ -35,7 +35,12 @@ const BlockSearchList = () => {
   }, [searchQuery]);
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyDownEvent);
+    if (opened) {
+      document.addEventListener("keydown", handleKeyDownEvent);
+    } else {
+      document.removeEventListener("keydown", handleKeyDownEvent);
+    }
+
     return () => {
       document.removeEventListener("keydown", handleKeyDownEvent);
     };

@@ -9,4 +9,7 @@ export const BlockCanvasContext = createContext<{
   addBlock: (block: BlockTypes) => void;
   updateBlockData: (id: string, data: any) => void;
   openBlock: (id: string) => void;
+  duplicateBlock: (id: string) => void;
+  deleteBulk: (ids: string[], type: "block" | "edge") => void;
+  onSave: () => Promise<void>;
 }>({} as any);

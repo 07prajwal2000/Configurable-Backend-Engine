@@ -11,7 +11,10 @@ export const insertBulkDbBlockSchema = z
   .object({
     connection: z.string(),
     tableName: z.string(),
-    data: z.array(z.object()),
+    data: z.object({
+      source: z.enum(["raw", "js"]),
+      value: z.array(z.object()).or(z.string()),
+    }),
     useParam: z.boolean(),
   })
   .extend(baseBlockDataSchema.shape);
@@ -28,7 +31,29 @@ export class InsertBulkDbBlock extends BaseBlock {
 
   public async executeAsync(data: object[]): Promise<BlockOutput> {
     try {
-      const dataToInsert = this.input.useParam ? data : this.input.data;
+      let dataToInsert = this.input.useParam ? data : this.input.data;
+      if (
+        !this.input.useParam &&
+        this.input.data.source === "js" &&
+        typeof this.input.data.value === "string"
+      ) {
+        dataToInsert = (await this.context.vm.runAsync(
+          this.input.data.value.slice(3)
+        )) as object[];
+      }
+      if (!(dataToInsert instanceof Array)) {
+        return {
+          continueIfFail: false,
+          successful: false,
+          error: "error in insert bulk: data to insert is not an array",
+        };
+      }
+      this.input.tableName = this.input.tableName.startsWith("js:")
+        ? ((await this.context.vm.runAsync(
+            this.input.tableName.slice(3)
+          )) as string)
+        : this.input.tableName;
+
       const result = await this.dbAdapter.insertBulk(
         this.input.tableName,
         dataToInsert

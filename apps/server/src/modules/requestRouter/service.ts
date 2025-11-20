@@ -37,7 +37,7 @@ export async function handleRequest(
   const dbFactory = createDbFactory(vm);
   const context = createContext(pathId, ctx, requestBody, vm, vars, dbFactory);
   const executionResult = await startBlocksExecution(pathId.id, context);
-  if (executionResult && executionResult.successful) {
+  if (executionResult) {
     return {
       status: executionResult.output?.httpCode || 200,
       data:
@@ -47,7 +47,7 @@ export async function handleRequest(
   return {
     status: 500,
     data: {
-      message: executionResult?.error || "Internal server error",
+      message: "Internal server error",
     },
   };
 }

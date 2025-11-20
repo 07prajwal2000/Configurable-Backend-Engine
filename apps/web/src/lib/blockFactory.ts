@@ -117,14 +117,20 @@ export function createBlockData(block: BlockTypes) {
       return {
         connection: "",
         tableName: "",
-        data: [],
+        data: {
+          source: "raw",
+          value: [],
+        },
         useParam: false,
       };
     case BlockTypes.db_update:
       return {
         connection: "",
         tableName: "",
-        data: {},
+        data: {
+          source: "raw",
+          value: {},
+        },
         conditions: [],
         useParam: false,
       };

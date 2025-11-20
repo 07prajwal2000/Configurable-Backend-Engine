@@ -1,5 +1,10 @@
 import z from "zod";
-import { BaseBlock, baseBlockDataSchema, BlockOutput } from "../baseBlock";
+import {
+  BaseBlock,
+  baseBlockDataSchema,
+  BlockOutput,
+  Context,
+} from "../baseBlock";
 import { httpcodes } from "@fluxify/lib";
 
 export const responseBlockSchema = z
@@ -17,20 +22,13 @@ export interface ResponseBlockHTTPResult extends BlockOutput {
 
 export class ResponseBlock extends BaseBlock {
   override async executeAsync(params?: any): Promise<ResponseBlockHTTPResult> {
-    const { data, success } = responseBlockSchema.safeParse(this.input);
-    if (!success) {
-      return {
-        continueIfFail: false,
-        successful: false,
-        error: "Failed to parse input in Response Block",
-      };
-    }
+    const { httpCode } = this.input as z.infer<typeof responseBlockSchema>;
     return {
       continueIfFail: true,
       successful: true,
       output: {
-        httpCode: data.httpCode,
-        body: params,
+        httpCode,
+        body: params ?? null,
       },
     };
   }

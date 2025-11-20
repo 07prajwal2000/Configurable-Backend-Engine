@@ -15,7 +15,7 @@ export class ConsoleLoggerBlock extends BaseBlock {
     const data = this.input as z.infer<typeof logBlockSchema>;
     const level = data.level;
     const msgOrParams = data.message?.trim() != "" ? data.message : params;
-    const msg = this.formatMessage(msgOrParams, level, params);
+    const msg = await this.formatMessage(msgOrParams, level, params);
     if (level == "info") {
       console.log(msg);
     } else if (level == "error") {
@@ -31,7 +31,7 @@ export class ConsoleLoggerBlock extends BaseBlock {
     };
   }
 
-  private formatMessage(originalMsg: any, level: string, params?: any) {
+  private async formatMessage(originalMsg: any, level: string, params?: any) {
     const isObject = typeof originalMsg == "object";
     const datetime = new Date().toISOString().split("T");
     const date = datetime[0];
@@ -42,7 +42,10 @@ export class ConsoleLoggerBlock extends BaseBlock {
         ? JSON.stringify(originalMsg, null, 2)
         : typeof originalMsg == "string"
         ? originalMsg.startsWith("js:")
-          ? this.context.vm.run(originalMsg.slice(3), params)
+          ? ((await this.context.vm.runAsync(
+              originalMsg.slice(3),
+              params
+            )) as string)
           : originalMsg
         : originalMsg
     }`;

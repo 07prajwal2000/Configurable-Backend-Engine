@@ -18,13 +18,12 @@ export class Engine {
       nextParams = params;
     while (true) {
       result = await block.executeAsync(nextParams);
-
-      if (!result.successful && !result.continueIfFail) {
-        throw new Error(result.error);
+      if (!result || (!result.successful && !result.continueIfFail)) {
+        throw new Error(result?.error || "Unknown error");
       }
       nextParams = await result.output;
-      if (!block.next) break;
-      block = blocks[block.next];
+      if (!result.next) break;
+      block = blocks[result.next];
     }
     return result;
   }

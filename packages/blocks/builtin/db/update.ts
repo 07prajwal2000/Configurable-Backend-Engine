@@ -14,7 +14,7 @@ export const updateDbBlockSchema = z
     tableName: z.string(),
     data: z.object(),
     conditions: z.array(whereConditionSchema),
-    useParam: z.object(),
+    useParam: z.boolean(),
   })
   .extend(baseBlockDataSchema.shape);
 

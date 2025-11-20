@@ -1,4 +1,8 @@
-import { conditionSchema, evaluateOperator, operatorSchema } from "@fluxify/lib";
+import {
+  conditionSchema,
+  evaluateOperator,
+  operatorSchema,
+} from "@fluxify/lib";
 import {
   BaseBlock,
   baseBlockDataSchema,
@@ -29,12 +33,18 @@ export class IfBlock extends BaseBlock {
     super(context, input, onSuccess);
   }
 
-  override async executeAsync(): Promise<BlockOutput> {
+  override async executeAsync(params?: any): Promise<BlockOutput> {
     const { conditions } = this.input as z.infer<typeof ifBlockSchema>;
     const operatorResults: OperatorResult[] = [];
     for (const condition of conditions) {
       const { lhs, rhs, operator, js, chain } = condition;
-      const operatorResult = this.evaluateOperator(lhs, rhs, operator, js);
+      const operatorResult = this.evaluateOperator(
+        lhs,
+        rhs,
+        operator,
+        js,
+        params
+      );
       operatorResults.push(
         operatorResult ? OperatorResult.TRUE : OperatorResult.FALSE
       );
@@ -43,7 +53,7 @@ export class IfBlock extends BaseBlock {
     }
     const result = this.evaluateResult(operatorResults);
     return {
-      output: result,
+      output: params,
       successful: result,
       continueIfFail: true,
       error: undefined,
@@ -75,8 +85,9 @@ export class IfBlock extends BaseBlock {
     lhs: any,
     rhs: any,
     operator: z.infer<typeof operatorSchema>,
-    js?: string
+    js?: string,
+    extras?: any
   ): boolean {
-    return evaluateOperator(this.context.vm, lhs, rhs, operator, js);
+    return evaluateOperator(this.context.vm, lhs, rhs, operator, js, extras);
   }
 }

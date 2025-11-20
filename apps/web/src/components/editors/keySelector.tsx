@@ -38,7 +38,7 @@ const KeySelector = (props: Props) => {
       <Table withRowBorders highlightOnHover striped>
         <Table.Thead>
           {props.header.map((header) => (
-            <Table.Th>{header.label}</Table.Th>
+            <Table.Th key={header.label}>{header.label}</Table.Th>
           ))}
           <Table.Th />
         </Table.Thead>
@@ -46,9 +46,9 @@ const KeySelector = (props: Props) => {
           {Object.keys(props.data).map((key) => {
             const item = props.data[key as any];
             return (
-              <Table.Tr>
+              <Table.Tr key={key}>
                 {props.header.map((header) => (
-                  <Table.Td>{item[header.name]}</Table.Td>
+                  <Table.Td key={header.name}>{item[header.name]}</Table.Td>
                 ))}
                 <Table.Td>
                   <Tooltip label="Choose">

@@ -2,15 +2,12 @@ import {
   ActionIcon,
   Box,
   Button,
-  Grid,
   Group,
-  Modal,
   Paper,
   Text,
   TextInput,
   TextInputProps,
   Tooltip,
-  useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import React from "react";
@@ -79,7 +76,18 @@ const JsTextInput = ({ enableJs = true, ...props }: Props & TextInputProps) => {
       </Box>
     );
   }
-
+  let iconSize = 15;
+  if (props.size === "xs") {
+    iconSize = 12;
+  } else if (props.size === "sm") {
+    iconSize = 15;
+  } else if (props.size === "md") {
+    iconSize = 18;
+  } else if (props.size === "lg") {
+    iconSize = 21;
+  } else if (props.size === "xl") {
+    iconSize = 24;
+  }
   return (
     <>
       <TextInput
@@ -87,8 +95,8 @@ const JsTextInput = ({ enableJs = true, ...props }: Props & TextInputProps) => {
         onChange={(e) => onChange(e.target.value, false)}
         rightSection={
           enableJs && (
-            <ActionIcon color="violet" onClick={open}>
-              <IoLogoJavascript />
+            <ActionIcon color="violet" onClick={open} size={props.size}>
+              <IoLogoJavascript size={iconSize} />
             </ActionIcon>
           )
         }

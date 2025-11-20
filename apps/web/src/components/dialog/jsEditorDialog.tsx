@@ -19,10 +19,10 @@ const JsEditorDialog = (props: PropTypes) => {
       onClose={props.onClose}
       size={"xl"}
       opened={props.opened}
+      onKeyDown={(e) => e.stopPropagation()}
     >
       <JsEditor
         defaultValue={js}
-        value={js}
         readonly={props.readonly}
         height={350}
         onChange={setJs}

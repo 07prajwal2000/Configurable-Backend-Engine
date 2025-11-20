@@ -5,7 +5,7 @@ import { useEditorChangeTrackerStore } from "@/store/editor";
 import { Button } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { TbDeviceFloppy } from "react-icons/tb";
 
 const SaveEditorButton = () => {
@@ -15,6 +15,15 @@ const SaveEditorButton = () => {
   const blockDataStore = useBlockDataStore();
   const disableButton = changeTracker.tracker.size === 0;
   const { id: routeId } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    if (changeTracker.tracker.size > 0) {
+      document.body.addEventListener("save-editor", onSaveClicked);
+    }
+    return () => {
+      document.body.removeEventListener("save-editor", onSaveClicked);
+    };
+  }, [changeTracker.tracker, blockDataStore, blocks, edges]);
 
   async function onSaveClicked() {
     const notificationId = "canvas-save-success";

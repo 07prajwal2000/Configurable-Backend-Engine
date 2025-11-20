@@ -19,6 +19,7 @@ import { SetHeaderSettingsPanel } from "../builtin/http/setHeader";
 import { HttpRequestSettingsPanel } from "../builtin/httpRequest";
 import { SetCookieSettingsPanel } from "../builtin/http/setCookie";
 import { GetSingleFromDBSettingsPanel } from "../builtin/database/getSingle";
+import { InsertBulkSettingsPanel } from "../builtin/database/insertBulk";
 
 type Props = {
   blockData: {
@@ -89,6 +90,10 @@ const BlockDataSettingsPanel = (props: Props) => {
     case BlockTypes.db_getsingle:
       return (
         <GetSingleFromDBSettingsPanel blockData={blockData} blockId={blockId} />
+      );
+    case BlockTypes.db_insertbulk:
+      return (
+        <InsertBulkSettingsPanel blockData={blockData} blockId={blockId} />
       );
     default:
       return (
