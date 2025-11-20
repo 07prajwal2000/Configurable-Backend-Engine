@@ -25,9 +25,11 @@ export const postgresVariantConfigSchema = z
     port: z.string().or(z.number()),
     database: z.string().min(1),
     useSSL: z.boolean().default(false).optional(),
+    source: z.literal("credentials"),
   })
   .or(
     z.object({
+      source: z.literal("url"),
       url: z
         .string()
         .min(10)

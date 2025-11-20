@@ -28,6 +28,9 @@ export class GetSingleDbBlock extends BaseBlock {
 
   public async executeAsync(): Promise<BlockOutput> {
     try {
+      this.input.tableName = this.input.tableName.startsWith("js:")
+        ? this.context.vm.run(this.input.tableName.slice(3))
+        : this.input.tableName;
       const result = await this.dbAdapter.getSingle(
         this.input.tableName,
         this.input.conditions
@@ -38,7 +41,7 @@ export class GetSingleDbBlock extends BaseBlock {
         output: result,
         next: this.next,
       };
-    } catch {
+    } catch (e) {
       return {
         continueIfFail: false,
         successful: false,

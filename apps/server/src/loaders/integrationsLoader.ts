@@ -42,8 +42,7 @@ async function loadFromDB() {
 
 function mapIntegrationToPgConnectionData(config: Record<string, string>) {
   let connectionDetails = {} as any;
-  const source = config.source;
-  if (source === "url") {
+  if (config.source === "url") {
     config.url = config.url.toString().startsWith("cfg:")
       ? appConfigCache[config.url.slice(4)]
       : config.url;
@@ -53,13 +52,13 @@ function mapIntegrationToPgConnectionData(config: Record<string, string>) {
     } else {
       console.log("Failed to load integration");
     }
-  }
-
-  for (let key in config) {
-    const value = config[key];
-    connectionDetails[key] = value.toString().startsWith("cfg:")
-      ? appConfigCache[value.slice(4)]
-      : value;
+  } else {
+    for (let key in config) {
+      const value = config[key];
+      connectionDetails[key] = value.toString().startsWith("cfg:")
+        ? appConfigCache[value.slice(4)]
+        : value;
+    }
   }
   return connectionDetails;
 }

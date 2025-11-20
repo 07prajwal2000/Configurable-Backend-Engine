@@ -18,6 +18,7 @@ export class Engine {
       nextParams = params;
     while (true) {
       result = await block.executeAsync(nextParams);
+
       if (!result.successful && !result.continueIfFail) {
         throw new Error(result.error);
       }

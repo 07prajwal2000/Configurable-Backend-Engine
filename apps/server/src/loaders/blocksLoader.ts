@@ -13,7 +13,6 @@ export async function startBlocksExecution(routeId: string, context: Context) {
 
   // Load blocks and edges from database
   const { blocks, edges } = await loadBlocksAndEdgesFromDatabase(routeId);
-
   builder.loadBlocks(blocks);
   builder.loadEdges(edges);
   const entrypoint = builder.getEntrypoint();

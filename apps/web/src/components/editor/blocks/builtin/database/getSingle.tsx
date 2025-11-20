@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NodeProps } from "@xyflow/react";
-import { Box, useMantineTheme } from "@mantine/core";
 import { TbDatabaseSearch } from "react-icons/tb";
 import { Position } from "@xyflow/react";
 import BaseBlock from "../../base";
 import BlockHandle from "../../handle";
-import { Stack } from "@mantine/core";
-import { Text } from "@mantine/core";
+import { Box, Stack, Text } from "@mantine/core";
+import z from "zod";
+import { getSingleDbBlockSchema } from "@fluxify/blocks";
+import IntegrationSelector from "@/components/editors/integrationSelector";
+import { BlockCanvasContext } from "@/context/blockCanvas";
+import JsTextInput from "@/components/editors/jsTextInput";
+import ConditionsEditor from "@/components/editors/conditionsEditor";
 
 const GetSingle = (props: NodeProps) => {
   return (
@@ -49,5 +53,71 @@ const GetSingle = (props: NodeProps) => {
     </BaseBlock>
   );
 };
+
+export function GetSingleFromDBSettingsPanel(props: {
+  blockId: string;
+  blockData: z.infer<typeof getSingleDbBlockSchema>;
+}) {
+  const { updateBlockData } = useContext(BlockCanvasContext);
+
+  function onIntegrationSelect(id: string) {
+    updateBlockData(props.blockId, {
+      connection: id,
+    });
+  }
+  function onTableNameChange(value: string) {
+    updateBlockData(props.blockId, {
+      tableName: value,
+    });
+  }
+  function onConditionsChange(
+    value: { lhs: any; rhs: any; operator: any; chain: any }[]
+  ) {
+    updateBlockData(props.blockId, {
+      conditions: value.map((x) => ({
+        attribute: x.lhs,
+        value: x.rhs,
+        operator: x.operator,
+        chain: x.chain,
+      })),
+    });
+  }
+
+  return (
+    <Stack px={"xs"}>
+      <IntegrationSelector
+        group="database"
+        label="Choose Database Connection"
+        description="Select the database connection to use for this block"
+        selectedIntegration={props.blockData.connection}
+        onSelect={onIntegrationSelect}
+      />
+      <JsTextInput
+        label="Table Name"
+        description="Enter the table name to get the single record from or a JS expression that returns the table name"
+        value={props.blockData.tableName}
+        onValueChange={onTableNameChange}
+      />
+      <Stack gap={2}>
+        <Text>Edit Condition(s)</Text>
+        <Text size="xs" c={"gray"}>
+          The conditions to use to get the single record from the table
+        </Text>
+        <Box my={2} />
+        <ConditionsEditor
+          conditions={
+            props.blockData.conditions.map((condition) => ({
+              ...condition,
+              lhs: condition.attribute,
+              rhs: condition.value,
+            })) ?? []
+          }
+          onChange={onConditionsChange}
+          disableJsConditions
+        />
+      </Stack>
+    </Stack>
+  );
+}
 
 export default GetSingle;

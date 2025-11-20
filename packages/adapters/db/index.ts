@@ -57,8 +57,9 @@ export class DbFactory {
     }
     if (connection in this.connectionMap) return this.connectionMap[connection];
     if (cfg.dbType === DbType.POSTGRES) {
+      const knexConn = this.getKnexConnection(cfg);
       return (this.connectionMap[connection] = new PostgresAdapter(
-        this.getKnexConnection(cfg),
+        knexConn,
         this.vm
       ));
     }
@@ -73,7 +74,7 @@ export class DbFactory {
         connection: {
           host: cfg.host,
           port: Number(cfg.port),
-          userName: cfg.username,
+          user: cfg.username,
           password: cfg.password,
           database: cfg.database,
         },

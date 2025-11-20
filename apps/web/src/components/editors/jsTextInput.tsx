@@ -22,9 +22,10 @@ type Props = {
   jsEditBtnLabel?: string;
   onValueChange?: (value: string) => void;
   onClear?: () => void;
+  enableJs?: boolean;
 };
 
-const JsTextInput = (props: Props & TextInputProps) => {
+const JsTextInput = ({ enableJs = true, ...props }: Props & TextInputProps) => {
   const [opened, { open, close }] = useDisclosure();
   const isJsValue =
     (typeof props.value === "string" && props.value.startsWith("js:")) || false;
@@ -85,9 +86,11 @@ const JsTextInput = (props: Props & TextInputProps) => {
         {...props}
         onChange={(e) => onChange(e.target.value, false)}
         rightSection={
-          <ActionIcon color="violet" onClick={open}>
-            <IoLogoJavascript />
-          </ActionIcon>
+          enableJs && (
+            <ActionIcon color="violet" onClick={open}>
+              <IoLogoJavascript />
+            </ActionIcon>
+          )
         }
       />
       <JsEditorDialog

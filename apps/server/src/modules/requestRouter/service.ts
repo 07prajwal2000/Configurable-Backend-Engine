@@ -22,7 +22,6 @@ export async function handleRequest(
     ctx.req.path,
     ctx.req.method as HttpRoute["method"]
   );
-
   if (!pathId) {
     return {
       status: 404,

@@ -18,7 +18,7 @@ type PropTypes = {
 const PostgresForm = (props: PropTypes) => {
   const form = props.form;
   const [tabSelected, setTabSelected] = useState(
-    "url" in form.values.config ? "url" : "credentials"
+    form.values.config.source === "url" ? "url" : "credentials"
   );
   const isUrlSelected = "url" === tabSelected;
   function selectUrl() {
