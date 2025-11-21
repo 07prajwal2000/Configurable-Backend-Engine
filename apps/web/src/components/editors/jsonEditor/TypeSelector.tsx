@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { Select, SelectProps } from "@mantine/core";
+import { Select } from "@mantine/core";
 import { TypeSelectorProps, DataType } from "./types";
 
 const TYPE_OPTIONS: Array<{ value: DataType; label: string }> = [
@@ -13,7 +13,6 @@ const TYPE_OPTIONS: Array<{ value: DataType; label: string }> = [
   { value: "boolean", label: "Boolean" },
   { value: "object", label: "Object" },
   { value: "array", label: "Array" },
-  { value: "null", label: "Null" },
 ];
 
 const TypeSelector: React.FC<TypeSelectorProps> = ({
@@ -23,6 +22,7 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({
 }) => {
   return (
     <Select
+      flex={1}
       data={TYPE_OPTIONS}
       value={currentType}
       onChange={(value) => value && onTypeChange(value as DataType)}

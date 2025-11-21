@@ -139,7 +139,6 @@ const ObjectEditor: React.FC<ObjectEditorProps> = ({
                           { value: "boolean", label: "Boolean" },
                           { value: "object", label: "Object" },
                           { value: "array", label: "Array" },
-                          { value: "null", label: "Null" },
                         ]}
                         value={newValueType}
                         onChange={(val) =>

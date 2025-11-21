@@ -29,22 +29,28 @@ export class PostgresAdapter implements IDbAdapter {
       conn.destroy();
     }
   }
-  async raw(query: string | unknown): Promise<any> {
+  async raw(query: string | unknown, params?: any[]): Promise<any> {
     if (typeof query !== "string")
       throw new Error("raw function accepts only string queries.");
     const conn = this.getConnection()!;
-    return await conn.raw(query);
+    return await conn.raw(query, params ?? []);
   }
   async getAll(
     table: string,
     conditions: DBConditionType[],
-    limit: number = this.HARD_LIMIT
+    limit: number = this.HARD_LIMIT,
+    offset: number = 0,
+    sort: { attribute: string; direction: "asc" | "desc" }
   ): Promise<unknown[]> {
     const conn = this.getConnection()!;
     let queryBuilder = conn(table);
     queryBuilder = this.buildQuery(conditions, queryBuilder);
     const l = limit < 0 || limit > this.HARD_LIMIT ? this.HARD_LIMIT : limit!;
-    const data = await queryBuilder.limit(l).select("*");
+    const data = await queryBuilder
+      .limit(l)
+      .offset(offset)
+      .orderBy(sort.attribute, sort.direction)
+      .select("*");
     return data;
   }
   async getSingle(
@@ -81,26 +87,28 @@ export class PostgresAdapter implements IDbAdapter {
     queryBuilder = this.buildQuery(conditions, queryBuilder);
     await queryBuilder.update(data);
   }
-  setMode(mode: DbAdapterMode): void {
+  async setMode(mode: DbAdapterMode): Promise<void> {
     if (mode == DbAdapterMode.TRANSACTION) {
-      // @ts-ignore
-      this.transaction = this.connection.transaction();
+      this.transaction = await this.connection.transaction();
     } else {
       this.transaction = null;
     }
     this.mode = mode;
   }
+  async startTransaction() {
+    await this.setMode(DbAdapterMode.TRANSACTION);
+  }
   async commitTransaction() {
     if (this.mode !== DbAdapterMode.TRANSACTION)
       throw new Error("db adapter is not in transaction mode");
     await this.transaction?.commit();
-    this.setMode(DbAdapterMode.NORMAL);
+    await this.setMode(DbAdapterMode.NORMAL);
   }
   async rollbackTransaction() {
     if (this.mode !== DbAdapterMode.TRANSACTION)
       throw new Error("db adapter is not in transaction mode");
     await this.transaction?.rollback();
-    this.setMode(DbAdapterMode.NORMAL);
+    await this.setMode(DbAdapterMode.NORMAL);
   }
   private buildQuery(
     conditions: DBConditionType[],

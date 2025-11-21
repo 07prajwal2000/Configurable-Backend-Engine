@@ -293,9 +293,9 @@ const blocksForSearch = [
     id: crypto.randomUUID(),
     title: "Native Database Object",
     description:
-      "Get a native database connection object to perform custom database operations.",
+      "Get a native database connection object to perform custom database operations using javascript.",
     icon: <TbDatabaseEdit size={iconSize} />,
-    tags: ["database", "native", "orm", "db"],
+    tags: ["database", "native", "orm", "db", "raw", "sql"],
     type: BlockTypes.db_native,
     category: BlockCategory.Database,
   },

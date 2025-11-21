@@ -5,7 +5,7 @@ import {
   BlockOutput,
   Context,
 } from "../../baseBlock";
-import { DbAdapterMode, IDbAdapter } from "@fluxify/adapters";
+import { IDbAdapter } from "@fluxify/adapters";
 import { Engine } from "../../engine";
 
 export const transactionDbBlockSchema = z
@@ -28,7 +28,7 @@ export class TransactionBlock extends BaseBlock {
 
   public async executeAsync(): Promise<BlockOutput> {
     try {
-      this.dbAdapter.setMode(DbAdapterMode.TRANSACTION);
+      await this.dbAdapter.startTransaction();
       const result = await this.childEngine.start(this.input.executor);
       await this.dbAdapter.commitTransaction();
       return result

@@ -28,6 +28,11 @@ export class DeleteDbBlock extends BaseBlock {
 
   public async executeAsync(): Promise<BlockOutput> {
     try {
+      this.input.tableName = this.input.tableName.startsWith("js:")
+        ? ((await this.context.vm.runAsync(
+            this.input.tableName.slice(3)
+          )) as string)
+        : this.input.tableName;
       const result = await this.dbAdapter.delete(
         this.input.tableName,
         this.input.conditions

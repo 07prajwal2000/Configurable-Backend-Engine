@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import BaseBlock from "../../base";
 import BlockHandle from "../../handle";
 import { NodeProps } from "@xyflow/react";
 import { Position } from "@xyflow/react";
 import { TbDatabaseX } from "react-icons/tb";
+import { deleteDbBlockSchema } from "@fluxify/blocks";
+import z from "zod";
+import { Box, Stack, Text } from "@mantine/core";
+import IntegrationSelector from "@/components/editors/integrationSelector";
+import ConditionsEditor from "@/components/editors/conditionsEditor";
+import JsTextInput from "@/components/editors/jsTextInput";
+import { BlockCanvasContext } from "@/context/blockCanvas";
 
 const Delete = (props: NodeProps) => {
   return (
@@ -30,5 +37,71 @@ const Delete = (props: NodeProps) => {
     </BaseBlock>
   );
 };
+
+export function DeleteBlockDataSettingsPanel(props: {
+  blockData: z.infer<typeof deleteDbBlockSchema>;
+  blockId: string;
+}) {
+  const { updateBlockData } = useContext(BlockCanvasContext);
+
+  function onIntegrationSelect(id: string) {
+    updateBlockData(props.blockId, {
+      connection: id,
+    });
+  }
+  function onTableNameChange(value: string) {
+    updateBlockData(props.blockId, {
+      tableName: value,
+    });
+  }
+  function onConditionsChange(
+    value: { lhs: any; rhs: any; operator: any; chain: any }[]
+  ) {
+    updateBlockData(props.blockId, {
+      conditions: value.map((x) => ({
+        attribute: x.lhs,
+        value: x.rhs,
+        operator: x.operator,
+        chain: x.chain,
+      })),
+    });
+  }
+
+  return (
+    <Stack px={"xs"}>
+      <IntegrationSelector
+        group="database"
+        label="Choose Database Connection"
+        description="Select the database connection to use for this block"
+        selectedIntegration={props.blockData.connection}
+        onSelect={onIntegrationSelect}
+      />
+      <JsTextInput
+        label="Table Name"
+        description="Enter the table name to delete the record(s) from or a JS expression that returns the table name"
+        value={props.blockData.tableName}
+        onValueChange={onTableNameChange}
+      />
+      <Stack gap={2}>
+        <Text>Edit Condition(s)</Text>
+        <Text size="xs" c={"gray"}>
+          The conditions to use to delete the record(s) from the table
+        </Text>
+        <Box my={2} />
+        <ConditionsEditor
+          conditions={
+            props.blockData.conditions.map((condition) => ({
+              ...condition,
+              lhs: condition.attribute,
+              rhs: condition.value,
+            })) ?? []
+          }
+          onChange={onConditionsChange}
+          disableJsConditions
+        />
+      </Stack>
+    </Stack>
+  );
+}
 
 export default Delete;

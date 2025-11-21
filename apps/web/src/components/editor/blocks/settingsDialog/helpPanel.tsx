@@ -13,6 +13,7 @@ import { ForloopHelpPanel } from "../builtin/forloop";
 import { GetVarHelpPanel } from "../builtin/getVar";
 import { IfConditionHelpPanel } from "../builtin/if";
 import { JsRunnerHelpPanel } from "../builtin/jsRunner";
+import { NativeBlockHelpPanel } from "../builtin/database/native";
 
 type Props = {
   blockId: string;
@@ -93,6 +94,9 @@ const HelpPanel = (props: Props) => {
         )}
         {blockType === BlockTypes.jsrunner && (
           <JsRunnerHelpPanel blockId={props.blockId} blockData={data} />
+        )}
+        {blockType === BlockTypes.db_native && (
+          <NativeBlockHelpPanel blockId={props.blockId} blockData={data} />
         )}
       </Stack>
     </Box>

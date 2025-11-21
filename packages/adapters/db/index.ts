@@ -23,7 +23,9 @@ export interface IDbAdapter {
   getAll(
     table: string,
     conditions: DBConditionType[],
-    limit: number
+    limit: number,
+    offset: number,
+    sort: { attribute: string; direction: "asc" | "desc" }
   ): Promise<unknown[]>;
   getSingle(
     table: string,
@@ -36,9 +38,10 @@ export interface IDbAdapter {
     data: unknown,
     conditions: DBConditionType[]
   ): Promise<void>;
-  raw(query: string | unknown): Promise<any>;
+  raw(query: string | unknown, params?: any[]): Promise<any>;
   delete(table: string, conditions: DBConditionType[]): Promise<boolean>;
-  setMode(mode: DbAdapterMode): void;
+  setMode(mode: DbAdapterMode): Promise<void>;
+  startTransaction(): Promise<void>;
   commitTransaction(): Promise<void>;
   rollbackTransaction(): Promise<void>;
 }

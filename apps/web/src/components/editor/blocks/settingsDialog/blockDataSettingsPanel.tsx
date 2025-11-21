@@ -20,6 +20,12 @@ import { HttpRequestSettingsPanel } from "../builtin/httpRequest";
 import { SetCookieSettingsPanel } from "../builtin/http/setCookie";
 import { GetSingleFromDBSettingsPanel } from "../builtin/database/getSingle";
 import { InsertBulkSettingsPanel } from "../builtin/database/insertBulk";
+import { InsertBlockSettingsPanel } from "../builtin/database/insert";
+import { UpdateBlockDataSettingsPanel } from "../builtin/database/update";
+import { GetAllBlockDataSettingsPanel } from "../builtin/database/getAll";
+import { DeleteBlockDataSettingsPanel } from "../builtin/database/delete";
+import { TransactionBlockDataSettingsPanel } from "../builtin/database/transaction";
+import { NativeBlockDataSettingsPanel } from "../builtin/database/native";
 
 type Props = {
   blockData: {
@@ -94,6 +100,33 @@ const BlockDataSettingsPanel = (props: Props) => {
     case BlockTypes.db_insertbulk:
       return (
         <InsertBulkSettingsPanel blockData={blockData} blockId={blockId} />
+      );
+    case BlockTypes.db_insert:
+      return (
+        <InsertBlockSettingsPanel blockData={blockData} blockId={blockId} />
+      );
+    case BlockTypes.db_update:
+      return (
+        <UpdateBlockDataSettingsPanel blockData={blockData} blockId={blockId} />
+      );
+    case BlockTypes.db_getall:
+      return (
+        <GetAllBlockDataSettingsPanel blockData={blockData} blockId={blockId} />
+      );
+    case BlockTypes.db_delete:
+      return (
+        <DeleteBlockDataSettingsPanel blockData={blockData} blockId={blockId} />
+      );
+    case BlockTypes.db_transaction:
+      return (
+        <TransactionBlockDataSettingsPanel
+          blockData={blockData}
+          blockId={blockId}
+        />
+      );
+    case BlockTypes.db_native:
+      return (
+        <NativeBlockDataSettingsPanel blockData={blockData} blockId={blockId} />
       );
     default:
       return (

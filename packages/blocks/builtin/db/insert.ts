@@ -48,6 +48,7 @@ export class InsertDbBlock extends BaseBlock {
           error: "error in insert: data to insert is not an object",
         };
       }
+      dataToInsert = await this.evaluateJsInData(dataToInsert);
       this.input.tableName = this.input.tableName.startsWith("js:")
         ? ((await this.context.vm.runAsync(
             this.input.tableName.slice(3)
@@ -63,12 +64,44 @@ export class InsertDbBlock extends BaseBlock {
         output: result,
         next: this.next,
       };
-    } catch {
+    } catch (e) {
+      console.error(e);
       return {
         continueIfFail: false,
         successful: false,
         error: "failed to execute insert db block",
       };
     }
+  }
+  private async evaluateJsInData(data: any): Promise<any> {
+    const result: any = {};
+    for (const key in data) {
+      const value = data[key];
+      if (typeof value === "string" && value.startsWith("js:")) {
+        result[key] = await this.context.vm.runAsync(value.slice(3));
+      } else if (typeof value === "object") {
+        result[key] = await this.evaluateJsInData(value);
+      } else if (Array.isArray(value)) {
+        result[key] = await this.evaluateJsInArray(value);
+      } else {
+        result[key] = value;
+      }
+    }
+    return result;
+  }
+  private async evaluateJsInArray(data: any[]): Promise<any[]> {
+    const result: any[] = [];
+    for (const item of data) {
+      if (typeof item === "string" && item.startsWith("js:")) {
+        result.push(await this.context.vm.runAsync(item.slice(3)));
+      } else if (typeof item === "object") {
+        result.push(await this.evaluateJsInData(item));
+      } else if (Array.isArray(item)) {
+        result.push(await this.evaluateJsInArray(item));
+      } else {
+        result.push(item);
+      }
+    }
+    return result;
   }
 }

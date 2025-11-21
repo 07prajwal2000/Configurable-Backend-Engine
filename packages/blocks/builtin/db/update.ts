@@ -30,7 +30,29 @@ export class UpdateDbBlock extends BaseBlock {
 
   public async executeAsync(data: object): Promise<BlockOutput> {
     try {
-      const dataToUpdate = this.input.useParam ? data : this.input.data;
+      let dataToUpdate = this.input.useParam ? data : this.input.data.value;
+      if (
+        !this.input.useParam &&
+        this.input.data.source === "js" &&
+        typeof this.input.data.value === "string"
+      ) {
+        dataToUpdate = (await this.context.vm.runAsync(
+          this.input.data.value
+        )) as object;
+      }
+      if (!(dataToUpdate instanceof Object)) {
+        return {
+          continueIfFail: false,
+          successful: false,
+          error: "error in update: data to update is not an object",
+        };
+      }
+      dataToUpdate = await this.evaluateJsInData(dataToUpdate);
+      this.input.tableName = this.input.tableName.startsWith("js:")
+        ? ((await this.context.vm.runAsync(
+            this.input.tableName.slice(3)
+          )) as string)
+        : this.input.tableName;
       const result = await this.dbAdapter.update(
         this.input.tableName,
         dataToUpdate,
@@ -42,12 +64,44 @@ export class UpdateDbBlock extends BaseBlock {
         output: result,
         next: this.next,
       };
-    } catch {
+    } catch (e) {
+      console.error(e);
       return {
         continueIfFail: false,
         successful: false,
         error: "failed to execute update db block",
       };
     }
+  }
+  private async evaluateJsInData(data: any): Promise<any> {
+    const result: any = {};
+    for (const key in data) {
+      const value = data[key];
+      if (typeof value === "string" && value.startsWith("js:")) {
+        result[key] = await this.context.vm.runAsync(value.slice(3));
+      } else if (typeof value === "object") {
+        result[key] = await this.evaluateJsInData(value);
+      } else if (Array.isArray(value)) {
+        result[key] = await this.evaluateJsInArray(value);
+      } else {
+        result[key] = value;
+      }
+    }
+    return result;
+  }
+  private async evaluateJsInArray(data: any[]): Promise<any[]> {
+    const result: any[] = [];
+    for (const item of data) {
+      if (typeof item === "string" && item.startsWith("js:")) {
+        result.push(await this.context.vm.runAsync(item.slice(3)));
+      } else if (typeof item === "object") {
+        result.push(await this.evaluateJsInData(item));
+      } else if (Array.isArray(item)) {
+        result.push(await this.evaluateJsInArray(item));
+      } else {
+        result.push(item);
+      }
+    }
+    return result;
   }
 }
