@@ -1,0 +1,21 @@
+http://localhost:8000 {
+
+    @admin_ui {
+        path /_/admin/ui/*
+        path /_/admin/ui
+    }
+
+    handle @admin_ui {
+        reverse_proxy host.docker.internal:5500
+    }
+
+    @admin_api path /_/admin/api/*
+
+    handle @admin_api {
+        reverse_proxy host.docker.internal:3000
+    }
+
+    handle {
+        reverse_proxy host.docker.internal:3000
+    }
+}

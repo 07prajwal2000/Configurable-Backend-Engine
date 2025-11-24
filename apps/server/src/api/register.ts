@@ -4,7 +4,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 
 export function mapVersionedAdminRoutes(app: Hono) {
-  const router = app.basePath("/_/admin");
+  const router = app.basePath("/_/admin/api");
   router.get("/openapi/ui", (c) => {
     try {
       const htmlContent = loadHtmlContent();

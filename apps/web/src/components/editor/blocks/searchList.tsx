@@ -9,7 +9,9 @@ import {
   TbDatabaseX,
   TbDoorExit,
   TbInfinity,
+  TbNote,
   TbTerminal2,
+  TbWorldCode,
 } from "react-icons/tb";
 import { FaHeading, FaMapSigns, FaToolbox, FaCode } from "react-icons/fa";
 import {
@@ -300,5 +302,12 @@ const blocksForSearch = [
     category: BlockCategory.Database,
   },
 ].sort((a, b) => (a.title > b.title ? 1 : -1));
+
+export const blockIcons: Record<string, React.ReactNode> = {};
+blockIcons[BlockTypes.entrypoint] = <TbWorldCode size={iconSize} />;
+blockIcons[BlockTypes.stickynote] = <TbNote size={iconSize} />;
+blocksForSearch.forEach((block) => {
+  blockIcons[block.type] = block.icon;
+});
 
 export default blocksForSearch;

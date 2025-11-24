@@ -1,13 +1,21 @@
-site_name: "CBE"
-site_description: "A Configurable Backend Engine (CBE) is a No/Low Code Tool to build Backend Rest APIs with ease."
-site_author: "Prajwal Aradhya"
+site_name: "Fluxify"
+site_description: "No/Low Code Backend Engine to Build APIs with ease"
+site_author: "07prajwal2000"
 docs_dir: "./docs"
+repo_name: "Fluxify"
+repo_url: "https://github.com/fluxify-rest/Fluxify"
+site_url: "https://docs.fluxify.rest"
+edit_uri: "https://github.com/fluxify-rest/Fluxify/edit/main/docs/"
 theme:
   name: material
+  logo: "assets/logo.webp"
+  favicon: "assets/favicon.ico"
   features:
     - content.code.copy
     - navigation.tabs
     - navigation.tabs.sticky
+    - navigation.path
+    - navigation.indexes
 extra:
   generator: false
 markdown_extensions:

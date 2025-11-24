@@ -1,6 +1,6 @@
 "use client";
 
-import { Group, Image, Stack, Text } from "@mantine/core";
+import { Image, Stack } from "@mantine/core";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import {
@@ -62,12 +62,12 @@ const RootSidebar = () => {
       py={"md"}
       px={"xs"}
     >
-      <Group gap={"sm"} align="center">
-        <Image src={"/logo_rounded.png"} w={"2.3rem"} alt="" />
-        <Text fw={"bold"} size="md">
-          CBE
-        </Text>
-      </Group>
+      <Image
+        src={"/_/admin/ui/logo_title.webp"}
+        style={{ width: "50%" }}
+        mx={"auto"}
+        alt=""
+      />
       <Stack my={"lg"} gap={4}>
         {topMenuItems.map((item) => (
           <MenuItem
