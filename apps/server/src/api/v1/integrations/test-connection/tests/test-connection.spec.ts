@@ -4,9 +4,7 @@ import { getAppConfigs } from "../repository";
 
 vi.mock("../repository");
 vi.mock("@fluxify/adapters", async () => {
-  const actual = await vi.importActual("@fluxify/adapters");
   return {
-    ...actual,
     PostgresAdapter: {
       testConnection: vi.fn(),
     },

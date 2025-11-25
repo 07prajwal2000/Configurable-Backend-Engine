@@ -1,4 +1,4 @@
-name: CI for @fluxify/blocks package
+name: CI for @fluxify/server package
 on:
   push:
     branches:
@@ -17,7 +17,7 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Change Directory to blocks package
-        run: cd packages/blocks
+      - name: Change Directory to server app
+        run: cd apps/server
       - name: Run tests
         run: npm test

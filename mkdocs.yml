@@ -16,9 +16,64 @@ theme:
     - navigation.tabs.sticky
     - navigation.path
     - navigation.indexes
+    - navigation.footer
+    - navigation.sections
+
+nav:
+  - "Fluxify":
+      - "index.md"
+  - "Getting Started":
+      - "getting-started/index.md"
+      - "getting-started/basics.md"
+      - "getting-started/installation.md"
+      - "getting-started/contributing.md"
+  - "Concepts":
+      - "concepts/index.md"
+      - App Config: "concepts/app-config.md"
+      - Blocks: "concepts/blocks.md"
+      - Edges: "concepts/edges.md"
+      - Execution Engine: "concepts/execution-engine.md"
+      - Globals: "concepts/globals.md"
+      - Integrations: "concepts/integrations.md"
+  - "Deployments":
+      - "deployments/index.md"
+      - Cloud: "deployments/cloud.md"
+      - Kubernetes HA: "deployments/kubernetes-ha.md"
+      - Serverless: "deployments/serverless.md"
+      - Standalone Docker: "deployments/standalone-docker.md"
+  - "Integrations":
+      - "integrations/index.md"
+      - Databases: "integrations/databases/index.md"
+      - Available Connectors: "integrations/databases/available-connectors.md"
+      - How To: "integrations/databases/how-to.md"
+      - Key Points: "integrations/databases/key-points.md"
+      - SQL vs NoSQL: "integrations/databases/sql-vs-nosql.md"
+      - Transactions: "integrations/databases/transactions.md"
+  - "Scripting":
+      - "scripting/index.md"
+      - Context: "scripting/context.md"
+      - How It Works: "scripting/how-it-works.md"
+      - Key Considerations: "scripting/key-considerations.md"
+      - npm Packages: "scripting/npm-packages.md"
+  - "Blocks":
+      - "blocks/index.md"
+      - How They Work: "blocks/how-they-work.md"
+      - List of Blocks: "blocks/list-of-blocks.md"
+  - "Blog":
+      - "blog/index.md"
+copyright: "Copyright &copy; 2025 Fluxify"
 extra:
   generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/fluxify-rest/Fluxify
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/fluxify
 markdown_extensions:
+  - toc:
+      permalink: true
+      title: On This Page
+      toc_depth: 3
   - def_list
   - pymdownx.highlight:
       anchor_linenums: true
@@ -29,8 +84,12 @@ markdown_extensions:
   - pymdownx.superfences
   - admonition
   - pymdownx.details
+  - tables
 plugins:
   - search
+  - blog:
+      authors_profiles: true
+      authors_profiles_name: Authors
   - tags:
       tags_allowed:
         - Built-in
