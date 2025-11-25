@@ -15,9 +15,9 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Build
+        run: npm run build:standalone
       - name: Change Directory to blocks package
         run: cd packages/blocks
-      - name: Build
-        run: npm run build
       - name: Run tests
         run: npm test
