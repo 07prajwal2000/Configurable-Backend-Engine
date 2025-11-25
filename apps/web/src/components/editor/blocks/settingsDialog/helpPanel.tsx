@@ -1,5 +1,12 @@
 import { BlockCanvasContext } from "@/context/blockCanvas";
-import { Box, Flex, Stack, TextInput } from "@mantine/core";
+import {
+  ActionIcon,
+  Center,
+  CopyButton,
+  Stack,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import React, { useContext } from "react";
 import { StickyNoteHelpPanel } from "../builtin/stickyNote";
 import { BlockTypes } from "@/types/block";
@@ -13,6 +20,9 @@ import { ForloopHelpPanel } from "../builtin/forloop";
 import { GetVarHelpPanel } from "../builtin/getVar";
 import { IfConditionHelpPanel } from "../builtin/if";
 import { JsRunnerHelpPanel } from "../builtin/jsRunner";
+import { NativeBlockHelpPanel } from "../builtin/database/native";
+import { blockIcons } from "../searchList";
+import { TbCheck, TbCopy } from "react-icons/tb";
 
 type Props = {
   blockId: string;
@@ -36,66 +46,85 @@ const HelpPanel = (props: Props) => {
   }
 
   return (
-    <Box>
-      <Stack gap={"4"}>
-        <Flex direction={"row"} gap={"xs"}>
-          <TextInput
-            placeholder="Block ID"
-            label="Block ID"
-            spellCheck={false}
-            readOnly
-            value={props.blockId}
-          />
-          <TextInput
-            placeholder="Block Type"
-            label="Block Type"
-            spellCheck={false}
-            readOnly
-            value={getHumanReadableBlockName(blockType)}
-          />
-        </Flex>
-        <DebouncedTextInput
-          placeholder="Block Name"
-          label="Block Name"
-          spellCheck={false}
-          value={data.blockName || ""}
-          debounceDelay={450}
-          onValueChange={(value) => onBlockNameChange(value)}
-        />
-        <DebouncedTextArea
-          placeholder="Block Description"
-          label="Block Description"
-          value={data.blockDescription || ""}
-          rows={4}
-          debounceDelay={250}
-          onValueChange={(value) => onBlockDescriptionChange(value)}
-        />
-        {blockType === BlockTypes.stickynote && (
-          <StickyNoteHelpPanel blockId={props.blockId} blockData={data} />
-        )}
-        {blockType === BlockTypes.response && (
-          <ResponseBlockHelpPanel blockId={props.blockId} blockData={data} />
-        )}
-        {blockType === BlockTypes.arrayops && (
-          <ArrayOperationsHelpPanel blockId={props.blockId} blockData={data} />
-        )}
-        {blockType === BlockTypes.foreachloop && (
-          <ForeachLoopHelpPanel blockId={props.blockId} blockData={data} />
-        )}
-        {blockType === BlockTypes.forloop && (
-          <ForloopHelpPanel blockId={props.blockId} blockData={data} />
-        )}
-        {blockType === BlockTypes.getvar && (
-          <GetVarHelpPanel blockId={props.blockId} blockData={data} />
-        )}
-        {blockType === BlockTypes.if && (
-          <IfConditionHelpPanel blockId={props.blockId} blockData={data} />
-        )}
-        {blockType === BlockTypes.jsrunner && (
-          <JsRunnerHelpPanel blockId={props.blockId} blockData={data} />
-        )}
-      </Stack>
-    </Box>
+    <Stack gap={"4"}>
+      <TextInput
+        placeholder="Block ID"
+        label="Block ID"
+        spellCheck={false}
+        readOnly
+        value={props.blockId}
+        rightSection={
+          <CopyButton value={props.blockId} timeout={2000}>
+            {({ copied, copy }) => (
+              <Tooltip
+                label={copied ? "Copied" : "Copy"}
+                withArrow
+                position="right"
+              >
+                <ActionIcon
+                  color={copied ? "teal" : "gray"}
+                  variant="subtle"
+                  onClick={copy}
+                >
+                  {copied ? <TbCheck size={16} /> : <TbCopy size={16} />}
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </CopyButton>
+        }
+      />
+      <TextInput
+        leftSection={<Center c={"dark.5"}>{blockIcons[blockType]}</Center>}
+        placeholder="Block Type"
+        label="Block Type"
+        spellCheck={false}
+        readOnly
+        value={getHumanReadableBlockName(blockType)}
+      />
+      <DebouncedTextInput
+        placeholder="Block Name"
+        label="Block Name"
+        spellCheck={false}
+        value={data.blockName || ""}
+        debounceDelay={450}
+        onValueChange={(value) => onBlockNameChange(value)}
+      />
+      <DebouncedTextArea
+        placeholder="Block Description"
+        label="Block Description"
+        value={data.blockDescription || ""}
+        rows={4}
+        debounceDelay={250}
+        onValueChange={(value) => onBlockDescriptionChange(value)}
+      />
+      {blockType === BlockTypes.stickynote && (
+        <StickyNoteHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+      {blockType === BlockTypes.response && (
+        <ResponseBlockHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+      {blockType === BlockTypes.arrayops && (
+        <ArrayOperationsHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+      {blockType === BlockTypes.foreachloop && (
+        <ForeachLoopHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+      {blockType === BlockTypes.forloop && (
+        <ForloopHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+      {blockType === BlockTypes.getvar && (
+        <GetVarHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+      {blockType === BlockTypes.if && (
+        <IfConditionHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+      {blockType === BlockTypes.jsrunner && (
+        <JsRunnerHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+      {blockType === BlockTypes.db_native && (
+        <NativeBlockHelpPanel blockId={props.blockId} blockData={data} />
+      )}
+    </Stack>
   );
 };
 

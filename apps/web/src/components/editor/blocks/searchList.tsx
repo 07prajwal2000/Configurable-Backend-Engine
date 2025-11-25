@@ -9,7 +9,9 @@ import {
   TbDatabaseX,
   TbDoorExit,
   TbInfinity,
+  TbNote,
   TbTerminal2,
+  TbWorldCode,
 } from "react-icons/tb";
 import { FaHeading, FaMapSigns, FaToolbox, FaCode } from "react-icons/fa";
 import {
@@ -293,12 +295,19 @@ const blocksForSearch = [
     id: crypto.randomUUID(),
     title: "Native Database Object",
     description:
-      "Get a native database connection object to perform custom database operations.",
+      "Get a native database connection object to perform custom database operations using javascript.",
     icon: <TbDatabaseEdit size={iconSize} />,
-    tags: ["database", "native", "orm", "db"],
+    tags: ["database", "native", "orm", "db", "raw", "sql"],
     type: BlockTypes.db_native,
     category: BlockCategory.Database,
   },
 ].sort((a, b) => (a.title > b.title ? 1 : -1));
+
+export const blockIcons: Record<string, React.ReactNode> = {};
+blockIcons[BlockTypes.entrypoint] = <TbWorldCode size={iconSize} />;
+blockIcons[BlockTypes.stickynote] = <TbNote size={iconSize} />;
+blocksForSearch.forEach((block) => {
+  blockIcons[block.type] = block.icon;
+});
 
 export default blocksForSearch;

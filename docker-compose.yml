@@ -9,12 +9,28 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - pg_cbe:/var/lib/postgresql/data
+    networks:
+      - default
   valkey:
     image: valkey/valkey:9.0-alpine
     container_name: valkey
     ports:
       - 6379:6379
+    networks:
+      - default
+  caddy:
+    image: caddy:2.6.4-alpine
+    container_name: caddy
+    ports:
+      - 8000:8000
+    volumes:
+      - ./Caddyfile.local:/etc/caddy/Caddyfile
+    networks:
+      - default
 
 volumes:
   pg_cbe:
     external: true
+networks:
+  default:
+    driver: bridge

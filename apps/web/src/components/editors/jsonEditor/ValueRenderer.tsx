@@ -83,6 +83,8 @@ const ValueRenderer: React.FC<ValueRendererProps> = ({
     return (
       <Group gap={4} align="center">
         <Checkbox
+          color="violet"
+          flex={1}
           checked={value as boolean}
           onChange={(e) => onChange(e.currentTarget.checked)}
           disabled={readonly}
@@ -101,6 +103,8 @@ const ValueRenderer: React.FC<ValueRendererProps> = ({
   return (
     <Group gap={4} align="flex-start" grow>
       <JsTextInput
+        enableJs={currentType === "string"}
+        jsEditBtnLabel="Edit Js Expression"
         value={displayValue}
         onValueChange={handleValueChange}
         placeholder={currentType === "number" ? "0" : "Enter value"}

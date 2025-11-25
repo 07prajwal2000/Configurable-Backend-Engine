@@ -26,7 +26,7 @@ export class NativeDbBlock extends BaseBlock {
 
   public async executeAsync(params: any): Promise<BlockOutput> {
     try {
-      this.context.vars.dbQuery = this.dbAdapter.raw;
+      this.context.vars.dbQuery = this.dbAdapter.raw.bind(this.dbAdapter);
       this.input.js = this.input.js.startsWith("js:")
         ? this.input.js.slice(3)
         : this.input.js;
@@ -37,7 +37,8 @@ export class NativeDbBlock extends BaseBlock {
         next: this.next,
         output: value,
       };
-    } catch {
+    } catch (e) {
+      console.error(e);
       return {
         continueIfFail: false,
         successful: false,

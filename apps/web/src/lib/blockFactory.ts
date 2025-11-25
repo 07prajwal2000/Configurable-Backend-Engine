@@ -99,6 +99,11 @@ export function createBlockData(block: BlockTypes) {
         tableName: "",
         conditions: [],
         limit: 10,
+        offset: 0,
+        sort: {
+          attribute: "id",
+          direction: "asc",
+        },
       };
     case BlockTypes.db_delete:
       return {

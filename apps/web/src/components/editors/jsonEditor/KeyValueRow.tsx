@@ -4,11 +4,21 @@
  */
 
 import React from "react";
-import { Grid, TextInput, ActionIcon, Group, Text, Stack } from "@mantine/core";
+import {
+  Grid,
+  TextInput,
+  ActionIcon,
+  Group,
+  Text,
+  Stack,
+  Box,
+} from "@mantine/core";
 import { TbTrashFilled } from "react-icons/tb";
 import ValueRenderer from "./ValueRenderer";
 import { KeyValueRowProps } from "./types";
 import { getDataType } from "./utils";
+import TypeSelector from "./TypeSelector";
+import { createDefaultValue } from "./utils";
 
 const KeyValueRow: React.FC<KeyValueRowProps> = ({
   keyName,
@@ -20,6 +30,11 @@ const KeyValueRow: React.FC<KeyValueRowProps> = ({
 }) => {
   const valueType = getDataType(value);
   const isComplexType = valueType === "object" || valueType === "array";
+
+  const handleTypeChange = (newType: typeof valueType) => {
+    if (newType === valueType) return;
+    onValueChange(createDefaultValue(newType));
+  };
 
   if (isComplexType) {
     return (
@@ -38,7 +53,7 @@ const KeyValueRow: React.FC<KeyValueRowProps> = ({
           </Grid.Col>
 
           {/* Colon Separator */}
-          <Grid.Col span={{ base: 12, sm: "auto" }} w={20}>
+          <Grid.Col span={{ sm: 1 }}>
             <Group justify="center" h="100%">
               <Text fw={500} c="gray" size="xs">
                 :
@@ -48,28 +63,35 @@ const KeyValueRow: React.FC<KeyValueRowProps> = ({
 
           {/* Delete Button */}
           {!readonly && (
-            <Grid.Col span={{ base: 12, sm: "auto" }}>
-              <ActionIcon
-                color="red"
-                onClick={onDelete}
-                variant="subtle"
-                size="xs"
-              >
-                <TbTrashFilled size={12} />
-              </ActionIcon>
+            <Grid.Col span={{ sm: 4 }}>
+              <Group justify="between">
+                <TypeSelector
+                  currentType={valueType}
+                  onTypeChange={handleTypeChange}
+                  readonly={readonly}
+                />
+                <ActionIcon
+                  color="red"
+                  onClick={onDelete}
+                  variant="subtle"
+                  size="xs"
+                >
+                  <TbTrashFilled size={12} />
+                </ActionIcon>
+              </Group>
             </Grid.Col>
           )}
         </Grid>
 
         {/* Nested editor below */}
-        <div style={{ marginLeft: 0 }}>
+        <Box ml={"sm"}>
           <ValueRenderer
             value={value}
             onChange={onValueChange}
             readonly={readonly}
             depth={1}
           />
-        </div>
+        </Box>
       </Stack>
     );
   }
@@ -110,12 +132,7 @@ const KeyValueRow: React.FC<KeyValueRowProps> = ({
       {/* Delete Button */}
       {!readonly && (
         <Grid.Col span={{ base: 12, sm: "auto" }}>
-          <ActionIcon
-            color="red"
-            onClick={onDelete}
-            variant="subtle"
-            size="xs"
-          >
+          <ActionIcon color="red" onClick={onDelete} variant="subtle" size="xs">
             <TbTrashFilled size={12} />
           </ActionIcon>
         </Grid.Col>

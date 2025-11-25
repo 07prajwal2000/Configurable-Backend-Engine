@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import BaseBlock from "../../base";
 import BlockHandle from "../../handle";
 import { NodeProps } from "@xyflow/react";
 import { Position } from "@xyflow/react";
 import { LuDatabaseZap } from "react-icons/lu";
-import { useMantineTheme } from "@mantine/core";
+import { Stack, useMantineTheme } from "@mantine/core";
+import z from "zod";
+import { transactionDbBlockSchema } from "@fluxify/blocks";
+import IntegrationSelector from "@/components/editors/integrationSelector";
+import { BlockCanvasContext } from "@/context/blockCanvas";
 
 const Transaction = (props: NodeProps) => {
   const green = useMantineTheme().colors.green;
@@ -37,6 +41,30 @@ const Transaction = (props: NodeProps) => {
         position={Position.Top}
       />
     </BaseBlock>
+  );
+};
+
+export const TransactionBlockDataSettingsPanel = (props: {
+  blockData: z.infer<typeof transactionDbBlockSchema>;
+  blockId: string;
+}) => {
+  const { updateBlockData } = useContext(BlockCanvasContext);
+
+  function onIntegrationSelect(id: string) {
+    updateBlockData(props.blockId, {
+      connection: id,
+    });
+  }
+  return (
+    <Stack px={"xs"}>
+      <IntegrationSelector
+        group="database"
+        label="Choose Database Connection"
+        description="Select the database connection to start a transaction"
+        selectedIntegration={props.blockData.connection}
+        onSelect={onIntegrationSelect}
+      />
+    </Stack>
   );
 };
 

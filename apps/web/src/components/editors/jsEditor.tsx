@@ -6,9 +6,11 @@ type CodeEditorProps = {
   value?: string;
   readonly?: boolean;
   height?: number;
+  showLineNumbers?: boolean;
 };
 
 const JsEditor = (props: CodeEditorProps) => {
+  const showLineNumbers = props.showLineNumbers ?? true;
   const height = props.height ? `${props.height}px` : "350px";
   return (
     <Editor
@@ -20,6 +22,7 @@ const JsEditor = (props: CodeEditorProps) => {
       onChange={(e) => props.onChange && props.onChange(e!)}
       options={{
         readOnly: props.readonly,
+        lineNumbers: showLineNumbers ? "on" : "off",
         minimap: {
           enabled: false,
         },

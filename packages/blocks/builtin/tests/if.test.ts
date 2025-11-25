@@ -89,32 +89,46 @@ describe("Testing IfBlock", () => {
       expect(sut.evaluateOperator(1, 2, "eq")).toBe(false);
     });
     it("should return success when lhs is js script and rhs is value", () => {
-      expect(sut.evaluateOperator("js:1", 1, "gte")).toBe(true);
-      expect(sut.evaluateOperator("js:5", 1, "gt")).toBe(true);
-      expect(sut.evaluateOperator("js:http.method", "GET", "eq")).toBe(true);
-      expect(
-        sut.evaluateOperator("js:user.roles.includes('admin')", true, "eq")
-      ).toBe(true);
-      // faliure testing
-      expect(sut.evaluateOperator("js:1", 2, "gte")).not.toBe(true);
-      expect(sut.evaluateOperator("js:1", 2, "gt")).not.toBe(true);
-      expect(sut.evaluateOperator("js:http.method", "POST", "eq")).not.toBe(
+      expect(sut.evaluateOperator("js:return 1", 1, "gte")).toBe(true);
+      expect(sut.evaluateOperator("js:return 5", 1, "gt")).toBe(true);
+      expect(sut.evaluateOperator("js:return http.method;", "GET", "eq")).toBe(
         true
       );
+      expect(
+        sut.evaluateOperator(
+          "js:return user.roles.includes('admin')",
+          true,
+          "eq"
+        )
+      ).toBe(true);
+      // faliure testing
+      expect(sut.evaluateOperator("js:return 1", 2, "gte")).not.toBe(true);
+      expect(sut.evaluateOperator("js:return 1", 2, "gt")).not.toBe(true);
+      expect(
+        sut.evaluateOperator("js:return http.method", "POST", "eq")
+      ).not.toBe(true);
     });
     it("should return success when rhs is js script and lhs is value", () => {
-      expect(sut.evaluateOperator(1, "js:1", "gte")).toBe(true);
-      expect(sut.evaluateOperator(5, "js:2", "gt")).toBe(true);
-      expect(sut.evaluateOperator("GET", "js:http.method", "eq")).toBe(true);
+      expect(sut.evaluateOperator(1, "js:return 1", "gte")).toBe(true);
+      expect(sut.evaluateOperator(5, "js:return 2", "gt")).toBe(true);
+      expect(sut.evaluateOperator("GET", "js:return 'GET'", "eq")).toBe(true);
       expect(
-        sut.evaluateOperator(true, "js:user.roles.includes('admin')", "eq")
+        sut.evaluateOperator(
+          true,
+          "js:return user.roles.includes('admin')",
+          "eq"
+        )
       ).toBe(true);
     });
     it("should return true when lhs is js script and rhs is js script", () => {
-      expect(sut.evaluateOperator("js:1", "js:1", "gte")).toBe(true);
-      expect(sut.evaluateOperator("js:5", "js:2", "gt")).toBe(true);
+      expect(sut.evaluateOperator("js:return 1", "js:return 1", "gte")).toBe(
+        true
+      );
+      expect(sut.evaluateOperator("js:return 5", "js:return 2", "gt")).toBe(
+        true
+      );
       expect(
-        sut.evaluateOperator("js:http.method", "js:http.method", "eq")
+        sut.evaluateOperator("js:return http.method", "js:return 'GET'", "eq")
       ).toBe(true);
     });
   });

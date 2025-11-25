@@ -209,7 +209,6 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({
                     { value: "boolean", label: "Boolean" },
                     { value: "object", label: "Object" },
                     { value: "array", label: "Array" },
-                    { value: "null", label: "Null" },
                   ]}
                   value={newItemType}
                   onChange={(val) => val && setNewItemType(val as DataType)}

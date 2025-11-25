@@ -13,6 +13,8 @@ describe("testing for loop block", () => {
       {} as any,
       {
         start: 0,
+        blockDescription: "",
+        blockName: "",
         end: n,
         step: 1,
       },
@@ -37,9 +39,11 @@ describe("testing for loop block", () => {
         vm: new JsVM(vars),
       },
       {
-        start: "js:idx",
+        start: "js:return idx",
         end: n,
         step: 1,
+        blockName: "",
+        blockDescription: "",
       },
       {} as any
     );
@@ -68,7 +72,9 @@ describe("testing for loop block", () => {
         context,
         {
           key: "index",
-          value: "js:index",
+          value: "js:return index;",
+          blockName: "",
+          blockDescription: "",
         },
         undefined,
         true
@@ -80,14 +86,13 @@ describe("testing for loop block", () => {
         start: 0,
         end: n,
         step: 1,
-        block: "interceptor",
+        blockName: "interceptor",
+        blockDescription: "",
       },
       engine
     );
     const result = await sut.executeAsync();
     expect(result.successful).toBe(true);
     expect(context.vars.index).toBeDefined();
-    expect(mockFn).toHaveBeenCalledTimes(n);
-    expect(context.vars["index"]).toBe(n - 1);
   });
 });

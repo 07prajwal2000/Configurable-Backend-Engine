@@ -1,0 +1,1 @@
+serverless only for route handlers

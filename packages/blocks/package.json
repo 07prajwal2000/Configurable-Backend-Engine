@@ -19,7 +19,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@fluxify/adapters": "file:../adapters",
+    "@fluxify/adapters": "../adapters",
     "@fluxify/lib": "file:../lib",
     "zod": "^4.0.17"
   }
